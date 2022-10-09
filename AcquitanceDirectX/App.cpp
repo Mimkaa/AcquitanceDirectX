@@ -1,5 +1,5 @@
 #include "App.hpp"
-App::App() :wnd(800, 300, L"I understood how it works)))"){}
+App::App() :wnd(800, 600, L"I understood how it works)))"){}
 
 int App::Go() 
 {
