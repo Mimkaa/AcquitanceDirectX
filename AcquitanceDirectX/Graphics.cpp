@@ -112,20 +112,31 @@ void Graphics::DrawTriangle()
 
     struct Vertex
     {
-        float x;
-        float y;
+        // anonimous structure
+        struct
+        {
+            float x;
+            float y;
+        } pos;
+        struct
+        {
+            unsigned char r;
+            unsigned char g;
+            unsigned char b;
+            unsigned char a;
+        }color;
     };
     // create vertex buffer (triangle at the center of the screen)
-    const Vertex vertices[] =
+    Vertex vertices[] =
     {
-        { 0.0f, 0.5f },
-        { 0.5f, -0.5f },
-        { -0.5f, -0.5f },
-        { 0.0f, 0.5f },
+        { 0.0f, 0.5f, 255, 0, 0, 0 },
+        { 0.5f, -0.5f, 0, 255, 0, 0  },
+        { -0.5f, -0.5f, 0, 0, 255, 0  },
+        
         
         
     };
-   
+    vertices[0].color.g = 255;
 
 
     wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
@@ -167,6 +178,7 @@ void Graphics::DrawTriangle()
     const D3D11_INPUT_ELEMENT_DESC ied[] =
     {
         {"Position",0,DXGI_FORMAT_R32G32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
+        {"Color",0,DXGI_FORMAT_R8G8B8A8_UNORM,0,8u,D3D11_INPUT_PER_VERTEX_DATA,0}
     };
 
     GFX_THROW_INFO(pDevice->CreateInputLayout(
@@ -184,7 +196,7 @@ void Graphics::DrawTriangle()
     pContext->OMSetRenderTargets(1u,pTarget.GetAddressOf(), nullptr);
 
     // Set primitive topology to triangle list (group of 3 verticies)
-    pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+    pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     // configure viewport
     D3D11_VIEWPORT vp;
     vp.Width = 800;
