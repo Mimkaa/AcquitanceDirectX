@@ -134,7 +134,7 @@ void Graphics::DrawTriangle()
         { -0.5f, -0.5f, 0, 0, 255, 0  },
         {-0.3, 0.3f,0,255,0,0},
         {0.3f,0.3,0,0,255,0},
-        {0.0f,-0.8f,255,0,0,0},
+        {0.0f,-1.8f,255,0,0,0},
         
         
         
@@ -202,7 +202,7 @@ void Graphics::DrawTriangle()
     wrl::ComPtr<ID3D11InputLayout> pInputLayout;
     const D3D11_INPUT_ELEMENT_DESC ied[] =
     {
-        {"Position",0,DXGI_FORMAT_R32G32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
+        {"Pubes",0,DXGI_FORMAT_R32G32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
         {"Color",0,DXGI_FORMAT_R8G8B8A8_UNORM,0,8u,D3D11_INPUT_PER_VERTEX_DATA,0}
     };
 
@@ -224,12 +224,12 @@ void Graphics::DrawTriangle()
     pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     // configure viewport
     D3D11_VIEWPORT vp;
-    vp.Width = 800;
-    vp.Height = 600;
+    vp.Width = 400;
+    vp.Height = 300;
     vp.MinDepth = 0;
     vp.MaxDepth = 1;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
+    vp.TopLeftX = 100;
+    vp.TopLeftY = 100;
     pContext->RSSetViewports(1u, &vp);
     
     GFX_THROW_INFO_ONLY(pContext->DrawIndexed((UINT)std::size(indices), 0u,0u));
