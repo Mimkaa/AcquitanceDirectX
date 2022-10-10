@@ -116,24 +116,16 @@ void Graphics::DrawTriangle()
         float y;
     };
     // create vertex buffer (triangle at the center of the screen)
-    Vertex vertices[] =
+    const Vertex vertices[] =
     {
         { 0.0f, 0.5f },
         { 0.5f, -0.5f },
+        { 0.5f, -0.5f },
         { -0.5f, -0.5f },
+        { -0.5f, -0.5f },
+        { 0.0f, 0.5f },
     };
-    // rotate verticies
-    angle +=0.01;
-    float RotationMat[2][2] = {cos(angle),sin(angle),
-                           -sin(angle), cos(angle) };
-
-    for (int i = 0; i < sizeof(vertices)/ sizeof(vertices[0]); i++)
-    {
-        float x = vertices[i].x;
-        float y = vertices[i].y;
-        vertices[i].x = RotationMat[0][0] * x + RotationMat[1][0] * y;
-        vertices[i].y = RotationMat[0][1] * x + RotationMat[1][1] * y;
-    }
+   
 
 
     wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
@@ -192,10 +184,10 @@ void Graphics::DrawTriangle()
     pContext->OMSetRenderTargets(1u,pTarget.GetAddressOf(), nullptr);
 
     // Set primitive topology to triangle list (group of 3 verticies)
-    pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
     // configure viewport
     D3D11_VIEWPORT vp;
-    vp.Width = 600;
+    vp.Width = 800;
     vp.Height = 600;
     vp.MinDepth = 0;
     vp.MaxDepth = 1;
