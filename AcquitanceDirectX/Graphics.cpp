@@ -109,8 +109,11 @@ void Graphics::ClearBuffer(float red, float green, float blue) noexcept
 
 
 
-void Graphics::DrawTriangle(float angle)
+void Graphics::DrawTriangle(float angle, float x, float y)
 {
+    dx::XMVECTOR v = dx::XMVectorSet(3.0f, 3.0f, 0.0f, 0.0f);
+    auto result =dx::XMVector3Transform(v, dx::XMMatrixScaling(1.5,0.0f,0.0f));
+    auto xx = dx::XMVectorGetX(result);
     HRESULT hr;
     namespace wrl = Microsoft::WRL;
 
@@ -188,18 +191,18 @@ void Graphics::DrawTriangle(float angle)
     // create constant buffer for transformation matrix
     struct ConstantBuffer
     {
-        struct
-        {
-            float element[4][4];
-        }transformation;
+        dx::XMMATRIX transfor;
     };
     const ConstantBuffer cb =
     {
+        // row major
         {
-            (3.0f/4.0f)*std::cos(angle), std::sin(angle), 0.0f, 0.0f,
-             (3.0f / 4.0f) * -std::sin(angle),std::cos(angle), 0.0f, 0.0f,
-            0.0f,            0.0f,              1.0f, 0.0f,
-            0.0f,            0.0f,              0.0f, 1.0f
+            dx::XMMatrixTranspose(
+            dx::XMMatrixRotationZ(angle) *
+            dx::XMMatrixScaling(3.0f / 4.0f, 1.0f,1.0f) *
+            dx::XMMatrixTranslation(x,y,0.0f)
+            )
+                
 
         }
     };
