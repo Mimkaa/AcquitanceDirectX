@@ -1,6 +1,7 @@
 #include "Window.hpp"
 #include <sstream>
 #include "resource.h"
+#include "WindowThrowHeader.h"
 
 // Window Class Stuff
 Window::WindowClass Window::WindowClass::wndClass;
