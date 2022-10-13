@@ -4,8 +4,14 @@
 #include "ChiliException.hpp"
 #include "DxgiInfoManager.hpp"
 #include <wrl.h>
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
+#include <memory>
+#include <random>
+
 class Graphics
 {
+	friend class  Bindable;
 public:
 	class Exception : public ChiliException
 	{
@@ -49,7 +55,9 @@ public:
 	~Graphics() = default;
 	void EndFrame();
 	void ClearBuffer(float red, float green, float blue) noexcept;
-	void DrawTriangle(float angle, float x, float y);
+	void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
+	void SetProjection(DirectX::FXMMATRIX proj) noexcept;
+	DirectX::XMMATRIX GetProjection() const noexcept;
 	
 private:
 #ifndef NDEBUG
@@ -61,6 +69,9 @@ private:
 	Microsoft::WRL::ComPtr < ID3D11DeviceContext> pContext ;
 	Microsoft::WRL::ComPtr < ID3D11RenderTargetView> pTarget ;
 	Microsoft::WRL::ComPtr <ID3D11DepthStencilView> pDSV;
+
+private:
+	DirectX::XMMATRIX projection;
 
 };
 

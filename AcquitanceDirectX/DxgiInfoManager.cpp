@@ -3,6 +3,7 @@
 #include "Graphics.hpp"
 #include <dxgidebug.h>
 #include <memory>
+#include "WindowThrowHeader.h"
 
 
 #pragma comment(lib, "dxguid.lib")

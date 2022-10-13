@@ -52,3 +52,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "StringToWstring.hpp";
+
+//#ifdef NDEBUG
+//#define IS_DEBUG FALSE
+//#else
+//#define IS_DEBUG TRUE
+//#endif
