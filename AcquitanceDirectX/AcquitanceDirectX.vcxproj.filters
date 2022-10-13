@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Drawable">
       <UniqueIdentifier>{04ee8d33-69b0-4408-ab15-79bb3b6df841}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GeometryPrimitives">
+      <UniqueIdentifier>{b47f45a8-35a6-451a-ac63-f44e9b1ac565}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -184,6 +187,27 @@
     </ClInclude>
     <ClInclude Include="DrawableBase.h">
       <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexedTriangleList.h">
+      <Filter>Header Files\GeometryPrimitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Header Files\GeometryPrimitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cone.h">
+      <Filter>Header Files\GeometryPrimitives</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiliMath.h">
+      <Filter>Header Files\GeometryPrimitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Header Files\GeometryPrimitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Prism.h">
+      <Filter>Header Files\GeometryPrimitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Header Files\GeometryPrimitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
