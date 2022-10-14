@@ -34,6 +34,12 @@
     <Filter Include="Header Files\GeometryPrimitives">
       <UniqueIdentifier>{b47f45a8-35a6-451a-ac63-f44e9b1ac565}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GDI">
+      <UniqueIdentifier>{97acd16c-967c-449f-abd9-1480efb6b5ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GDI">
+      <UniqueIdentifier>{622d8f61-008f-4c5f-8397-368416272b9b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -101,6 +107,18 @@
     </ClCompile>
     <ClCompile Include="Bindable.cpp">
       <Filter>Source Files\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="Pyramid.cpp">
+      <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="Melon.cpp">
+      <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="Surface.cpp">
+      <Filter>Source Files\GDI</Filter>
+    </ClCompile>
+    <ClCompile Include="GDIPlusManager.cpp">
+      <Filter>Source Files\GDI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -209,6 +227,18 @@
     <ClInclude Include="Sphere.h">
       <Filter>Header Files\GeometryPrimitives</Filter>
     </ClInclude>
+    <ClInclude Include="Pyramid.h">
+      <Filter>Header Files\GeometryPrimitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Melon.h">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="Surface.h">
+      <Filter>Header Files\GDI</Filter>
+    </ClInclude>
+    <ClInclude Include="GDIPlusManager.h">
+      <Filter>Header Files\GDI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AcquitanceDirectX1.rc">
@@ -224,10 +254,16 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
+    <FxCompile Include="ColorIndexVS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
+    <FxCompile Include="ColorIndexPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="ColorBlendVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="ColorBlendPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>
