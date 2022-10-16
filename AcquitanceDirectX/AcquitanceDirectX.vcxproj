@@ -156,6 +156,11 @@
     <ClCompile Include="GDIPlusManager.cpp" />
     <ClCompile Include="GetErrorStringFromHresult.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -165,6 +170,7 @@
     <ClCompile Include="Pyramid.cpp" />
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Sheet.cpp" />
+    <ClCompile Include="SkinnedCube.cpp" />
     <ClCompile Include="StringToWstring.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -193,6 +199,12 @@
     <ClInclude Include="GDIPlusManager.h" />
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="GraphicsThrowHeader.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="IndexedTriangleList.h" />
     <ClInclude Include="InputLayout.h" />
@@ -208,6 +220,7 @@
     <ClInclude Include="resource1.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Sheet.h" />
+    <ClInclude Include="SkinnedCube.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="StringToWstring.hpp" />
     <ClInclude Include="Surface.h" />

@@ -8,6 +8,7 @@
 #include "GDIPlusManager.h"
 #include "Surface.h"
 #include "Sheet.h"
+#include "SkinnedCube.h"
 GDIPlusManager gdipm;
 
 
@@ -44,6 +45,11 @@ App::App() :wnd(800, 600, L"I understood how it works)))")
 					gfx, rng, adist, ddist,
 					odist, rdist
 					);
+			case 4:
+				return std::make_unique<SkinnedCube>(
+					gfx, rng, adist, ddist,
+					odist, rdist
+					);
 			default:
 				assert(false && "bad drawable type in factory");
 				return {};
@@ -59,7 +65,7 @@ App::App() :wnd(800, 600, L"I understood how it works)))")
 		std::uniform_real_distribution<float> bdist{ 0.4f,3.0f };
 		std::uniform_int_distribution<int> latdist{ 5,20 };
 		std::uniform_int_distribution<int> longdist{ 10,40 };
-		std::uniform_int_distribution<int> typedist{ 0,3 };
+		std::uniform_int_distribution<int> typedist{ 0,4 };
 };
 
 Factory f(wnd.Gfx());
@@ -95,7 +101,7 @@ void App::DoFrame()
 	wnd.Gfx().ClearBuffer(0.07f, 0.0f, 0.12f);
 	for (auto& b : drawables)
 	{
-		b->Update(dt);
+		b->Update(wnd.kbd.KeyIsPressed(VK_SPACE)? 0.0f:dt);
 		b->Draw(wnd.Gfx());
 	}
 	wnd.Gfx().EndFrame();
