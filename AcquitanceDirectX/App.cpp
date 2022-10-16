@@ -10,6 +10,8 @@
 #include "Sheet.h"
 #include "SkinnedCube.h"
 #include "imgui/imgui.h"
+
+namespace dx = DirectX;
 GDIPlusManager gdipm;
 
 
@@ -76,6 +78,7 @@ std::generate_n(std::back_inserter(drawables), nDrawables, f);
 
 
 wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
+
 }
 
 App::~App()
@@ -102,6 +105,7 @@ void App::DoFrame()
 
 	
 	wnd.Gfx().BeginFrame(0.07f, 0.0f, 0.12f);
+	wnd.Gfx().SetCamera(cam.GetMatrix());
 
 	for (auto& b : drawables)
 	{
@@ -120,7 +124,8 @@ void App::DoFrame()
 	}
 	ImGui::End();
 	
-	
+	// imgui window for camera
+	cam.SpawnControlWindow();
 	
 	wnd.Gfx().EndFrame();
 		

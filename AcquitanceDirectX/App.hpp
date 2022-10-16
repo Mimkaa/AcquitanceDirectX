@@ -3,6 +3,7 @@
 #include "Timer.hpp"
 #include "Box.h"
 #include "ImguiManager.h"
+#include "Camera.h"
 class App
 {
 public:
@@ -20,5 +21,6 @@ private:
 	std::vector<std::unique_ptr<class Drawable>> drawables;
 	float speed_factor = 1.0f;
 	static constexpr size_t nDrawables = 180;
+	Camera cam;
 };
 
