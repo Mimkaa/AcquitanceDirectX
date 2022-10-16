@@ -54,10 +54,13 @@ public:
 	/*It means that you want to use the compiler-generated version of that function, so you don't need to specify a body.*/
 	~Graphics() = default;
 	void EndFrame();
-	void ClearBuffer(float red, float green, float blue) noexcept;
+	void BeginFrame(float red, float green, float blue) noexcept;
 	void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
 	void SetProjection(DirectX::FXMMATRIX proj) noexcept;
 	DirectX::XMMATRIX GetProjection() const noexcept;
+	void EnableImgui() noexcept;
+	void DisableImgui() noexcept;
+	bool IsImguiEnabled() const noexcept;
 	
 private:
 #ifndef NDEBUG
@@ -71,6 +74,7 @@ private:
 	Microsoft::WRL::ComPtr <ID3D11DepthStencilView> pDSV;
 
 private:
+	bool imguiEnabled = true;
 	DirectX::XMMATRIX projection;
 
 };
