@@ -11,11 +11,15 @@
 #include "SkinnedCube.h"
 #include "imgui/imgui.h"
 
+
 namespace dx = DirectX;
 GDIPlusManager gdipm;
 
 
-App::App() :wnd(800, 600, L"I understood how it works)))")
+App::App()
+	:
+	wnd(800, 600, L"I understood how it works)))"),
+	light(wnd.Gfx())
 {
 	class Factory
 	{
@@ -26,37 +30,11 @@ App::App() :wnd(800, 600, L"I understood how it works)))")
 		{}
 		std::unique_ptr<Drawable> operator()()
 		{
-			switch (typedist(rng))
-			{
-			case 0:
-				return std::make_unique<Pyramid>(
-					gfx, rng, adist, ddist,
-					odist, rdist
-					);
-			case 1:
-				return std::make_unique<Box>(
-					gfx, rng, adist, ddist,
-					odist, rdist, bdist
-					);
-			case 2:
-				return std::make_unique<Melon>(
-					gfx, rng, adist, ddist,
-					odist, rdist, longdist, latdist
-					);
-			case 3:
-				return std::make_unique<Sheet>(
-					gfx, rng, adist, ddist,
-					odist, rdist
-					);
-			case 4:
-				return std::make_unique<SkinnedCube>(
-					gfx, rng, adist, ddist,
-					odist, rdist
-					);
-			default:
-				assert(false && "bad drawable type in factory");
-				return {};
-			}
+			
+			return std::make_unique<Box>(
+				gfx, rng, adist, ddist,
+				odist, rdist, bdist
+				);
 		}
 	private:
 		Graphics& gfx;
@@ -103,6 +81,7 @@ void App::DoFrame()
 {
 	const auto dt = timer.Mark() * speed_factor;
 
+	light.Bind(wnd.Gfx());
 	
 	wnd.Gfx().BeginFrame(0.07f, 0.0f, 0.12f);
 	wnd.Gfx().SetCamera(cam.GetMatrix());
@@ -113,6 +92,7 @@ void App::DoFrame()
 		b->Draw(wnd.Gfx());
 	}
 
+	light.Draw(wnd.Gfx());
 
 
 	// imgui window to control simulation speed
@@ -126,6 +106,7 @@ void App::DoFrame()
 	
 	// imgui window for camera
 	cam.SpawnControlWindow();
+	light.SpawnControlWindow();
 	
 	wnd.Gfx().EndFrame();
 		
