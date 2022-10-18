@@ -1,20 +1,17 @@
 cbuffer LightCBuf
 {
     float3 LightPos;
+    float3 material_color;
+    float3 light_ambient;
+    float3 light_diffuse;
+    float attIntensity;
+    float constant_attenuation;
+    float linear_attenuation;
+    float quadratic_attenuation;
 };
 
 
-		// color of direct light
-static float3 light_diffuse = { 1.0f, 1.0f, 1.0f };
-		// indirect light
-static float3 light_ambient = { 0.1f, 0.1f, 0.1f };
-		// how much of each channel is reflected
-static float3 material_color = { 0.8f, 0.85f, 1.0f };
 
-static const float linear_attenuation = 0.045f;
-static const float quadratic_attenuation = 0.007f;
-static const float constant_attenuation = 1.0f;
-static const float attIntensity = 1.0f;
 
 
 float4 main(float3 WorldPos : Position, float3 normal : Normal) : SV_Target
