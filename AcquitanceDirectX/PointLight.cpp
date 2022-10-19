@@ -4,7 +4,7 @@
 PointLight::PointLight(Graphics& gfx, float radius)
 	:
 	mesh(gfx, radius),
-	cbuf(gfx)
+	cbuf(gfx,0)
 {
 	Reset();
 }
@@ -22,7 +22,7 @@ void PointLight::SpawnControlWindow() noexcept
 		ImGui::SliderFloat("Intensity", &cbData.diffuseIntensity, 0.01f, 2.0f, "%.2f", 2);
 		ImGui::ColorEdit3("Diffuse Color", &cbData.diffuseColor.x);
 		ImGui::ColorEdit3("Ambient", &cbData.ambient.x);
-		ImGui::ColorEdit3("Material Color", &cbData.material.x);
+		
 		
 		ImGui::Text("Attenuation(Fallof)");
 		
@@ -43,7 +43,6 @@ void PointLight::Reset() noexcept
 	
 	cbData = {
 		{0.0f, 0.0f, 0.0f},
-		{ 0.8f, 0.85f, 1.0f },
 		{ 0.1f, 0.1f, 0.1f },
 		{ 1.0f, 1.0f, 1.0f },
 		1.0f,

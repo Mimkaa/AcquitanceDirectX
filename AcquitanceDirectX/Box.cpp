@@ -7,7 +7,8 @@ Box::Box(Graphics& gfx, std::mt19937& rng,
 	std::uniform_real_distribution<float>& ddist,
 	std::uniform_real_distribution<float>& odist,
 	std::uniform_real_distribution<float>& rdist,
-	std::uniform_real_distribution<float>& bdist)
+	std::uniform_real_distribution<float>& bdist,
+	DirectX::XMFLOAT3 mat)
 	:
 	r(rdist(rng)),
 	droll(ddist(rng)),
@@ -37,6 +38,8 @@ Box::Box(Graphics& gfx, std::mt19937& rng,
 
 		AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
+		
+
 
 		auto pvs = std::make_unique<VertexShader>(gfx, L"PhongVS.cso");
 		auto pvsbc = pvs->GetBytecode();
@@ -59,7 +62,15 @@ Box::Box(Graphics& gfx, std::mt19937& rng,
 	{
 		SetIndexFromStatic();
 	}
-	AddBind(std::make_unique<TransformCbuf>(gfx, *this));
+	AddBind(std::make_unique<TransformCbuf>(gfx, *this,1u));
+
+	struct PSMaterialConstantBuf
+	{
+		DirectX::XMFLOAT3 color;
+		float padding;
+	} color_buf;
+	color_buf.color = mat;
+	AddBind(std::make_unique<PixelConstantBuffer<PSMaterialConstantBuf>>(gfx, color_buf, 1u));
 
 	// model deformation transform (per instance, not stored as bind)
 	DirectX::XMStoreFloat3x3(

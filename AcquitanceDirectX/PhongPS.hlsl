@@ -1,7 +1,6 @@
 cbuffer LightCBuf
 {
     float3 LightPos;
-    float3 material_color;
     float3 light_ambient;
     float3 light_diffuse;
     float attIntensity;
@@ -11,7 +10,10 @@ cbuffer LightCBuf
 };
 
 
-
+cbuffer MaterialCBuf
+{
+    float3 material_color;
+};
 
 
 float4 main(float3 WorldPos : Position, float3 normal : Normal) : SV_Target

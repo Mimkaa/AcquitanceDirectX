@@ -16,7 +16,6 @@ private:
 	{
 		// alignas add padding (additional 4 bytes)
 		alignas(16)DirectX::XMFLOAT3 pos;
-		alignas(16)DirectX::XMFLOAT3 material;
 		alignas(16)DirectX::XMFLOAT3 ambient;
 		alignas(16)DirectX::XMFLOAT3 diffuseColor;
 		float diffuseIntensity;

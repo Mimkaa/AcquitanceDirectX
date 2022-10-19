@@ -19,7 +19,7 @@ public:
 		memcpy(msr.pData, &consts, sizeof(consts));
 		GetContext(gfx)->Unmap(pConstantBuffer.Get(), 0u);
 	}
-	ConstantBuffer(Graphics& gfx, const C& consts)
+	ConstantBuffer(Graphics& gfx, const C& consts, UINT slot_in = 0)
 	{
 		INFOMAN(gfx);
 
@@ -34,8 +34,9 @@ public:
 		D3D11_SUBRESOURCE_DATA csd = {};
 		csd.pSysMem = &consts;
 		GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstantBuffer));
+		slot = slot_in;
 	}
-	ConstantBuffer(Graphics& gfx)
+	ConstantBuffer(Graphics& gfx, UINT slot_in = 0)
 	{
 		INFOMAN(gfx);
 
@@ -47,9 +48,11 @@ public:
 		cbd.ByteWidth = sizeof(C);
 		cbd.StructureByteStride = 0u;
 		GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, nullptr, &pConstantBuffer));
+		slot = slot_in;
 	}
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
+	UINT slot;
 };
 
 // class template inheritance
@@ -59,11 +62,12 @@ class VertexConstantBuffer : public ConstantBuffer<C>
 {
 	using ConstantBuffer<C>::pConstantBuffer;
 	using Bindable::GetContext;
+	using ConstantBuffer<C>::slot;
 public:
 	using ConstantBuffer<C>::ConstantBuffer;
 	void Bind(Graphics& gfx) noexcept override
 	{
-		GetContext(gfx)->VSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
+		GetContext(gfx)->VSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
 	}
 };
 
@@ -72,10 +76,11 @@ class PixelConstantBuffer : public ConstantBuffer<C>
 {
 	using ConstantBuffer<C>::pConstantBuffer;
 	using Bindable::GetContext;
+	using ConstantBuffer<C>::slot;
 public:
 	using ConstantBuffer<C>::ConstantBuffer;
 	void Bind(Graphics& gfx) noexcept override
 	{
-		GetContext(gfx)->PSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
+		GetContext(gfx)->PSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
 	}
 };

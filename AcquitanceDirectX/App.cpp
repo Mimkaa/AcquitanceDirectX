@@ -30,10 +30,10 @@ App::App()
 		{}
 		std::unique_ptr<Drawable> operator()()
 		{
-			
+			const dx::XMFLOAT3 mat_color = { colordist(rng), colordist(rng) ,colordist(rng) };
 			return std::make_unique<Box>(
 				gfx, rng, adist, ddist,
-				odist, rdist, bdist
+				odist, rdist, bdist, mat_color
 				);
 		}
 	private:
@@ -47,6 +47,7 @@ App::App()
 		std::uniform_int_distribution<int> latdist{ 5,20 };
 		std::uniform_int_distribution<int> longdist{ 10,40 };
 		std::uniform_int_distribution<int> typedist{ 0,4 };
+		std::uniform_real_distribution<float> colordist{ 0.0f,1.0f };
 };
 
 Factory f(wnd.Gfx());
