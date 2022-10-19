@@ -82,7 +82,7 @@ void App::DoFrame()
 {
 	const auto dt = timer.Mark() * speed_factor;
 
-	light.Bind(wnd.Gfx());
+	light.Bind(wnd.Gfx(), wnd.Gfx().GetCamera());
 	
 	wnd.Gfx().BeginFrame(0.07f, 0.0f, 0.12f);
 	wnd.Gfx().SetCamera(cam.GetMatrix());
