@@ -2,6 +2,7 @@
 #include "Melon.h"
 #include "Pyramid.h"
 #include "Box.h"
+#include "Cylinder.h"
 #include <memory>
 #include <algorithm>
 #include "ChiliMath.h"
@@ -30,11 +31,26 @@ App::App()
 		{}
 		std::unique_ptr<Drawable> operator()()
 		{
-			const dx::XMFLOAT3 mat_color = { colordist(rng), colordist(rng) ,colordist(rng) };
-			return std::make_unique<Box>(
-				gfx, rng, adist, ddist,
-				odist, rdist, bdist, mat_color
-				);
+			switch (typedist(rng)) {
+			case (0):
+			{
+				const dx::XMFLOAT3 mat_color = { colordist(rng), colordist(rng) ,colordist(rng) };
+				return std::make_unique<Box>(
+					gfx, rng, adist, ddist,
+					odist, rdist, bdist, mat_color
+					);
+				break;
+			}
+
+			case(1):
+			{
+				return std::make_unique<Cylinder>(
+					gfx, rng, adist, ddist,
+					odist, rdist, bdist, longdist);
+				break;
+			}
+
+			}
 		}
 	private:
 		Graphics& gfx;
@@ -46,7 +62,7 @@ App::App()
 		std::uniform_real_distribution<float> bdist{ 0.4f,3.0f };
 		std::uniform_int_distribution<int> latdist{ 5,20 };
 		std::uniform_int_distribution<int> longdist{ 10,40 };
-		std::uniform_int_distribution<int> typedist{ 0,4 };
+		std::uniform_int_distribution<int> typedist{ 0,1 };
 		std::uniform_real_distribution<float> colordist{ 0.0f,1.0f };
 };
 

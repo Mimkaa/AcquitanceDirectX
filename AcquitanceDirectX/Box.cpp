@@ -10,16 +10,8 @@ Box::Box(Graphics& gfx, std::mt19937& rng,
 	std::uniform_real_distribution<float>& bdist,
 	DirectX::XMFLOAT3 mat)
 	:
-	r(rdist(rng)),
-	droll(ddist(rng)),
-	dpitch(ddist(rng)),
-	dyaw(ddist(rng)),
-	dphi(odist(rng)),
-	dtheta(odist(rng)),
-	dchi(odist(rng)),
-	chi(adist(rng)),
-	theta(adist(rng)),
-	phi(adist(rng))
+	TestObj(gfx, rng, adist, ddist, odist, rdist)
+	
 {
 	if (!IsStaticInitialized())
 	{
@@ -83,20 +75,10 @@ Box::Box(Graphics& gfx, std::mt19937& rng,
 
 }
 
-void Box::Update(float dt) noexcept
-{
-	roll += droll *dt;
-	pitch += dpitch * dt;
-	yaw += dyaw * dt;
-	theta += dphi * dt;
-	phi += dphi * dt;
-	chi += dchi * dt;
-}
+
 
 DirectX::XMMATRIX Box::GetTransformXM() const noexcept
 {
 	namespace dx = DirectX;
-	return dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-		dx::XMMatrixTranslation(r, 0.0f, 0.0f) *
-		dx::XMMatrixRotationRollPitchYaw(theta, phi, chi);
+	return TestObj::GetTransformXM() * dx::XMLoadFloat3x3(&mt);
 }
