@@ -16,14 +16,7 @@ Cylinder::Cylinder(Graphics& gfx, std::mt19937& rng,
 
 	if (!IsStaticInitialized())
 	{
-		struct Vertex
-		{
-			dx::XMFLOAT3 pos;
-			dx::XMFLOAT3 n;
-		};
-		auto model = Prism::MakeTesselatedIndependentCapNormals<Vertex>(tdist(rng));
-
-		AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
+		
 
 		auto pvs = std::make_unique<VertexShader>(gfx, L"PhongVS.cso");
 		auto pvsbc = pvs->GetBytecode();
@@ -31,7 +24,6 @@ Cylinder::Cylinder(Graphics& gfx, std::mt19937& rng,
 
 		AddStaticBind(std::make_unique<PixelShader>(gfx, L"IndexedPhongPS.cso"));
 
-		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.indices));
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
@@ -63,4 +55,14 @@ Cylinder::Cylinder(Graphics& gfx, std::mt19937& rng,
 	}
 
 	AddBind(std::make_unique<TransformCbuf>(gfx, *this));
+
+	struct Vertex
+	{
+		dx::XMFLOAT3 pos;
+		dx::XMFLOAT3 n;
+	};
+	auto model = Prism::MakeTesselatedIndependentCapNormals<Vertex>(tdist(rng));
+
+	AddBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
+	AddIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.indices));
 }

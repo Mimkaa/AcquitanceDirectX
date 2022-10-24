@@ -14,40 +14,12 @@ ConeDrawable::ConeDrawable(Graphics& gfx, std::mt19937& rng,
 	TestObj(gfx, rng, adist, ddist, odist, rdist)
 
 {
+	namespace dx = DirectX;
 	if (!IsStaticInitialized())
 	{
-		namespace dx = DirectX;
+		
 
-		struct Vertex
-		{
-			dx::XMFLOAT3 pos;
-			dx::XMFLOAT3 n;
-			std::array<char, 4> color;
-			char padding;
-			/*std::array<unsigned char, 4> color;
-			char padding;*/
-
-		};
-
-		auto model = MyCone::MakeTessalated<Vertex>(tessalation);
-		for (auto& v : model.vertices)
-		{
-			v.color = { (char)40,(char)40,(char)255 };
-		}
-
-		// set top to a different color
-		for (int i = 0; i<tessalation; i++)
-		{
-			model.vertices[model.indices[i*3]].color = { (char)255,(char)40,(char)40 };
-		}
-
-		model.Transform(dx::XMMatrixScaling(1.0f, 1.0f, 0.7f));
-
-		model.SetNormalsIndependentFlat();
-
-
-		AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
-
+		
 		
 		auto pvs = std::make_unique<VertexShader>(gfx, L"ColorBlendPhongVS.cso");
 		auto pvsbc = pvs->GetBytecode();
@@ -55,7 +27,7 @@ ConeDrawable::ConeDrawable(Graphics& gfx, std::mt19937& rng,
 
 		AddStaticBind(std::make_unique<PixelShader>(gfx, L"ColorBlendPhongPS.cso"));
 
-		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.indices));
+		
 
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
@@ -80,6 +52,35 @@ ConeDrawable::ConeDrawable(Graphics& gfx, std::mt19937& rng,
 		float padding[2];
 	} spec_buf;
 	AddBind(std::make_unique<PixelConstantBuffer<PSMaterialConstantBuf>>(gfx, spec_buf, 1u));
+
+	struct Vertex
+	{
+		dx::XMFLOAT3 pos;
+		dx::XMFLOAT3 n;
+		std::array<char, 4> color;
+		char padding;
+
+	};
+
+	auto model = MyCone::MakeTessalated<Vertex>(tessalation);
+	for (auto& v : model.vertices)
+	{
+		v.color = { (char)40,(char)40,(char)255 };
+	}
+
+	// set top to a different color
+	for (int i = 0; i < tessalation; i++)
+	{
+		model.vertices[model.indices[i * 3]].color = { (char)255,(char)40,(char)40 };
+	}
+
+	model.Transform(dx::XMMatrixScaling(1.0f, 1.0f, 0.7f));
+
+	model.SetNormalsIndependentFlat();
+
+
+	AddBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
+	AddIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.indices));
 
 	// model deformation transform (per instance, not stored as bind)
 	DirectX::XMStoreFloat3x3(
