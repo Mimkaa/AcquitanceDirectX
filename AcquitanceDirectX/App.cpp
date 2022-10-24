@@ -11,7 +11,7 @@
 #include "Sheet.h"
 #include "SkinnedCube.h"
 #include "imgui/imgui.h"
-
+#include "ConeDrawable.h"
 
 namespace dx = DirectX;
 GDIPlusManager gdipm;
@@ -50,6 +50,15 @@ App::App()
 				break;
 			}
 
+			case(2):
+			{
+				int tes = tessdist(rng);
+				return std::make_unique<ConeDrawable>(
+					gfx, rng, adist, ddist,
+					odist, rdist, bdist, tes);
+				break;
+			}
+
 			}
 		}
 	private:
@@ -62,7 +71,8 @@ App::App()
 		std::uniform_real_distribution<float> bdist{ 0.4f,3.0f };
 		std::uniform_int_distribution<int> latdist{ 5,20 };
 		std::uniform_int_distribution<int> longdist{ 10,40 };
-		std::uniform_int_distribution<int> typedist{ 0,1 };
+		std::uniform_int_distribution<int> tessdist{ 3,30 };
+		std::uniform_int_distribution<int> typedist{ 0,2 };
 		std::uniform_real_distribution<float> colordist{ 0.0f,1.0f };
 };
 
