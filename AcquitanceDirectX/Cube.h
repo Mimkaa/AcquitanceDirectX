@@ -91,6 +91,66 @@ public:
 	}
 
 	template<class V>
+	static IndexedTriangleList<V> MakeSkinnedIndependent(float size = 1.0f)
+	{
+		namespace dx = DirectX;
+		const float side = size / 2.0f;
+
+		std::vector<dx::XMFLOAT3> vertices;
+		// positions
+		vertices.emplace_back(-side, -side, -side); // 0 near side
+		vertices.emplace_back(side, -side, -side); // 1
+		vertices.emplace_back(-side, side, -side); // 2
+		vertices.emplace_back(side, side, -side); // 3
+		vertices.emplace_back(-side, -side, side); // 4 far side
+		vertices.emplace_back(side, -side, side); // 5
+		vertices.emplace_back(-side, side, side); // 6
+		vertices.emplace_back(side, side, side); // 7
+		vertices.emplace_back(-side, -side, -side); // 8 left side
+		vertices.emplace_back(-side, side, -side); // 9
+		vertices.emplace_back(-side, -side, side); // 10
+		vertices.emplace_back(-side, side, side); // 11
+		vertices.emplace_back(side, -side, -side); // 12 right side
+		vertices.emplace_back(side, side, -side); // 13
+		vertices.emplace_back(side, -side, side); // 14
+		vertices.emplace_back(side, side, side); // 15
+		vertices.emplace_back(-side, -side, -side); // 16 bottom side
+		vertices.emplace_back(side, -side, -side); // 17
+		vertices.emplace_back(-side, -side, side); // 18
+		vertices.emplace_back(side, -side, side); // 19
+		vertices.emplace_back(-side, side, -side); // 20 top side
+		vertices.emplace_back(side, side, -side); // 21
+		vertices.emplace_back(-side, side, side); // 22
+		vertices.emplace_back(side, side, side); // 23
+
+		std::vector<V> verts(vertices.size());
+		int count = 0;
+		float tex_coors[4][2] = { {0.0f, 0.0f},{1.0f, 0.0f},{0.0f, 1.0f},{1.0f, 1.0f} };
+		for (size_t i = 0; i < vertices.size(); i++)
+		{
+			if (count > 3)
+			{
+				count = 0;
+			}
+			verts[i].pos = vertices[i];
+			verts[i].tex = { tex_coors[count][0],tex_coors[count][1] };
+			count += 1;
+			
+		}
+		return{
+			std::move(verts),{
+				0,2, 1,    2,3,1,
+				4,5, 7,    4,7,6,
+				8,10, 9,  10,11,9,
+				12,13,15, 12,15,14,
+				16,17,18, 18,17,19,
+				20,23,21, 20,22,23
+			}
+		};
+
+	}
+
+	template<class V>
 	static IndexedTriangleList<V> MakeSkinned()
 	{
 		namespace dx = DirectX;
