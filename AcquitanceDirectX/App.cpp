@@ -87,6 +87,14 @@ Factory f(wnd.Gfx());
 drawables.reserve(nDrawables);
 std::generate_n(std::back_inserter(drawables), nDrawables, f);
 
+// init our box pointers
+for (auto& d : drawables)
+{
+	if (auto ptr = dynamic_cast<Box*>(d.get()))
+	{
+		boxes.push_back(ptr);
+	}
+}
 
 
 wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
@@ -141,6 +149,9 @@ void App::DoFrame()
 	// imgui window for camera
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
+
+	// boxes control window
+	boxes[0]->SpawnControlWindow(69, wnd.Gfx());
 	
 	wnd.Gfx().EndFrame();
 		

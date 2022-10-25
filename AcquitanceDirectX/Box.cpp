@@ -2,6 +2,8 @@
 #include "BindableBase.h"
 #include "GraphicsThrowHeader.h"
 #include "Cube.h"
+#include "imgui/imgui.h"
+#include <format>
 Box::Box(Graphics& gfx, std::mt19937& rng,
 	std::uniform_real_distribution<float>& adist,
 	std::uniform_real_distribution<float>& ddist,
@@ -56,15 +58,9 @@ Box::Box(Graphics& gfx, std::mt19937& rng,
 	}
 	AddBind(std::make_unique<TransformCbuf>(gfx, *this,1u));
 
-	struct PSMaterialConstantBuf
-	{
-		DirectX::XMFLOAT3 color;
-		float specularIntensity = 0.6f;
-		float specularPower = 30.0f;
-		float padding[3];
-	} color_buf;
-	color_buf.color = mat;
-	AddBind(std::make_unique<PixelConstantBuffer<PSMaterialConstantBuf>>(gfx, color_buf, 1u));
+
+	materialConstants.color = mat;
+	AddBind(std::make_unique<MaterialCBuf>(gfx, materialConstants, 1u));
 
 	// model deformation transform (per instance, not stored as bind)
 	DirectX::XMStoreFloat3x3(
@@ -81,4 +77,29 @@ DirectX::XMMATRIX Box::GetTransformXM() const noexcept
 {
 	namespace dx = DirectX;
 	return TestObj::GetTransformXM() * dx::XMLoadFloat3x3(&mt);
+}
+
+void Box::SpawnControlWindow(int id, Graphics& gfx)
+{
+	bool changed = false;
+	if (ImGui::Begin(std::format("Manager For Box number {}", std::to_string(id)).c_str()))
+	{
+		changed = changed || ImGui::ColorEdit3("Material Color", &materialConstants.color.x);
+		changed = changed || ImGui::SliderFloat("SpecularIntensity", &materialConstants.specularIntensity, 0.1f, 4.0f, "%.1f",2);
+		changed = changed || ImGui::SliderFloat("SpecularPower", &materialConstants.specularPower, 1.0f, 150.0f, "%.1f",2);
+		
+	}
+	if (changed)
+	{
+		SyncMaterial(gfx);
+	}
+	
+	ImGui::End();
+}
+
+void Box::SyncMaterial(Graphics& gfx) noexcept(!IS_DEBUG)
+{
+	auto pConstB = QueryBindables<MaterialCBuf>();
+	assert(pConstB != nullptr);
+	pConstB->Update(gfx, materialConstants);
 }

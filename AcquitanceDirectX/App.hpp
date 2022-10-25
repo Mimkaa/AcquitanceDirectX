@@ -22,6 +22,7 @@ private:
 	std::vector<std::unique_ptr<class Drawable>> drawables;
 	float speed_factor = 1.0f;
 	static constexpr size_t nDrawables = 180;
+	std::vector<Box*> boxes;
 	Camera cam;
 	PointLight light;
 };
