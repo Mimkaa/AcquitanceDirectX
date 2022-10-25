@@ -138,18 +138,46 @@ void App::DoFrame()
 
 
 	// imgui window to control simulation speed
-	if (ImGui::Begin("Simulation Speed"))
-	{
-		ImGui::SliderFloat("Speed Factor", &speed_factor, 0.0f, 4.0f);
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		
-	}
-	ImGui::End();
+	SpawnSimulationWindow();
 	
 	// imgui window for camera
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
 
+	//boxes control
+	SpawnBoxWindowManagerWindow();
+	SpawnBoxWindows();
+
+	
+	
+		
+}
+
+void App::SpawnSimulationWindow()noexcept
+{
+	// imgui window to control simulation speed
+	if (ImGui::Begin("Simulation Speed"))
+	{
+		ImGui::SliderFloat("Speed Factor", &speed_factor, 0.0f, 4.0f);
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+	}
+	ImGui::End();
+}
+
+void App::SpawnBoxWindows()noexcept
+{
+	// imgui box attribute control windows
+	for (auto id : boxControlIds)
+	{
+		boxes[id]->SpawnControlWindow(id, wnd.Gfx());
+	}
+
+	wnd.Gfx().EndFrame();
+}
+
+void App::SpawnBoxWindowManagerWindow()noexcept
+{
 	// boxes control window
 	// imgui window to open box windows
 	if (ImGui::Begin("Boxes"))
@@ -160,7 +188,7 @@ void App::DoFrame()
 		{
 			for (int i = 0; i < boxes.size(); i++)
 			{
-				const bool selected = comboBoxIndex? *comboBoxIndex == i : false;
+				const bool selected = comboBoxIndex ? *comboBoxIndex == i : false;
 				if (ImGui::Selectable(std::to_string(i).c_str(), selected))
 				{
 					comboBoxIndex = i;
@@ -179,12 +207,4 @@ void App::DoFrame()
 		}
 	}
 	ImGui::End();
-	// imgui box attribute control windows
-	for (auto id : boxControlIds)
-	{
-		boxes[id]->SpawnControlWindow(id, wnd.Gfx());
-	}
-	
-	wnd.Gfx().EndFrame();
-		
 }
