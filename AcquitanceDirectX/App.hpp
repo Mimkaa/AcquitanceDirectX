@@ -5,6 +5,7 @@
 #include "ImguiManager.h"
 #include "Camera.h"
 #include "PointLight.h"
+#include <set>
 class App
 {
 public:
@@ -25,5 +26,7 @@ private:
 	std::vector<Box*> boxes;
 	Camera cam;
 	PointLight light;
+	std::optional<int> comboBoxIndex;
+	std::set<int> boxControlIds;
 };
 

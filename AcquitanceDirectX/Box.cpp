@@ -84,10 +84,10 @@ void Box::SpawnControlWindow(int id, Graphics& gfx)
 	bool changed = false;
 	if (ImGui::Begin(std::format("Manager For Box number {}", std::to_string(id)).c_str()))
 	{
-		changed = changed || ImGui::ColorEdit3("Material Color", &materialConstants.color.x);
-		changed = changed || ImGui::SliderFloat("SpecularIntensity", &materialConstants.specularIntensity, 0.1f, 4.0f, "%.1f",2);
-		changed = changed || ImGui::SliderFloat("SpecularPower", &materialConstants.specularPower, 1.0f, 150.0f, "%.1f",2);
-		
+		auto const mc = ImGui::ColorEdit3("Material Color", &materialConstants.color.x);
+		auto const si = ImGui::SliderFloat("SpecularIntensity", &materialConstants.specularIntensity, 0.1f, 4.0f, "%.1f",2);
+		auto const sp = ImGui::SliderFloat("SpecularPower", &materialConstants.specularPower, 1.0f, 150.0f, "%.1f",2);
+		changed = mc || si || sp;
 	}
 	if (changed)
 	{
