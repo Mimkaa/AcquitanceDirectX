@@ -85,10 +85,20 @@ bool Box::SpawnControlWindow(int id, Graphics& gfx)
 	bool closed = true;
 	if (ImGui::Begin(std::format("Manager For Box number {}", std::to_string(id)).c_str(), &closed))
 	{
+		ImGui::Text("Material Properties");
 		auto const mc = ImGui::ColorEdit3("Material Color", &materialConstants.color.x);
 		auto const si = ImGui::SliderFloat("SpecularIntensity", &materialConstants.specularIntensity, 0.1f, 4.0f, "%.1f",2);
 		auto const sp = ImGui::SliderFloat("SpecularPower", &materialConstants.specularPower, 1.0f, 150.0f, "%.1f",2);
 		changed = mc || si || sp;
+
+		ImGui::Text("Position");
+		ImGui::SliderFloat("R", &r, 0.0f, 80.0f, "%.1f");
+		ImGui::SliderAngle("Theta", &theta, -180.0f, 180.0f);
+		ImGui::SliderAngle("Phi", &phi, -180.0f, 180.0f);
+		ImGui::Text("Orientation");
+		ImGui::SliderAngle("Roll", &roll, -180.0f, 180.0f);
+		ImGui::SliderAngle("Pitch", &pitch, -180.0f, 180.0f);
+		ImGui::SliderAngle("Yaw", &yaw, -180.0f, 180.0f);
 	}
 	if (changed)
 	{

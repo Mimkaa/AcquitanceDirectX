@@ -41,7 +41,7 @@ public :
 		chi += dchi * dt;
 	}
 
-private:
+protected:
 	// positional
 	float r;
 	float roll = 0.0f;
