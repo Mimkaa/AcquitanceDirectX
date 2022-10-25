@@ -269,9 +269,6 @@
     <ClInclude Include="Cone.h">
       <Filter>Header Files\GeometryPrimitives</Filter>
     </ClInclude>
-    <ClInclude Include="ChiliMath.h">
-      <Filter>Header Files\GeometryPrimitives</Filter>
-    </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>Header Files\GeometryPrimitives</Filter>
     </ClInclude>
@@ -352,6 +349,9 @@
     </ClInclude>
     <ClInclude Include="ConeDrawable.h">
       <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiliMath.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
