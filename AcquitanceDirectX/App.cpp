@@ -12,7 +12,10 @@
 #include "SkinnedCube.h"
 #include "imgui/imgui.h"
 #include "ConeDrawable.h"
-
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
+#include "FirstMesh.h"
 namespace dx = DirectX;
 GDIPlusManager gdipm;
 
@@ -65,6 +68,14 @@ App::App()
 					odist, rdist);
 				break;
 			}
+			case(4):
+			{
+				const dx::XMFLOAT3 mat_color = { colordist(rng), colordist(rng) ,colordist(rng) };
+				return std::make_unique<FirstMesh>(
+					gfx, rng, adist, ddist,
+					odist, rdist, mat_color, 0.7);
+				break;
+			}
 
 			}
 		}
@@ -79,7 +90,7 @@ App::App()
 		std::uniform_int_distribution<int> latdist{ 5,20 };
 		std::uniform_int_distribution<int> longdist{ 10,40 };
 		std::uniform_int_distribution<int> tessdist{ 3,30 };
-		std::uniform_int_distribution<int> typedist{ 0,3 };
+		std::uniform_int_distribution<int> typedist{ 0,4};
 		std::uniform_real_distribution<float> colordist{ 0.0f,1.0f };
 };
 

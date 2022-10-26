@@ -174,6 +174,9 @@
     <ClCompile Include="Cylinder.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
+    <ClCompile Include="FirstMesh.cpp">
+      <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowMessageMap.hpp">
@@ -352,6 +355,9 @@
     </ClInclude>
     <ClInclude Include="ChiliMath.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FirstMesh.h">
+      <Filter>Header Files\Drawable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
