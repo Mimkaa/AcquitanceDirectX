@@ -16,15 +16,24 @@
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 #include "FirstMesh.h"
+#include "VertexLayout.h"
 namespace dx = DirectX;
 GDIPlusManager gdipm;
 
-
+void f()
+{
+	VertexLayout vl;
+	vl.Append<VertexLayout::Position3D>().Append<VertexLayout::Normal>();
+	VertexBuffer vb(vl);
+	vb.EmplaceBack(dx::XMFLOAT3{ 1.0f,1.5f, 1.0f }, dx::XMFLOAT3{ 1.0f,1.5f, 1.0f });
+	dx::XMFLOAT3 n = vb[0].Attr<VertexLayout::Normal>();
+}
 App::App()
 	:
 	wnd(800, 600, L"I understood how it works)))"),
 	light(wnd.Gfx())
 {
+	f();
 	class Factory
 	{
 	public:
