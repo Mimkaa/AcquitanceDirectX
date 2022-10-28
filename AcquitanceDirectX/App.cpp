@@ -16,7 +16,6 @@
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 #include "FirstMesh.h"
-#include "VertexLayout.h"
 namespace dx = DirectX;
 GDIPlusManager gdipm;
 

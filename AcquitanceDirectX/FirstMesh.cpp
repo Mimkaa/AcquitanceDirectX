@@ -7,6 +7,7 @@
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 #include <vector>
+#include "Vertex.h"
 FirstMesh::FirstMesh(Graphics& gfx, std::mt19937& rng,
 	std::uniform_real_distribution<float>& adist,
 	std::uniform_real_distribution<float>& ddist,
@@ -22,11 +23,10 @@ FirstMesh::FirstMesh(Graphics& gfx, std::mt19937& rng,
 	{
 		namespace dx = DirectX;
 
-		struct Vertex
-		{
-			dx::XMFLOAT3 pos;
-			dx::XMFLOAT3 n;
-		};
+		using hw3dexp::VertexLayout;
+
+		hw3dexp::VertexBuffer vb{ std::move(VertexLayout{}.Append<VertexLayout::Position3D>().Append<VertexLayout::Normal>())};
+
 		Assimp::Importer importer;
 
 		const auto scene = importer.ReadFile("Models\\suzanne.obj",
@@ -35,14 +35,12 @@ FirstMesh::FirstMesh(Graphics& gfx, std::mt19937& rng,
 
 		// extract a mesh
 		const auto mesh = scene->mMeshes[0];
-		// reinterpret verices
-		std::vector<Vertex> vertices;
-		vertices.reserve(mesh->mNumVertices);
+		
 		for (int i = 0; i < mesh->mNumVertices; i++)
 		{
-			vertices.push_back({
-				{mesh->mVertices[i].x * scale,mesh->mVertices[i].y * scale ,mesh->mVertices[i].z * scale},
-				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh->mNormals[i]) }
+			vb.EmplaceBack(
+				dx::XMFLOAT3{mesh->mVertices[i].x * scale,mesh->mVertices[i].y * scale ,mesh->mVertices[i].z * scale},
+				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh->mNormals[i]) 
 			);
 		}
 		// reinterpert indices
@@ -55,7 +53,7 @@ FirstMesh::FirstMesh(Graphics& gfx, std::mt19937& rng,
 			indices.push_back(mesh->mFaces[i].mIndices[2]);
 		}
 
-		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertices));
+		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vb));
 
 
 

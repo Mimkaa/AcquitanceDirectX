@@ -1,7 +1,7 @@
 #pragma once
 #include "Bindable.h"
 #include "GraphicsThrowHeader.h"
-
+#include "Vertex.h"
 class VertexBuffer : public Bindable
 {
 public:
@@ -23,6 +23,23 @@ public:
 		sd.pSysMem = vertices.data();
 		GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&bd, &sd, &pVertexBuffer));
 	}
+	VertexBuffer(Graphics& gfx, const hw3dexp::VertexBuffer vb)
+		:
+		stride(vb.GetLayout().Size())
+	{
+		INFOMAN(gfx);
+		D3D11_BUFFER_DESC bd = {};
+		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.CPUAccessFlags = 0u;
+		bd.MiscFlags = 0u;
+		bd.ByteWidth = UINT(vb.SizeBytes());
+		bd.StructureByteStride = stride;
+		D3D11_SUBRESOURCE_DATA sd = {};
+		sd.pSysMem = vb.GetData();
+		GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&bd, &sd, &pVertexBuffer));
+	}
+
 	void Bind(Graphics& gfx) noexcept override;
 protected:
 	UINT stride;
