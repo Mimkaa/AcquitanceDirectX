@@ -25,7 +25,7 @@ FirstMesh::FirstMesh(Graphics& gfx, std::mt19937& rng,
 
 		using hw3dexp::VertexLayout;
 
-		hw3dexp::VertexBuffer vb{ std::move(VertexLayout{}.Append<VertexLayout::Position3D>().Append<VertexLayout::Normal>())};
+		hw3dexp::VertexBuffer vb{ std::move(VertexLayout{}.Append(VertexLayout::Position3D).Append(VertexLayout::Normal))};
 
 		Assimp::Importer importer;
 
@@ -67,12 +67,7 @@ FirstMesh::FirstMesh(Graphics& gfx, std::mt19937& rng,
 		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, indices));
 
 
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
-		{
-			{"Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
-			{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
-		};
-		AddStaticBind(std::make_unique<InputLayout>(gfx, ied, pvsbc));
+		AddStaticBind(std::make_unique<InputLayout>(gfx, vb.GetLayout().GetD3DLayout(), pvsbc));
 		AddStaticBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	}
 	else
