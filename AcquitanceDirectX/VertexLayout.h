@@ -85,7 +85,7 @@ public:
 				}
 				case(BGRAColor):
 				{
-					return sizeof(BGRAColor);
+					return sizeof(::BGRAColor);
 				}
 			}
 			assert("improper type" && false);
@@ -127,6 +127,12 @@ public:
 	{
 		return elements.empty() ? 0u : elements.back().GetOffsetAfter();
 	}
+
+	size_t GetElementCount() const noexcept
+	{
+		return elements.size();
+	}
+
 private:
 	std::vector<Element> elements;
 };
@@ -212,8 +218,8 @@ public:
 			assert("Bad element type" && false);
 		}
 	}
+protected:
 
-private:
 	Vertex(char* pData, const VertexLayout& layout) noexcept(!IS_DEBUG)
 		:
 		pData(pData),
@@ -221,7 +227,8 @@ private:
 	{
 		assert(pData != nullptr);
 	}
-
+private:
+	
 template<typename First, typename ...Rest>
 void SetAttributeByIndex(size_t index, First&& first, Rest&&... rest)
 {
@@ -244,6 +251,23 @@ void SetAttribute(char* attr, Src&& source)
 private:
 	const VertexLayout& layout;
 	char* pData = nullptr;
+};
+
+
+class ConstVertex
+{
+public:
+	ConstVertex(const Vertex& v) noexcept(!IS_DEBUG)
+		:
+		vertex(v)
+	{}
+	template<VertexLayout::ElementType Type>
+	const auto& Attr() const noexcept(!IS_DEBUG)
+	{
+		return const_cast<Vertex&>(vertex).Attr<Type>();
+	}
+private:
+	Vertex vertex;
 };
 
 
@@ -281,9 +305,24 @@ public :
 		return Vertex{ buffer.data() + layout.Size() * i, layout};
 	}
 
+	ConstVertex Back() const noexcept(!IS_DEBUG)
+	{
+		// const_cast removes constness
+		return const_cast<VertexBuffer*>(this)->Back();
+	}
+	ConstVertex Front() const noexcept(!IS_DEBUG)
+	{
+		return const_cast<VertexBuffer*>(this)->Front();
+	}
+	ConstVertex operator[](size_t i) const noexcept(!IS_DEBUG)
+	{
+		return const_cast<VertexBuffer&>(*this)[i];
+	}
+
 	template <typename ...Params >
 	void EmplaceBack(Params&&... params)
 	{
+		assert(sizeof...(params) == layout.GetElementCount() && "Number of Parameters does not match the number of elements in the layout");
 		buffer.resize(buffer.size() + layout.Size());
 		Back().SetAttributeByIndex(0u, std::forward<Params>(params)...);
 	}
