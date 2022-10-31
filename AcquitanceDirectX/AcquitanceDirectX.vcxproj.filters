@@ -344,9 +344,6 @@
     <ClInclude Include="TestObj.h">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
-    <ClInclude Include="Cylinder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MyCone.h">
       <Filter>Header Files\GeometryPrimitives</Filter>
     </ClInclude>
@@ -361,6 +358,12 @@
     </ClInclude>
     <ClInclude Include="Vertex.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylinder.h">
+      <Filter>Header Files\Drawable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

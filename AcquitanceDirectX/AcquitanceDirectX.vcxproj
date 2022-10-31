@@ -237,6 +237,7 @@
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Keyboard.hpp" />
     <ClInclude Include="Melon.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Mouse.hpp" />
     <ClInclude Include="MyCone.h" />
     <ClInclude Include="MyWin.hpp" />
