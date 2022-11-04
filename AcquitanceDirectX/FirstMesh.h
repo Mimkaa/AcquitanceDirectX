@@ -16,7 +16,7 @@ public:
 
 	bool SpawnControlWindow(int id, Graphics& gfx);
 private:
-	void SyncMaterial(Graphics& gfx)noexcept(!IS_DEBUG);
+	void SyncMaterial(Graphics& gfx)noxnd;
 
 private:
 	struct PSMaterialConstants
@@ -27,7 +27,7 @@ private:
 		float padding[3];
 
 	} materialConstants;
-	using MaterialCBuf = PixelConstantBuffer<PSMaterialConstants>;
+	using MaterialCBuf = Bind::PixelConstantBuffer<PSMaterialConstants>;
 
 	
 };

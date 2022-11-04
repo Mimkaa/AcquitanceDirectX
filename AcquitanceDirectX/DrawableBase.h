@@ -10,25 +10,25 @@ protected:
 	{
 		return !staticBinds.empty();
 	}
-	static void AddStaticBind(std::unique_ptr<Bindable> bind) noexcept(!IS_DEBUG)
+	static void AddStaticBind(std::unique_ptr<Bind::Bindable> bind) noxnd
 	{
-		assert("*Must* use AddIndexBuffer to bind index buffer" && typeid(*bind) != typeid(IndexBuffer));
+		assert("*Must* use AddIndexBuffer to bind index buffer" && typeid(*bind) != typeid(Bind::IndexBuffer));
 		staticBinds.push_back(std::move(bind));
 	}
 
-	void AddStaticIndexBuffer(std::unique_ptr<IndexBuffer> ibuf) noexcept
+	void AddStaticIndexBuffer(std::unique_ptr<Bind::IndexBuffer> ibuf) noexcept
 	{
 		assert("Attempting to add index buffer a second time" && pIndexBuffer == nullptr);
 		pIndexBuffer = ibuf.get();
 		staticBinds.push_back(std::move(ibuf));
 	}
 
-	void SetIndexFromStatic() noexcept(!IS_DEBUG)
+	void SetIndexFromStatic() noxnd
 	{
 		assert("Attempting to add index buffer secont time" && pIndexBuffer == nullptr);
 		for (const auto& b : staticBinds)
 		{
-			if (const auto p = dynamic_cast<IndexBuffer*>(b.get()))
+			if (const auto p = dynamic_cast<Bind::IndexBuffer*>(b.get()))
 			{
 				pIndexBuffer = p;
 				return;
@@ -37,14 +37,14 @@ protected:
 		assert("Failed to find index buffer in static binds" && pIndexBuffer == nullptr);
 	}
 private:
-	const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept
+	const std::vector<std::unique_ptr<Bind::Bindable>>& GetStaticBinds() const noexcept
 	{
 		return staticBinds;
 	}
 private:
-	static std::vector<std::unique_ptr<Bindable >> staticBinds;
+	static std::vector<std::unique_ptr<Bind::Bindable >> staticBinds;
 
 };
 // static data members definition is generally put outside of the class
 template<class T>
-std::vector<std::unique_ptr<Bindable >> DrawableBase<T>::staticBinds;
+std::vector<std::unique_ptr<Bind::Bindable >> DrawableBase<T>::staticBinds;

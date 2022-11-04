@@ -27,7 +27,7 @@ private:
 		float padding[3];
 
 	} materialConstants;
-	using MaterialCBuf = PixelConstantBuffer<PSMaterialConstants>;
+	using MaterialCBuf = Bind::PixelConstantBuffer<PSMaterialConstants>;
 private:
 	// model transform
 	DirectX::XMFLOAT3X3 mt;

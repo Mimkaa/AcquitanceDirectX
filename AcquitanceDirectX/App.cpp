@@ -52,12 +52,16 @@ void App::DoFrame()
 	wnd.Gfx().BeginFrame(0.07f, 0.0f, 0.12f);
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 
-	Kakashi.Draw();
+	auto transform = dx::XMMatrixRotationRollPitchYaw(ModelPos.pitch, ModelPos.yaw, ModelPos.roll) *
+		dx::XMMatrixTranslation(ModelPos.x, ModelPos.y, ModelPos.z);
+
+	nano.Draw(transform);
 
 	light.Draw(wnd.Gfx());
 
 
-
+	// constrol model
+	ControlModelPos();
 	
 	// imgui window for camera
 	cam.SpawnControlWindow();
@@ -70,3 +74,20 @@ void App::DoFrame()
 		
 }
 
+void App::ControlModelPos()
+{
+	if (ImGui::Begin("Model"))
+	{
+		ImGui::Text("Position");
+		ImGui::SliderFloat("x_offset", &ModelPos.x, -20.0f, 20.0f);
+		ImGui::SliderFloat("y_offset", &ModelPos.y, -20.0f, 20.0f);
+		ImGui::SliderFloat("z_offset", &ModelPos.z, -20.0f, 20.0f);
+		ImGui::Text("Rotation");
+		ImGui::SliderAngle("roll", &ModelPos.roll, -180.0f, 180.0f, "%.2f deg");
+		ImGui::SliderAngle("pitch", &ModelPos.pitch, -180.0f, 180.0f, "%.2f deg");
+		ImGui::SliderAngle("yaw", &ModelPos.yaw, -180.0f, 180.0f, "%.2f deg");
+
+	}
+
+	ImGui::End();
+}

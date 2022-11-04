@@ -2,85 +2,87 @@
 #include "Bindable.h"
 #include "GraphicsThrowHeader.h"
 
-template<typename C>
-class ConstantBuffer : public Bindable
-{
-public:
-	void Update(Graphics& gfx, const C& consts)
+namespace Bind {
+	template<typename C>
+	class ConstantBuffer : public Bindable
 	{
-		INFOMAN(gfx);
+	public:
+		void Update(Graphics& gfx, const C& consts)
+		{
+			INFOMAN(gfx);
 
-		D3D11_MAPPED_SUBRESOURCE msr;
-		GFX_THROW_INFO(GetContext(gfx)->Map(
-			pConstantBuffer.Get(), 0u,
-			D3D11_MAP_WRITE_DISCARD, 0u,
-			&msr
-		));
-		memcpy(msr.pData, &consts, sizeof(consts));
-		GetContext(gfx)->Unmap(pConstantBuffer.Get(), 0u);
-	}
-	ConstantBuffer(Graphics& gfx, const C& consts, UINT slot_in = 0)
+			D3D11_MAPPED_SUBRESOURCE msr;
+			GFX_THROW_INFO(GetContext(gfx)->Map(
+				pConstantBuffer.Get(), 0u,
+				D3D11_MAP_WRITE_DISCARD, 0u,
+				&msr
+			));
+			memcpy(msr.pData, &consts, sizeof(consts));
+			GetContext(gfx)->Unmap(pConstantBuffer.Get(), 0u);
+		}
+		ConstantBuffer(Graphics& gfx, const C& consts, UINT slot_in = 0)
+		{
+			INFOMAN(gfx);
+
+			D3D11_BUFFER_DESC cbd;
+			cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			cbd.Usage = D3D11_USAGE_DYNAMIC;
+			cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			cbd.MiscFlags = 0u;
+			cbd.ByteWidth = sizeof(consts);
+			cbd.StructureByteStride = 0u;
+
+			D3D11_SUBRESOURCE_DATA csd = {};
+			csd.pSysMem = &consts;
+			GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstantBuffer));
+			slot = slot_in;
+		}
+		ConstantBuffer(Graphics& gfx, UINT slot_in = 0)
+		{
+			INFOMAN(gfx);
+
+			D3D11_BUFFER_DESC cbd;
+			cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			cbd.Usage = D3D11_USAGE_DYNAMIC;
+			cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			cbd.MiscFlags = 0u;
+			cbd.ByteWidth = sizeof(C);
+			cbd.StructureByteStride = 0u;
+			GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, nullptr, &pConstantBuffer));
+			slot = slot_in;
+		}
+	protected:
+		Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
+		UINT slot;
+	};
+
+	// class template inheritance
+
+	template<typename C>
+	class VertexConstantBuffer : public ConstantBuffer<C>
 	{
-		INFOMAN(gfx);
+		using ConstantBuffer<C>::pConstantBuffer;
+		using Bindable::GetContext;
+		using ConstantBuffer<C>::slot;
+	public:
+		using ConstantBuffer<C>::ConstantBuffer;
+		void Bind(Graphics& gfx) noexcept override
+		{
+			GetContext(gfx)->VSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
+		}
+	};
 
-		D3D11_BUFFER_DESC cbd;
-		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cbd.Usage = D3D11_USAGE_DYNAMIC;
-		cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		cbd.MiscFlags = 0u;
-		cbd.ByteWidth = sizeof(consts);
-		cbd.StructureByteStride = 0u;
-
-		D3D11_SUBRESOURCE_DATA csd = {};
-		csd.pSysMem = &consts;
-		GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstantBuffer));
-		slot = slot_in;
-	}
-	ConstantBuffer(Graphics& gfx, UINT slot_in = 0)
+	template<typename C>
+	class PixelConstantBuffer : public ConstantBuffer<C>
 	{
-		INFOMAN(gfx);
-
-		D3D11_BUFFER_DESC cbd;
-		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cbd.Usage = D3D11_USAGE_DYNAMIC;
-		cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		cbd.MiscFlags = 0u;
-		cbd.ByteWidth = sizeof(C);
-		cbd.StructureByteStride = 0u;
-		GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, nullptr, &pConstantBuffer));
-		slot = slot_in;
-	}
-protected:
-	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
-	UINT slot;
-};
-
-// class template inheritance
-
-template<typename C>
-class VertexConstantBuffer : public ConstantBuffer<C>
-{
-	using ConstantBuffer<C>::pConstantBuffer;
-	using Bindable::GetContext;
-	using ConstantBuffer<C>::slot;
-public:
-	using ConstantBuffer<C>::ConstantBuffer;
-	void Bind(Graphics& gfx) noexcept override
-	{
-		GetContext(gfx)->VSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
-	}
-};
-
-template<typename C>
-class PixelConstantBuffer : public ConstantBuffer<C>
-{
-	using ConstantBuffer<C>::pConstantBuffer;
-	using Bindable::GetContext;
-	using ConstantBuffer<C>::slot;
-public:
-	using ConstantBuffer<C>::ConstantBuffer;
-	void Bind(Graphics& gfx) noexcept override
-	{
-		GetContext(gfx)->PSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
-	}
-};
+		using ConstantBuffer<C>::pConstantBuffer;
+		using Bindable::GetContext;
+		using ConstantBuffer<C>::slot;
+	public:
+		using ConstantBuffer<C>::ConstantBuffer;
+		void Bind(Graphics& gfx) noexcept override
+		{
+			GetContext(gfx)->PSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
+		}
+	};
+}

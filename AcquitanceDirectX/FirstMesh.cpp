@@ -1,5 +1,5 @@
 #include "FirstMesh.h"
-#include "BindableBase.h"
+#include "BindableCommon.h"
 #include "GraphicsThrowHeader.h"
 #include "imgui/imgui.h"
 #include <format>
@@ -23,9 +23,9 @@ FirstMesh::FirstMesh(Graphics& gfx, std::mt19937& rng,
 	{
 		namespace dx = DirectX;
 
-		using hw3dexp::VertexLayout;
+		using Dvtx::VertexLayout;
 
-		hw3dexp::VertexBuffer vb{ std::move(VertexLayout{}.Append(VertexLayout::Position3D).Append(VertexLayout::Normal))};
+		Dvtx::VertexBuffer vb{ std::move(VertexLayout{}.Append(VertexLayout::Position3D).Append(VertexLayout::Normal))};
 
 		Assimp::Importer importer;
 
@@ -53,28 +53,28 @@ FirstMesh::FirstMesh(Graphics& gfx, std::mt19937& rng,
 			indices.push_back(mesh->mFaces[i].mIndices[2]);
 		}
 
-		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vb));
+		AddStaticBind(std::make_unique<Bind::VertexBuffer>(gfx, vb));
 
 
 
 
-		auto pvs = std::make_unique<VertexShader>(gfx, L"PhongVS.cso");
+		auto pvs = std::make_unique<Bind::VertexShader>(gfx, L"PhongVS.cso");
 		auto pvsbc = pvs->GetBytecode();
 		AddStaticBind(std::move(pvs));
 
-		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongPS.cso"));
+		AddStaticBind(std::make_unique<Bind::PixelShader>(gfx, L"PhongPS.cso"));
 
-		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, indices));
+		AddStaticIndexBuffer(std::make_unique<Bind::IndexBuffer>(gfx, indices));
 
 
-		AddStaticBind(std::make_unique<InputLayout>(gfx, vb.GetLayout().GetD3DLayout(), pvsbc));
-		AddStaticBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+		AddStaticBind(std::make_unique<Bind::InputLayout>(gfx, vb.GetLayout().GetD3DLayout(), pvsbc));
+		AddStaticBind(std::make_unique<Bind::Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	}
 	else
 	{
 		SetIndexFromStatic();
 	}
-	AddBind(std::make_unique<TransformCbuf>(gfx, *this, 1u));
+	AddBind(std::make_unique<Bind::TransformCbuf>(gfx, *this, 1u));
 
 
 	materialConstants.color = mat;
