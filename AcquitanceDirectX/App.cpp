@@ -60,7 +60,7 @@ void App::DoFrame()
 
 
 	// constrol model
-	nano.ShowNodes("nano") ;
+	nano.ShowWindow("nano") ;
 	
 	// imgui window for camera
 	cam.SpawnControlWindow();

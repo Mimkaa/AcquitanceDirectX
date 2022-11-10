@@ -27,7 +27,7 @@ class Node
 	friend class Model;
 public:
 	Node(const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation);
-	void RenderChild() noxnd;
+	void ShowTree() const noxnd;
 	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) noxnd;
 	
 	
@@ -48,7 +48,7 @@ class Model
 	
 public:
 	Model(Graphics& gfx, const char* filename);
-		
+	~Model() noexcept;
 private:
 	void ParseMesh(const aiMesh* mesh_in, float scale);
 	
@@ -57,19 +57,12 @@ private:
 	
 public :
 	void Draw();
-	void ShowNodes(const char* windowName) noexcept;
-
+	void ShowWindow(const char* windowName) noexcept;
+	
 private:
 	std::vector<std::unique_ptr<Mesh>> meshes;
 	std::unique_ptr<Node> pRoot;
 	Graphics& gfx;
-	struct {
-		float x = 0.0f;
-		float y = 0.0f;
-		float z = 0.0f;
-		float roll = 0.0f;
-		float pitch = 0.0f;
-		float yaw = 0.0f;
-	}pos;
+	std::unique_ptr<class Window> pWindow;
 };
 
