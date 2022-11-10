@@ -33,12 +33,22 @@ void Mesh::Draw(Graphics& gfx, const DirectX::FXMMATRIX& accumulatedTransform) c
 }
 
 // node
-Node::Node(std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation)
+Node::Node(const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation)
 	:
-	meshes(std::move(meshes_in))
+	meshes(std::move(meshes_in)),
+	name(name_in)
 
 {
 	DirectX::XMStoreFloat4x4(&transform, transfomation);
+}
+
+void Node::RenderChild() noxnd
+{
+	if (ImGui::TreeNode(name.c_str())) {
+		for (const auto& child : children)
+			child->RenderChild();
+		ImGui::TreePop();
+	}
 }
 
 void Node::Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform)noxnd
@@ -132,9 +142,38 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale)
 
 }
 
-void Model::Draw(DirectX::FXMMATRIX transform)
+void Model::Draw()
 {
+	auto transform = DirectX::XMMatrixRotationRollPitchYaw(pos.pitch, pos.yaw, pos.roll) *
+		DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 	pRoot->Draw(gfx, transform);
+}
+
+void Model::ShowNodes(const char* windowName) noexcept
+{
+	windowName = windowName ? windowName : "Model";
+	if (ImGui::Begin(windowName))
+	{
+		ImGui::Columns(2, nullptr, false);
+		pRoot->RenderChild(); 
+		ImGui::NextColumn();
+		
+
+		ImGui::Text("Position");
+		ImGui::SliderFloat("x_offset", &pos.x, -20.0f, 20.0f);
+		ImGui::SliderFloat("y_offset", &pos.y, -20.0f, 20.0f);
+		ImGui::SliderFloat("z_offset", &pos.z, -20.0f, 20.0f);
+		ImGui::Text("Rotation");
+		ImGui::SliderAngle("roll", &pos.roll, -180.0f, 180.0f, "%.2f deg");
+		ImGui::SliderAngle("pitch", &pos.pitch, -180.0f, 180.0f, "%.2f deg");
+		ImGui::SliderAngle("yaw", &pos.yaw, -180.0f, 180.0f, "%.2f deg");
+
+		
+
+		ImGui::Columns();
+	}
+
+	ImGui::End();
 }
 
 std::unique_ptr<Node> Model::ParseNode(aiNode* node_in)
@@ -148,7 +187,7 @@ std::unique_ptr<Node> Model::ParseNode(aiNode* node_in)
 		const auto mesh_index = node_in->mMeshes[i];
 		nodeMeshes.push_back(meshes.at(mesh_index).get());
 	}
-	auto pNode = std::make_unique<Node>(std::move(nodeMeshes), transform);
+	auto pNode = std::make_unique<Node>(node_in->mName.C_Str(), std::move(nodeMeshes), transform);
 	for (int i = 0; i < node_in->mNumChildren; i++)
 	{
 		pNode->AddChild(ParseNode(node_in->mChildren[i]));

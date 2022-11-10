@@ -8,6 +8,7 @@
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 #include "Vertex.h"
+#include "imgui/imgui.h"
 class Mesh:public DrawableBase<Mesh>
 {
 public:
@@ -25,18 +26,20 @@ class Node
 {
 	friend class Model;
 public:
-	Node(std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation);
-	
-	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform)noxnd;
+	Node(const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation);
+	void RenderChild() noxnd;
+	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) noxnd;
 	
 	
 private:
 	void AddChild(std::unique_ptr<Node> node_in);
+
 	
 private:
 	std::vector<Mesh*> meshes;
 	std::vector<std::unique_ptr<Node>> children;
 	DirectX::XMFLOAT4X4 transform;
+	std::string name;
 };
 
 
@@ -53,12 +56,20 @@ private:
 	
 	
 public :
-	void Draw(DirectX::FXMMATRIX transform);
-	
+	void Draw();
+	void ShowNodes(const char* windowName) noexcept;
 
 private:
 	std::vector<std::unique_ptr<Mesh>> meshes;
 	std::unique_ptr<Node> pRoot;
 	Graphics& gfx;
+	struct {
+		float x = 0.0f;
+		float y = 0.0f;
+		float z = 0.0f;
+		float roll = 0.0f;
+		float pitch = 0.0f;
+		float yaw = 0.0f;
+	}pos;
 };
 
