@@ -9,6 +9,7 @@
 #include <assimp/postprocess.h>     // Post processing flags
 #include "Vertex.h"
 #include "imgui/imgui.h"
+#include <optional>
 class Mesh:public DrawableBase<Mesh>
 {
 public:
@@ -27,7 +28,7 @@ class Node
 	friend class Model;
 public:
 	Node(const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation);
-	void ShowTree() const noxnd;
+	void ShowTree(int& nodeIndex, std::optional<int> selectedIndex) const noxnd;
 	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) noxnd;
 	
 	

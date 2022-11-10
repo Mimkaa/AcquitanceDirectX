@@ -42,11 +42,20 @@ Node::Node(const std::string& name_in, std::vector<Mesh*> meshes_in, const Direc
 	DirectX::XMStoreFloat4x4(&transform, transfomation);
 }
 
-void Node::ShowTree() const noxnd
+void Node::ShowTree(int& nodeIndex, std::optional<int> selectedIndex) const noxnd
 {
-	if (ImGui::TreeNode(name.c_str())) {
+	// recursively increment the index of a node
+	const int currentNodeIndex = nodeIndex;
+	nodeIndex++;
+	// build up flags for current node
+	const auto node_flags = ImGuiTreeNodeFlags_OpenOnArrow
+		| ((currentNodeIndex == selectedIndex.value_or(-1)) ? ImGuiTreeNodeFlags_Selected : 0)
+		| ((children.size() == 0) ? ImGuiTreeNodeFlags_Leaf : 0);
+	// if tree node expanded, recursively render all children
+	if (ImGui::TreeNodeEx((void*)(intptr_t)currentNodeIndex, node_flags, name.c_str())) {
+		selectedIndex = ImGui::IsItemClicked() ? currentNodeIndex : selectedIndex;
 		for (const auto& child : children)
-			child->ShowTree();
+			child->ShowTree(nodeIndex, selectedIndex);
 		ImGui::TreePop();
 	}
 }
@@ -76,11 +85,14 @@ class Window//pImpl Idiom : class whose implementation can be found only in this
 public:
 	void Show(const char* windowName, const Node& root)
 	{
+	
 		windowName = windowName ? windowName : "Model";
+
+		int nodeIndexTracker = 0;
 		if (ImGui::Begin(windowName))
 		{
 			ImGui::Columns(2, nullptr, false);
-			root.ShowTree();
+			root.ShowTree(nodeIndexTracker, selectedIndex);
 			ImGui::NextColumn();
 
 
@@ -107,6 +119,7 @@ public:
 	}
 
 private:
+	std::optional<int> selectedIndex;
 	struct {
 		float x = 0.0f;
 		float y = 0.0f;
