@@ -28,7 +28,7 @@ class Node
 	friend class Model;
 public:
 	Node(const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation);
-	void ShowTree(int& nodeIndex, std::optional<int> selectedIndex) const noxnd;
+	void ShowTree(int& nodeIndex, std::optional<int>& selectedIndex) const noxnd;
 	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) noxnd;
 	
 	

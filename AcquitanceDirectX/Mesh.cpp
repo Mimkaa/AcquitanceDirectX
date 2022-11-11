@@ -42,7 +42,7 @@ Node::Node(const std::string& name_in, std::vector<Mesh*> meshes_in, const Direc
 	DirectX::XMStoreFloat4x4(&transform, transfomation);
 }
 
-void Node::ShowTree(int& nodeIndex, std::optional<int> selectedIndex) const noxnd
+void Node::ShowTree(int& nodeIndex, std::optional<int>& selectedIndex) const noxnd
 {
 	// recursively increment the index of a node
 	const int currentNodeIndex = nodeIndex;
@@ -53,7 +53,9 @@ void Node::ShowTree(int& nodeIndex, std::optional<int> selectedIndex) const noxn
 		| ((children.size() == 0) ? ImGuiTreeNodeFlags_Leaf : 0);
 	// if tree node expanded, recursively render all children
 	if (ImGui::TreeNodeEx((void*)(intptr_t)currentNodeIndex, node_flags, name.c_str())) {
+
 		selectedIndex = ImGui::IsItemClicked() ? currentNodeIndex : selectedIndex;
+
 		for (const auto& child : children)
 			child->ShowTree(nodeIndex, selectedIndex);
 		ImGui::TreePop();
