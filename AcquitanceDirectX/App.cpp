@@ -16,7 +16,7 @@ GDIPlusManager gdipm;
 
 App::App()
 	:
-	wnd(800, 600, L"I understood how it works)))"),
+	wnd(1920, 1080, L"I understood how it works)))"),
 	light(wnd.Gfx())
 	
 {

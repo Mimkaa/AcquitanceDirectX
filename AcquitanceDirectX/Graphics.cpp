@@ -13,11 +13,11 @@ namespace dx = DirectX;
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
 
-Graphics::Graphics(HWND hWnd) {
+Graphics::Graphics(HWND hWnd, int width, int height) {
     DXGI_SWAP_CHAIN_DESC sd = { 0 };
     sd.BufferCount = 1;
-    sd.BufferDesc.Width = 0;
-    sd.BufferDesc.Height = 0;
+    sd.BufferDesc.Width = width;
+    sd.BufferDesc.Height = height;
     sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
     sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
     sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -79,8 +79,8 @@ Graphics::Graphics(HWND hWnd) {
     // create depth stensil texture
     wrl::ComPtr<ID3D11Texture2D> pDepthStencil;
     D3D11_TEXTURE2D_DESC descDepth = {};
-    descDepth.Width = 800u;
-    descDepth.Height = 600u;
+    descDepth.Width = width;
+    descDepth.Height = height;
     descDepth.MipLevels = 1u;
     descDepth.ArraySize = 1u;
     descDepth.Format = DXGI_FORMAT_D32_FLOAT;
@@ -101,8 +101,8 @@ Graphics::Graphics(HWND hWnd) {
 
     // configure viewport
     D3D11_VIEWPORT vp;
-    vp.Width = 800.0f;
-    vp.Height = 600.0f;
+    vp.Width = width;
+    vp.Height = height;
     vp.MinDepth = 0.0f;
     vp.MaxDepth = 1.0f;
     vp.TopLeftX = 0.0f;

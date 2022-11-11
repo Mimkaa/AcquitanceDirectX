@@ -54,7 +54,7 @@ public:
 		const char* GetType() const noexcept override;
 	};
 public:
-	Graphics(HWND hWnd);
+	Graphics(HWND hWnd, int width, int height);
 	Graphics(const Graphics&) = delete;
 	Graphics& operator = (const Graphics&) = delete;
 	/*It means that you want to use the compiler-generated version of that function, so you don't need to specify a body.*/
