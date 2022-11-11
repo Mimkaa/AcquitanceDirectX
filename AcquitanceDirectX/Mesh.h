@@ -54,7 +54,7 @@ private:
 private:
 	std::vector<Mesh*> meshes;
 	std::vector<std::unique_ptr<Node>> children;
-	DirectX::XMFLOAT4X4 baseTransform;
+	DirectX::XMFLOAT4X4 transform;
 	DirectX::XMFLOAT4X4 appliedTransform;
 	std::string name;
 };

@@ -41,7 +41,7 @@ Node::Node(const std::string& name_in, std::vector<Mesh*> meshes_in, const Direc
 	name(name_in)
 
 {
-	DirectX::XMStoreFloat4x4(&baseTransform, transfomation);
+	DirectX::XMStoreFloat4x4(&transform, transfomation);
 	DirectX::XMStoreFloat4x4(&appliedTransform, DirectX::XMMatrixIdentity());
 }
 
@@ -58,7 +58,7 @@ void Node::SetAppliedTransform(const DirectX::FXMMATRIX& appTrans) noexcept
 
 DirectX::XMMATRIX Node::GetBaseTransform() const noexcept
 {
-	return DirectX::XMLoadFloat4x4(&baseTransform);
+	return DirectX::XMLoadFloat4x4(&transform);
 }
 
 void Node::ShowTree(int& nodeIndex, std::optional<int>& selectedIndex, Node*& selectedNode) const noxnd
@@ -88,7 +88,7 @@ void Node::ShowTree(int& nodeIndex, std::optional<int>& selectedIndex, Node*& se
 
 void Node::Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform)noxnd
 {
-	const auto build = XMLoadFloat4x4(&baseTransform) * accumulatedTransform * XMLoadFloat4x4(&appliedTransform);
+	const auto build =   XMLoadFloat4x4(&appliedTransform) * XMLoadFloat4x4(&transform) * accumulatedTransform;
 	for (auto& m : meshes)
 	{
 		m->Draw(gfx, build);
