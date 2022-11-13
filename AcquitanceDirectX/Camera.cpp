@@ -1,20 +1,23 @@
 #include "Camera.h"
 #include "imgui/imgui.h"
+#include "ChiliMath.h"
 
 namespace dx = DirectX;
+Camera::Camera()
+{
+	Reset();
+}
 
 DirectX::XMMATRIX Camera::GetMatrix() const noexcept
 {
-	const auto pos = dx::XMVector3Transform(
-		dx::XMVectorSet(0.0f, 0.0f, -r, 0.0f),
-		dx::XMMatrixRotationRollPitchYaw(-phi, -theta, 0.0f)
-	);
-	return dx::XMMatrixLookAtLH(
-		pos, dx::XMVectorZero(),
-		dx::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
-	) * dx::XMMatrixRotationRollPitchYaw(
-		-pitch, -yaw, -roll
-	);
+	using namespace dx;
+	dx::XMVECTOR dirVec = dx::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+	dx::XMVECTOR LookVector = dx::XMVector3Transform(dirVec, dx::XMMatrixRotationRollPitchYaw(pitch * 0.995f, yaw * 0.995f, 0.0f));
+	dx::XMVECTOR camPos = dx::XMLoadFloat3(&pos);
+	dx::XMVECTOR TargetVec = LookVector + camPos;
+	return dx::XMMatrixLookAtLH(camPos, TargetVec, dx::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f ));
+
+	
 }
 
 void Camera::SpawnControlWindow() noexcept
@@ -22,12 +25,11 @@ void Camera::SpawnControlWindow() noexcept
 	if (ImGui::Begin("Camera"))
 	{
 		ImGui::Text("Position");
-		ImGui::SliderFloat("R", &r, 0.2f, 80.0f, "%.1f");
-		ImGui::SliderAngle("Theta", &theta, -180.0f, 180.0f);
-		ImGui::SliderAngle("Phi", &phi, -89.0f, 89.0f);
+		ImGui::SliderFloat("X", &pos.x, -80.0f, 80.0f);
+		ImGui::SliderFloat("Y", &pos.y, -80.0f, 80.0f);
+		ImGui::SliderFloat("Z", &pos.z, -80.0f, 80.0f);
 		ImGui::Text("Orientation");
-		ImGui::SliderAngle("Roll", &roll, -180.0f, 180.0f);
-		ImGui::SliderAngle("Pitch", &pitch, -180.0f, 180.0f);
+		ImGui::SliderAngle("Pitch", &pitch, -90.0f * 0.995f, 90.0f * 0.995f);
 		ImGui::SliderAngle("Yaw", &yaw, -180.0f, 180.0f);
 		if (ImGui::Button("Reset"))
 		{
@@ -39,10 +41,26 @@ void Camera::SpawnControlWindow() noexcept
 
 void Camera::Reset() noexcept
 {
-	r = 20.0f;
-	theta = 0.0f;
-	phi = 0.0f;
-	pitch = 0.0f;
+	pos = { 0.0f, 7.0f, -18.0f };
+	pitch = 1.5f;
 	yaw = 0.0f;
-	roll = 0.0f;
+	
+}
+
+void Camera::Rotate(const int dx, const int dy)
+{
+	yaw = wrap_angle(yaw + dx * rotationSpeed);
+	pitch = std::clamp(pitch + dy * rotationSpeed, 0.995f * -PI / 2, 0.995f * PI / 2);
+}
+
+void Camera::Translate(DirectX::XMFLOAT3 translation)
+{
+	dx::XMStoreFloat3(&translation, dx::XMVector3Transform(dx::XMLoadFloat3(&translation),
+		dx::XMMatrixRotationRollPitchYaw(pitch* 0.995f, yaw * 0.995f, 0.0f)
+		* dx::XMMatrixScaling(movingSpeed, movingSpeed, movingSpeed)));
+
+	pos.x += translation.x;
+	pos.y += translation.y;
+	pos.z += translation.z;
+
 }

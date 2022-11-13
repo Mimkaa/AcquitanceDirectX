@@ -55,12 +55,20 @@ private:
 	int height;
 	HWND hWnd;
 	std::unique_ptr<Graphics> pGfx;
+	std::vector<char> rawBuffer;
+	bool cursorEnabled = true;
 public:
 	Keyboard kbd;
 	Mouse mouse;
 private:
 	// not member functions but functions that are created in static storage that will live until the program ends
 	//(custom windows procedures)
+	void ConfineCursor() noexcept;
+	void FreeCursor() noexcept;
+	void ShowCursor() noexcept;
+	void HideCursor() noexcept;
+	void EnableImGuiMouse() noexcept;
+	void DisableImGuiMouse() noexcept;
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
@@ -71,6 +79,9 @@ public:
 	Window& operator=(const Window&) = delete;
 	void SetTitle(std::string& title);
 	static std::optional<int> ProcessMessages();
+	bool GetCursorenabled() const;
+	void EnableCursor() noexcept;
+	void DisableCursor() noexcept;
 	Graphics& Gfx();
 };
 

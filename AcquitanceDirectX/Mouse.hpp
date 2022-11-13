@@ -110,5 +110,6 @@ private:
 	bool rawEnabled = false;
 	std::queue<Event> buffer;
 	std::queue<RawDelta> rawDeltaBuffer;
+	
 };
 

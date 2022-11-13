@@ -79,6 +79,18 @@ Window::Window(int width, int height, const wchar_t* name)
 	ImGui_ImplWin32_Init(hWnd);
 	// create graphics object
 	pGfx = std::make_unique<Graphics>(hWnd, width, height);
+
+	// register a raw mouse input
+	RAWINPUTDEVICE Rid;
+
+	Rid.usUsagePage = 0x01;          // HID_USAGE_PAGE_GENERIC
+	Rid.usUsage = 0x02;              // HID_USAGE_GENERIC_MOUSE
+	Rid.dwFlags = 0;    // adds mouse and also ignores legacy mouse messages
+	Rid.hwndTarget = 0;
+	if (RegisterRawInputDevices(&Rid, 1, sizeof(Rid)) == FALSE)
+	{
+		throw CHWND_LAST_EXCEPT();
+	}
 }
 
 Window::~Window()
@@ -260,11 +272,81 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		break;
 	}
 	/**************** END MOUSE MESSAGES *****************/
+	/**************** RAW MOUSE MESSAGES *****************/
+	case WM_INPUT:
+	{
+		if (!mouse.RawEnabled())
+		{
+			break;
+		}
+		// basically get the size of the buffer
+		UINT Size;
+
+		if (GetRawInputData((HRAWINPUT)lParam, 
+			RID_INPUT, 
+			NULL, 
+			&Size, 
+			sizeof(RAWINPUTHEADER)) == 1)
+
+		{
+			// bail out
+			return 0;
+		}
+
+		// filling the buffer
+		rawBuffer.resize(Size);
+
+		GetRawInputData((HRAWINPUT)lParam,
+			RID_INPUT,
+			rawBuffer.data(),
+			&Size,
+			sizeof(RAWINPUTHEADER));
+
+		if (rawBuffer.size()!= Size)
+		{
+			// bail out
+			return 0;
+		}
+
+		auto& rb = reinterpret_cast<const RAWINPUT&>(*rawBuffer.data());
+
+		if (rb.header.dwType == RIM_TYPEMOUSE &&
+			rb.data.mouse.lLastX != 0 || rb.data.mouse.lLastY)
+		{
+			mouse.OnRawDelta(rb.data.mouse.lLastX, rb.data.mouse.lLastY);
+		}
+
+		break;
+	}
+
+	
 	}
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
+bool Window::GetCursorenabled() const
+{
+	return cursorEnabled;
+}
+
+void Window::EnableCursor() noexcept
+{
+	cursorEnabled = true;
+	ShowCursor();
+	EnableImGuiMouse();
+	FreeCursor();
+}
+
+void Window::DisableCursor() noexcept
+{
+	cursorEnabled = false;
+	HideCursor();
+	DisableImGuiMouse();
+	ConfineCursor();
+}
+
 std::optional<int> Window::ProcessMessages() {
+	
 	MSG msg;
 	// while queue has messages, remove and dispatch them (but do not block on empty queue)
 	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -292,6 +374,39 @@ Graphics& Window::Gfx()
 		throw CMWND_NOGFX_EXCEPT();
 	}
 	return *pGfx;
+}
+
+void Window::ConfineCursor() noexcept
+{
+	RECT rect;
+	GetClientRect(hWnd, &rect);
+	MapWindowPoints(hWnd, nullptr, reinterpret_cast<POINT*>(&rect), 2);
+	ClipCursor(&rect);
+}
+
+void Window::FreeCursor() noexcept
+{
+	ClipCursor(nullptr);
+}
+
+void Window::HideCursor() noexcept
+{
+	while (::ShowCursor(FALSE) >= 0);
+}
+
+void Window::ShowCursor() noexcept
+{
+	while (::ShowCursor(TRUE) < 0);
+}
+
+void Window::EnableImGuiMouse() noexcept
+{
+	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+}
+
+void Window::DisableImGuiMouse() noexcept
+{
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
 }
 
 // Window Exception Stuff
