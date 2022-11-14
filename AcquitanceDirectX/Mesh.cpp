@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include <unordered_map>
 #include <sstream>
+#include "Surface.h"
 // mesh
 Mesh::Mesh(Graphics& gfx, std::vector<std::unique_ptr<Bind::Bindable>>binds_in)
 {
@@ -185,7 +186,7 @@ Model::Model(Graphics& gfx, const char* filename)
 	}
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
-		ParseMesh(scene->mMeshes[i], 1.0f);
+		ParseMesh(scene->mMeshes[i], 1.0f, scene->mMaterials);
 	}
 	int firstNodeId = 0;
 	pRoot = ParseNode(firstNodeId, scene->mRootNode);
@@ -196,7 +197,7 @@ Model::~Model() noexcept
 {
 }
 
-void Model::ParseMesh(const aiMesh* mesh_in, float scale)
+void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const* ppMaterials)
 {
 	namespace dx = DirectX;
 	std::vector<std::unique_ptr<Bind::Bindable>> currBinds;
@@ -204,13 +205,15 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale)
 	using Dvtx::VertexLayout;
 	Dvtx::VertexBuffer vb{ std::move(VertexLayout{}
 	.Append(VertexLayout::Position3D)
-	.Append(VertexLayout::Normal)) };
+	.Append(VertexLayout::Normal)
+	.Append(VertexLayout::Texture2D)) };
 
 	for (int i = 0; i < mesh_in->mNumVertices; i++)
 	{
 		vb.EmplaceBack(
 			dx::XMFLOAT3{ mesh_in->mVertices[i].x * scale,mesh_in->mVertices[i].y * scale ,mesh_in->mVertices[i].z * scale },
-			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh_in->mNormals[i])
+			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh_in->mNormals[i]),
+			*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh_in->mTextureCoords[0][i])
 		);
 	}
 
@@ -223,6 +226,20 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale)
 		indices.push_back(mesh_in->mFaces[i].mIndices[1]);
 		indices.push_back(mesh_in->mFaces[i].mIndices[2]);
 	}
+	// add materials
+	if (ppMaterials != nullptr)
+	{
+		auto& material = *ppMaterials[mesh_in->mMaterialIndex];
+		for (int i = 0; i < material.mNumProperties; i++)
+		{
+			aiString textureSrc;
+			material.GetTexture(aiTextureType_DIFFUSE, 0, &textureSrc);
+			currBinds.push_back(std::make_unique<Bind::Texture>(gfx, Surface::FromFile(std::string("Models\\nano_textured\\") + textureSrc.C_Str())));
+			currBinds.push_back(std::make_unique<Bind::Sampler>(gfx));
+		}
+	}
+
+
 	currBinds.push_back(std::make_unique<Bind::VertexBuffer>(gfx, vb));
 
 	currBinds.push_back(std::make_unique<Bind::IndexBuffer>(gfx, indices));
@@ -234,6 +251,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale)
 	currBinds.push_back(std::make_unique<Bind::PixelShader>(gfx, L"PhongPS.cso"));
 
 
+	
 
 
 	currBinds.push_back(std::make_unique<Bind::InputLayout>(gfx, vb.GetLayout().GetD3DLayout(), pvsbc));

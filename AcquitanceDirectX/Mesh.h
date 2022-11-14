@@ -70,7 +70,7 @@ public:
 	Model(Graphics& gfx, const char* filename);
 	~Model() noexcept;
 private:
-	void ParseMesh(const aiMesh* mesh_in, float scale);
+	void ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* const* ppMaterials);
 	
 	std::unique_ptr<Node> ParseNode(int& node_id, aiNode* node_in);
 	
