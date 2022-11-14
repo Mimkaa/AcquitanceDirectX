@@ -42,21 +42,24 @@ class Node
 	friend class Model;
 	friend class WindowMenu;
 public:
-	Node(const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation);
+	Node(int id_in, const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation);
 	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) noxnd;
 	DirectX::XMMATRIX GetAppliedTransform() const noexcept;
 	void SetAppliedTransform(const DirectX::FXMMATRIX& appTrans) noexcept;
 	DirectX::XMMATRIX GetBaseTransform() const noexcept;
+	int GetId() const;
+	
 	
 private:
 	void AddChild(std::unique_ptr<Node> node_in);
-	void ShowTree(int& nodeIndex, std::optional<int>& selectedIndex, Node*& selectedNode) const noxnd;
+	void ShowTree(Node*& eslectedNode) const noxnd;
 private:
 	std::vector<Mesh*> meshes;
 	std::vector<std::unique_ptr<Node>> children;
 	DirectX::XMFLOAT4X4 transform;
 	DirectX::XMFLOAT4X4 appliedTransform;
 	std::string name;
+	int id;
 };
 
 
@@ -69,7 +72,7 @@ public:
 private:
 	void ParseMesh(const aiMesh* mesh_in, float scale);
 	
-	std::unique_ptr<Node> ParseNode(aiNode* node_in);
+	std::unique_ptr<Node> ParseNode(int& node_id, aiNode* node_in);
 	
 	
 public :
