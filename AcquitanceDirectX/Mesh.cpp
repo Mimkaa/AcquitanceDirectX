@@ -227,14 +227,27 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 		indices.push_back(mesh_in->mFaces[i].mIndices[2]);
 	}
 	// add materials
+	bool hasSppecularMap = false;
+	float shininess = 35.0f;
 	if (ppMaterials != nullptr)
 	{
 		auto& material = *ppMaterials[mesh_in->mMaterialIndex];
 		for (int i = 0; i < material.mNumProperties; i++)
 		{
 			aiString textureSrc;
+			std::string base = "Models\\nano_textured\\";
 			material.GetTexture(aiTextureType_DIFFUSE, 0, &textureSrc);
-			currBinds.push_back(std::make_unique<Bind::Texture>(gfx, Surface::FromFile(std::string("Models\\nano_textured\\") + textureSrc.C_Str())));
+			currBinds.push_back(std::make_unique<Bind::Texture>(gfx, Surface::FromFile(base + textureSrc.C_Str())));
+
+			if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureSrc) == aiReturn_SUCCESS)
+			{
+				currBinds.push_back(std::make_unique<Bind::Texture>(gfx, Surface::FromFile(base + textureSrc.C_Str()), 1));
+				hasSppecularMap = true;
+			}
+			else
+			{
+				material.Get(AI_MATKEY_SHININESS, shininess);
+			}
 			currBinds.push_back(std::make_unique<Bind::Sampler>(gfx));
 		}
 	}
@@ -248,24 +261,32 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 	auto pvsbc = pvs->GetBytecode();
 	currBinds.push_back(std::move(pvs));
 
-	currBinds.push_back(std::make_unique<Bind::PixelShader>(gfx, L"PhongPS.cso"));
+	if (hasSppecularMap) 
+	{
+		currBinds.push_back(std::make_unique<Bind::PixelShader>(gfx, L"PhongPSSpecMap.cso"));
+	}
+	else
+	{
 
 
-	
+		currBinds.push_back(std::make_unique<Bind::PixelShader>(gfx, L"PhongPS.cso"));
 
 
+
+
+		struct PSMaterialConstants
+		{
+
+			float specularIntensity = 0.8f;
+			float specularPower;
+			float padding[2];
+
+		} materialConstants;
+		materialConstants.specularPower = shininess;
+		currBinds.push_back(std::make_unique<Bind::PixelConstantBuffer<PSMaterialConstants>>(gfx, materialConstants, 1u));
+	}
 	currBinds.push_back(std::make_unique<Bind::InputLayout>(gfx, vb.GetLayout().GetD3DLayout(), pvsbc));
 
-	struct PSMaterialConstants
-	{
-		DirectX::XMFLOAT3 color = { 0.6f,0.6f,0.8f };
-		float specularIntensity = 0.6f;
-		float specularPower = 30.0f;
-		float padding[3];
-
-	} materialConstants;
-
-	currBinds.push_back(std::make_unique<Bind::PixelConstantBuffer<PSMaterialConstants>>(gfx, materialConstants, 1u));
 
 	meshes.push_back(std::make_unique<Mesh>(gfx, std::move(currBinds)));
 
