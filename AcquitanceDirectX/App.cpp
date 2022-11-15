@@ -1,9 +1,4 @@
 #include "App.hpp"
-#include "Box.h"
-#include "Cylinder.h"
-#include "Pyramid.h"
-#include "SkinnedCube.h"
-#include "FirstMesh.h"
 #include <memory>
 #include <algorithm>
 #include "ChiliMath.h"

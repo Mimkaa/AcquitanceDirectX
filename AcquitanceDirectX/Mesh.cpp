@@ -3,25 +3,18 @@
 #include <sstream>
 #include "Surface.h"
 // mesh
-Mesh::Mesh(Graphics& gfx, std::vector<std::unique_ptr<Bind::Bindable>>binds_in)
+Mesh::Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>>binds_in)
 {
-	if (!IsStaticInitialized())
-	{
-		AddStaticBind(std::make_unique<Bind::Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-	}
+	
+	AddBind(std::make_shared<Bind::Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	
 	for (auto& b : binds_in)
 	{
-		if (auto ptr = dynamic_cast<Bind::IndexBuffer*>(b.get()))
-		{
-			AddIndexBuffer(std::unique_ptr<Bind::IndexBuffer>(ptr));
-			b.release();
-		}
-		else
-		{
-			AddBind(std::move(b));
-		}
+		
+		AddBind(std::move(b));
+		
 	}
-	AddBind(std::make_unique<Bind::TransformCbuf>(gfx, *this, 1u));
+	AddBind(std::make_shared<Bind::TransformCbuf>(gfx, *this, 1u));
 }
 
 DirectX::XMMATRIX Mesh::GetTransformXM() const noexcept
@@ -200,7 +193,7 @@ Model::~Model() noexcept
 void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const* ppMaterials)
 {
 	namespace dx = DirectX;
-	std::vector<std::unique_ptr<Bind::Bindable>> currBinds;
+	std::vector<std::shared_ptr<Bind::Bindable>> currBinds;
 
 	using Dvtx::VertexLayout;
 	Dvtx::VertexBuffer vb{ std::move(VertexLayout{}
@@ -253,23 +246,23 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 	}
 
 
-	currBinds.push_back(std::make_unique<Bind::VertexBuffer>(gfx, vb));
+	currBinds.push_back(std::make_shared<Bind::VertexBuffer>(gfx, vb));
 
-	currBinds.push_back(std::make_unique<Bind::IndexBuffer>(gfx, indices));
+	currBinds.push_back(std::make_shared<Bind::IndexBuffer>(gfx, indices));
 
-	auto pvs = std::make_unique<Bind::VertexShader>(gfx, L"PhongVS.cso");
+	auto pvs = std::make_shared<Bind::VertexShader>(gfx, L"PhongVS.cso");
 	auto pvsbc = pvs->GetBytecode();
 	currBinds.push_back(std::move(pvs));
 
 	if (hasSppecularMap) 
 	{
-		currBinds.push_back(std::make_unique<Bind::PixelShader>(gfx, L"PhongPSSpecMap.cso"));
+		currBinds.push_back(std::make_shared<Bind::PixelShader>(gfx, L"PhongPSSpecMap.cso"));
 	}
 	else
 	{
 
 
-		currBinds.push_back(std::make_unique<Bind::PixelShader>(gfx, L"PhongPS.cso"));
+		currBinds.push_back(std::make_shared<Bind::PixelShader>(gfx, L"PhongPS.cso"));
 
 
 
@@ -283,9 +276,9 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 
 		} materialConstants;
 		materialConstants.specularPower = shininess;
-		currBinds.push_back(std::make_unique<Bind::PixelConstantBuffer<PSMaterialConstants>>(gfx, materialConstants, 1u));
+		currBinds.push_back(std::make_shared<Bind::PixelConstantBuffer<PSMaterialConstants>>(gfx, materialConstants, 1u));
 	}
-	currBinds.push_back(std::make_unique<Bind::InputLayout>(gfx, vb.GetLayout().GetD3DLayout(), pvsbc));
+	currBinds.push_back(std::make_shared<Bind::InputLayout>(gfx, vb.GetLayout().GetD3DLayout(), pvsbc));
 
 
 	meshes.push_back(std::make_unique<Mesh>(gfx, std::move(currBinds)));

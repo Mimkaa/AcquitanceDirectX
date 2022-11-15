@@ -1,5 +1,5 @@
 #pragma once
-#include "DrawableBase.h"
+#include "Drawable.h"
 #include "BindableCommon.h"
 #include <vector>
 #include <memory>
@@ -24,10 +24,10 @@ private:
 	std::string note;
 };
 
-class Mesh:public DrawableBase<Mesh>
+class Mesh:public Drawable
 {
 public:
-	Mesh(Graphics& gfx, std::vector<std::unique_ptr<Bind::Bindable>>binds_in);
+	Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>>binds_in);
 
 	DirectX::XMMATRIX GetTransformXM() const noexcept;
 

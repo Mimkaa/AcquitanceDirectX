@@ -165,7 +165,6 @@
     <ClCompile Include="ChiliException.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DxgiInfoManager.cpp" />
-    <ClCompile Include="FirstMesh.cpp" />
     <ClCompile Include="GDIPlusManager.cpp" />
     <ClCompile Include="GetErrorStringFromHresult.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -179,7 +178,6 @@
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Keyboard.cpp" />
-    <ClCompile Include="Melon.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="PixelShader.cpp" />
@@ -209,14 +207,10 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="ConditionalNoexcept.h" />
     <ClInclude Include="Cone.h" />
-    <ClInclude Include="ConeDrawable.h" />
     <ClInclude Include="ConstantBuffers.h" />
     <ClInclude Include="Cube.h" />
-    <ClInclude Include="Cylinder.h" />
     <ClInclude Include="Drawable.h" />
-    <ClInclude Include="DrawableBase.h" />
     <ClInclude Include="DxgiInfoManager.hpp" />
-    <ClInclude Include="FirstMesh.h" />
     <ClInclude Include="GDIPlusManager.h" />
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="GraphicsThrowHeader.h" />
@@ -233,7 +227,6 @@
     <ClInclude Include="IndexedTriangleList.h" />
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Keyboard.hpp" />
-    <ClInclude Include="Melon.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Mouse.hpp" />
     <ClInclude Include="MyCone.h" />
@@ -242,16 +235,13 @@
     <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Prism.h" />
-    <ClInclude Include="Pyramid.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="Sampler.h" />
-    <ClInclude Include="Sheet.h" />
     <ClInclude Include="SolidSphere.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="StringToWstring.hpp" />
     <ClInclude Include="Surface.h" />
-    <ClInclude Include="TestObj.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.hpp" />
     <ClInclude Include="Topology.h" />
