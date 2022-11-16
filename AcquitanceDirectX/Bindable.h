@@ -1,6 +1,7 @@
 #pragma once
 #include "Graphics.hpp"
 
+
 // if the base class is a friend class, children are not
 namespace Bind {
 	class Bindable
@@ -8,6 +9,11 @@ namespace Bind {
 	public:
 		virtual void Bind(Graphics& gfx) noexcept = 0;
 		virtual ~Bindable() = default;
+		virtual std::string GetUID() const noexcept
+		{
+			assert(false);
+			return " ";
+		}
 	protected:// only available to children and friends
 
 		// we create these to access members of Graphics 

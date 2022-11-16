@@ -250,7 +250,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 
 	currBinds.push_back(std::make_shared<Bind::IndexBuffer>(gfx, indices));
 
-	auto pvs = std::make_shared<Bind::VertexShader>(gfx, L"PhongVS.cso");
+	auto pvs = std::make_shared<Bind::VertexShader>(gfx, "PhongVS.cso");
 	auto pvsbc = pvs->GetBytecode();
 	currBinds.push_back(std::move(pvs));
 

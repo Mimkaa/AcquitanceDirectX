@@ -18,4 +18,7 @@ namespace Bind {
 				throw std::logic_error("YouFuckedUp! (tried to access gfx.infoManager in Release config)");
 		#endif
 	}
+
+	
+	
 }

@@ -16,7 +16,7 @@ SolidSphere::SolidSphere(Graphics& gfx, float radius)
 
 		
 
-	auto pvs = std::make_shared<Bind::VertexShader>(gfx, L"SolidVS.cso");
+	auto pvs = std::make_shared<Bind::VertexShader>(gfx, "SolidVS.cso");
 	auto pvsbc = pvs->GetBytecode();
 	AddBind(std::move(pvs));
 

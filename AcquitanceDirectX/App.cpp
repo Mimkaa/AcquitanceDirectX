@@ -5,6 +5,7 @@
 #include "Surface.h"
 #include "GDIPlusManager.h"
 #include "imgui/imgui.h"
+#include "VertexShader.h"
 namespace dx = DirectX;
 GDIPlusManager gdipm;
 
@@ -17,7 +18,10 @@ App::App()
 {
 
 wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
-
+// check if we get the same pointer in this case
+auto a = Bind::VertexShader::Resolve(wnd.Gfx(), "PhongVS.cso");
+auto b = Bind::VertexShader::Resolve(wnd.Gfx(), "PhongVS.cso");
+int av;
 }
 
 App::~App()
