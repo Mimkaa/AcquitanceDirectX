@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Bindable.h"
-#include "BindableCodex.h"
+
 #include <memory>
 #include <unordered_map>
 
@@ -10,32 +10,36 @@ namespace Bind
 	class Codex
 	{
 	public:
-		static std::shared_ptr<Bindable> Resolve(const std::string& bindID)
+		template<class T, typename ...Params>
+		// parameter pack
+		static std::shared_ptr<Bindable> Resolve(Graphics& gfx, Params&& ...p)
 		{
-			return Get().Resolve_(bindID);
+			return Get().Resolve_<T>(gfx, std::forward<Params>(p)...);
 		}
 
-		static void Store(std::shared_ptr<Bindable> bind)
-		{
-			Get().Store_(std::move(bind));
-		}
+		
 	private:
-		std::shared_ptr<Bindable> Resolve_(const std::string& bindID)
+		template<class T, typename ...Params>
+		std::shared_ptr<Bindable> Resolve_(Graphics& gfx, Params&& ...p)
 		{
-			auto i = binds.find(bindID);
-			if (i == binds.end())
+			const auto key = T::GenerateUID(std::forward<Params>(p)...);
+			const auto bind = binds.find(key);
+			if (bind == binds.end())
 			{
-				return {};
+				// this on will be created but then destroyed
+				auto new_s_ptr = std::make_shared<T>(gfx, std::forward<Params>(p)...);
+				// but then we copy it to the hash and this way it gets stored (so now we have 2 references to the object)
+				binds[key] = new_s_ptr;
+				// and then we return it
+				return new_s_ptr;
+				// supposingly there new_s_ptr is deleted (1 reference) but as we return it in the end whatever will own returned value will make num of refs 2
 			}
 			else
 			{
-				return i->second;
+				return bind->second;
 			}
 		}
-		void Store_(std::shared_ptr<Bindable> bind_in)
-		{
-			binds[bind_in->GetUID()] = std::move(bind_in);
-		}
+		
 
 	private:
 		// this creates a singleton
