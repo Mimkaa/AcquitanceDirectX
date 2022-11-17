@@ -1,10 +1,7 @@
 #include "VertexBuffer.h"
 #include "BindableCodex.h"
 namespace Bind {
-	VertexBuffer::VertexBuffer(Graphics& gfx, const Dvtx::VertexBuffer& vb)
-		:
-		VertexBuffer(gfx,"?",vb)
-	{}
+	
 
 	VertexBuffer::VertexBuffer(Graphics& gfx, std::string tag, const Dvtx::VertexBuffer& vb)
 		:
@@ -29,10 +26,13 @@ namespace Bind {
 		const UINT offset = 0u;
 		GetContext(gfx)->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
 	}
-	std::shared_ptr<Bindable> VertexBuffer::Resolve(Graphics& gfx, const std::string& tag_in, const Dvtx::VertexBuffer& vb)
+	std::shared_ptr<VertexBuffer> VertexBuffer::Resolve(Graphics& gfx, const std::string& tag_in, const Dvtx::VertexBuffer& vb)
 	{
 		return Codex::Resolve<VertexBuffer>(gfx, tag_in, vb);
 	}
+
+	
+
 	std::string VertexBuffer::GenerateUID_(const std::string& tag_in)
 	{
 		using namespace std::string_literals;

@@ -71,17 +71,25 @@ namespace Bind {
 		{
 			GetContext(gfx)->VSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
 		}
-		static std::shared_ptr<Bindable> Resolve(Graphics& gfx)
+		static std::shared_ptr<VertexConstantBuffer> Resolve(Graphics& gfx,const C& consts, UINT slot_in = 0)
 		{
-			return Codex::Resolve<VertexConstantBuffer>(gfx);
+			return Codex::Resolve<VertexConstantBuffer>(gfx, consts, slot_in );
 		}
-		static std::string GenerateUID()
+		static std::shared_ptr<VertexConstantBuffer> Resolve(Graphics& gfx, UINT slot_in = 0)
 		{
-			return typeid(VertexConstantBuffer).name();
+			return Codex::Resolve<VertexConstantBuffer>(gfx,  slot_in );
+		}
+		static std::string GenerateUID(const C& consts, UINT slot_in = 0)
+		{
+			return GenerateUID(slot);
+		}
+		static std::string GenerateUID(UINT slot_in = 0)
+		{
+			return typeid(VertexConstantBuffer).name() + std::to_string(slot_in);
 		}
 		std::string GetUID() const noexcept override
 		{
-			return GenerateUID();
+			return GenerateUID(slot);
 		}
 	};
 
@@ -97,17 +105,26 @@ namespace Bind {
 		{
 			GetContext(gfx)->PSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
 		}
-		std::shared_ptr<Bindable> Resolve(Graphics& gfx)
+
+		static std::shared_ptr<PixelConstantBuffer> Resolve(Graphics& gfx, const C& consts, UINT slot_in = 0)
 		{
-			return Codex::Resolve<PixelConstantBuffer>(gfx);
+			return Codex::Resolve<PixelConstantBuffer>(gfx,  consts,  slot_in);
 		}
-		static std::string GenerateUID()
+		static std::shared_ptr<PixelConstantBuffer> Resolve(Graphics& gfx, UINT slot_in = 0)
 		{
-			return typeid(PixelConstantBuffer).name();
+			return Codex::Resolve<PixelConstantBuffer>(gfx,  slot_in );
+		}
+		static std::string GenerateUID(const C& consts, UINT slot_in = 0)
+		{
+			return GenerateUID(slot_in);
+		}
+		static std::string GenerateUID(UINT slot_in = 0)
+		{
+			return typeid(PixelConstantBuffer).name() + std::to_string(slot_in);
 		}
 		std::string GetUID() const noexcept override
 		{
-			return GenerateUID();
+			return GenerateUID(slot);
 		}
 	};
 }

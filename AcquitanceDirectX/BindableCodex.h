@@ -13,16 +13,16 @@ namespace Bind
 	public:
 		template<class T, typename ...Params>
 		// parameter pack
-		static std::shared_ptr<Bindable> Resolve(Graphics& gfx, Params&& ...p)
+		static std::shared_ptr<T> Resolve(Graphics& gfx, Params&& ...p)
 		{
-			assert(std::is_base_of<Bindable, T> && "only children of Bindable are acceptable here");
+			static_assert(std::is_base_of<Bindable, T>::value, "Can only resolve classes derived from Bindable");
 			return Get().Resolve_<T>(gfx, std::forward<Params>(p)...);
 		}
 
 		
 	private:
 		template<class T, typename ...Params>
-		std::shared_ptr<Bindable> Resolve_(Graphics& gfx, Params&& ...p)
+		std::shared_ptr<T> Resolve_(Graphics& gfx, Params&& ...p)
 		{
 			const auto key = T::GenerateUID(std::forward<Params>(p)...);
 			const auto bind = binds.find(key);
@@ -38,7 +38,7 @@ namespace Bind
 			}
 			else
 			{
-				return bind->second;
+				return std::static_pointer_cast<T>(bind->second);
 			}
 		}
 		

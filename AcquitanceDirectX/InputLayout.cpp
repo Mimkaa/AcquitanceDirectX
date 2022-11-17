@@ -17,16 +17,17 @@ namespace Bind {
 			&pInputLayout
 		));
 	}
-	std::shared_ptr<Bindable> InputLayout::Resolve(Graphics& gfx)
+	std::shared_ptr<InputLayout> InputLayout::Resolve(Graphics& gfx,const Dvtx::VertexLayout& VLayout,
+		ID3DBlob* pVertexShaderBytecode)
 	{
-		return Codex::Resolve<InputLayout>(gfx);
+		return Codex::Resolve<InputLayout>(gfx, VLayout, pVertexShaderBytecode);
 	}
-	std::string InputLayout::GenerateUID(const Dvtx::VertexLayout& layout_in)
+	std::string InputLayout::GenerateUID_(const Dvtx::VertexLayout& layout_in)
 	{
 		using namespace std::string_literals;
 		return typeid(InputLayout).name() + "#"s + layout_in.GetCode();
 	}
-	std::string InputLayout::GetUID() const
+	std::string InputLayout::GetUID() const noexcept
 	{
 		return GenerateUID(layout);
 	}
