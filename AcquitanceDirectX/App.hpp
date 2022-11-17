@@ -25,6 +25,7 @@ private:
 	Camera cam;
 	PointLight light;
 	Model nano{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
+	Model nano1{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
 	int x = 0;
 	int y = 0;
 	

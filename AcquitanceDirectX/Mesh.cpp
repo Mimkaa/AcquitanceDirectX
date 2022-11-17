@@ -228,23 +228,22 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 	if (ppMaterials != nullptr)
 	{
 		auto& material = *ppMaterials[mesh_in->mMaterialIndex];
-		for (int i = 0; i < material.mNumProperties; i++)
-		{
-			aiString textureSrc;
-			material.GetTexture(aiTextureType_DIFFUSE, 0, &textureSrc);
-			currBinds.push_back(Texture::Resolve(gfx, base + textureSrc.C_Str(),0));
+		
+		aiString textureSrc;
+		material.GetTexture(aiTextureType_DIFFUSE, 0, &textureSrc);
+		currBinds.push_back(Texture::Resolve(gfx, base + textureSrc.C_Str(),0));
 
-			if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureSrc) == aiReturn_SUCCESS)
-			{
-				currBinds.push_back(Texture::Resolve(gfx, base + textureSrc.C_Str(), 1));
-				hasSppecularMap = true;
-			}
-			else
-			{
-				material.Get(AI_MATKEY_SHININESS, shininess);
-			}
-			currBinds.push_back(Sampler::Resolve(gfx));
+		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureSrc) == aiReturn_SUCCESS)
+		{
+			currBinds.push_back(Texture::Resolve(gfx, base + textureSrc.C_Str(), 1));
+			hasSppecularMap = true;
 		}
+		else
+		{
+			material.Get(AI_MATKEY_SHININESS, shininess);
+		}
+		currBinds.push_back(Sampler::Resolve(gfx));
+		
 	}
 	auto meshTag = base + "%" + mesh_in->mName.C_Str();
 

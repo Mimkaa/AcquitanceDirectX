@@ -53,6 +53,7 @@ void App::DoFrame()
 	
 
 	nano.Draw();
+	nano1.Draw();
 
 	light.Draw(wnd.Gfx());
 

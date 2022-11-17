@@ -8,9 +8,10 @@ cbuffer LightCBuf
     float attLin;
     float attQuad;
 };
-
 Texture2D tex;
 Texture2D spec;
+
+
 
 SamplerState smpl;
 
