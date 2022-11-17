@@ -6,6 +6,7 @@ namespace Bind {
 	class IndexBuffer : public Bindable
 	{
 	public:
+		IndexBuffer(Graphics& gfx, const std::vector<unsigned short>& indices);
 		IndexBuffer(Graphics& gfx, const std::string& tag,
 			const std::vector<unsigned short>& indices);
 		void Bind(Graphics& gfx) noexcept override;

@@ -2,6 +2,12 @@
 #include "BindableCodex.h"
 namespace Bind {
 	
+	VertexBuffer::VertexBuffer(Graphics& gfx, const Dvtx::VertexBuffer& vb)
+		:
+		VertexBuffer(gfx, "?", vb)
+	{
+
+	}
 
 	VertexBuffer::VertexBuffer(Graphics& gfx, std::string tag, const Dvtx::VertexBuffer& vb)
 		:
@@ -28,6 +34,7 @@ namespace Bind {
 	}
 	std::shared_ptr<VertexBuffer> VertexBuffer::Resolve(Graphics& gfx, const std::string& tag_in, const Dvtx::VertexBuffer& vb)
 	{
+		assert(tag_in != "?");
 		return Codex::Resolve<VertexBuffer>(gfx, tag_in, vb);
 	}
 
