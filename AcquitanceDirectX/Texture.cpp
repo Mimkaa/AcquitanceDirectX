@@ -1,13 +1,16 @@
 #include "Texture.h"
 #include "GraphicsThrowHeader.h"
+#include "BindableCodex.h"
 namespace Bind {
-	Texture::Texture(Graphics& gfx, const Surface& surf, unsigned int slot)
+	Texture::Texture(Graphics& gfx, const std::string& path, unsigned int slot)
 		:
-		slot(slot)
+		slot(slot),
+		path(path)
 	{
 		INFOMAN(gfx);
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> pTexture;
+		Surface surf = Surface::FromFile(path);
 
 		D3D11_TEXTURE2D_DESC tex_des = {};
 		tex_des.Width = surf.GetWidth();
@@ -42,5 +45,21 @@ namespace Bind {
 	void Texture::Bind(Graphics& gfx) noexcept
 	{
 		GetContext(gfx)->PSSetShaderResources(slot, 1u, pTextureView.GetAddressOf());
+	}
+
+	std::shared_ptr<Bindable> Texture::Resolve(Graphics& gfx, const std::string& path, UINT slot)
+	{
+		return Codex::Resolve<Texture>(gfx, path);
+
+	}
+
+	std::string Texture::GenerateUID(const std::string& path, UINT slot)
+	{
+		using namespace std::string_literals;
+		return typeid(Texture).name() + "#"s + path + "#"s + std::to_string(slot);
+	}
+	std::string Texture::GetUID() const  noexcept
+	{
+		return GenerateUID(path, slot);
 	}
 }

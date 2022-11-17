@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include  <type_traits>
 
 namespace Bind
 {
@@ -14,6 +15,7 @@ namespace Bind
 		// parameter pack
 		static std::shared_ptr<Bindable> Resolve(Graphics& gfx, Params&& ...p)
 		{
+			assert(std::is_base_of<Bindable, T> && "only children of Bindable are acceptable here");
 			return Get().Resolve_<T>(gfx, std::forward<Params>(p)...);
 		}
 
