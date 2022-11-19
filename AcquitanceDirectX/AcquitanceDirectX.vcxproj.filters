@@ -159,6 +159,9 @@
     <ClCompile Include="Vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestPlane.cpp">
+      <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowMessageMap.hpp">
@@ -326,6 +329,9 @@
     <ClInclude Include="BindableCodex.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
+    <ClInclude Include="TestPlane.h">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AcquitanceDirectX1.rc">
@@ -354,6 +360,12 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="PhongPSSpecMap.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongNormalsPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongNormalsVS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

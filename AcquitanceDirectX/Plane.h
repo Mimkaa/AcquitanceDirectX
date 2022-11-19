@@ -2,24 +2,28 @@
 
 #include <vector>
 #include <array>
+#include "Vertex.h"
 #include "IndexedTriangleList.h"
 #include "ChiliMath.h"
 
+#include <optional>
 class Plane
 {
 public:
-	template<class V>
-	static IndexedTriangleList<V> MakeTesselated(int divisions_x, int divisions_y)
+	
+	static IndexedTriangleList MakeTesselated(Dvtx::VertexLayout layout_in, int divisions_x, int divisions_y)
 	{
 		namespace dx = DirectX;
 		assert(divisions_x >= 1);
 		assert(divisions_y >= 1);
 
+		Dvtx::VertexBuffer vertices{ std::move(layout_in) };
+
 		constexpr float width = 2.0f;
 		constexpr float height = 2.0f;
 		const int nVertices_x = divisions_x + 1;
 		const int nVertices_y = divisions_y + 1;
-		std::vector<V> vertices(nVertices_x * nVertices_y);
+		
 
 		{
 			const float side_x = width / 2.0f;
@@ -33,11 +37,13 @@ public:
 				const float y_pos = float(y) * divisionSize_y;
 				for (int x = 0; x < nVertices_x; x++, i++)
 				{
+					dx::XMFLOAT3 emplacer;
 					const auto v = dx::XMVectorAdd(
 						bottomLeft,
 						dx::XMVectorSet(float(x) * divisionSize_x, y_pos, 0.0f, 0.0f)
 					);
-					dx::XMStoreFloat3(&vertices[i].pos, v);
+					dx::XMStoreFloat3(&emplacer,v);
+					vertices.EmplaceBack(std::move(emplacer), dx::XMFLOAT3(0.0f,0.0f,-1.0f), dx::XMFLOAT2(x, -y));
 				}
 			}
 		}
@@ -67,9 +73,15 @@ public:
 
 		return{ std::move(vertices),std::move(indices) };
 	}
-	template<class V>
-	static IndexedTriangleList<V> Make()
+	
+	static IndexedTriangleList Make(std::optional<Dvtx::VertexLayout> layout = std::nullopt)
 	{
-		return MakeTesselated<V>(1, 1);
+		if (!layout)
+		{
+			layout = Dvtx::VertexLayout{}.Append(Dvtx::VertexLayout::Position3D).
+				Append(Dvtx::VertexLayout::Normal).Append(Dvtx::VertexLayout::Texture2D);
+
+		}
+		return MakeTesselated(std::move(*layout),1, 1);
 	}
 };

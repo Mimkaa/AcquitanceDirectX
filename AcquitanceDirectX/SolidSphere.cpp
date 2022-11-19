@@ -30,7 +30,7 @@ SolidSphere::SolidSphere(Graphics& gfx, float radius)
 	} colorConst;
 	
 		
-	AddBind(PixelConstantBuffer<PSColorConstant>::Resolve(gfx, colorConst));
+	AddBind(PixelConstantBuffer<PSColorConstant>::Resolve(gfx, colorConst,1));
 
 	
 	AddBind(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));

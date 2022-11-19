@@ -7,6 +7,7 @@
 #include "PointLight.h"
 #include <set>
 #include "Mesh.h"
+#include "TestPlane.h"
 class App
 {
 public:
@@ -26,6 +27,7 @@ private:
 	PointLight light;
 	Model nano{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
 	Model nano1{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
+	TestPlane plane{wnd.Gfx()};
 	int x = 0;
 	int y = 0;
 	
