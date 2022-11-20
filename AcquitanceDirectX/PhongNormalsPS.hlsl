@@ -18,6 +18,12 @@ cbuffer MaterialCBuf
     float padding[1];
 };
 
+cbuffer CBufMat
+{
+    matrix modelView;
+    matrix modelViewProj;
+};
+
 Texture2D tex;
 Texture2D norm;
 SamplerState smpl;
@@ -31,6 +37,7 @@ float4 main(float3 WorldPos : Position, float3 normal_in : Normal, float2 tec : 
         normal.x = normal.x * 2 - 1;
         normal.y = -(normal.y * 2 - 1);
         normal.z = -normal.z;
+        normal = mul(normal, (float3x3) modelView);
     }
     else
     {

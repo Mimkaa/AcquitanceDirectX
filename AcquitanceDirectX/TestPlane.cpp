@@ -41,7 +41,7 @@ TestPlane::TestPlane(Graphics& gfx)
 	AddBind(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 
-	AddBind(std::make_shared<Bind::TransformCbuf>(gfx, *this));
+	AddBind(std::make_shared<Bind::TransformCbufDoubleBoi>(gfx, *this,0, 2));
 
 }
 
