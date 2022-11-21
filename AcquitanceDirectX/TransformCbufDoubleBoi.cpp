@@ -6,11 +6,18 @@ namespace Bind {
 	{
 		pPcbuf = std::make_unique<PixelConstantBuffer<Transforms>>(gfx, slotp);
 	}
-	void TransformCbufDoubleBoi::UpdateAndBind(Graphics& gfx) noexcept
+	
+	void TransformCbufDoubleBoi::UpdateAndBind(Graphics& gfx, const Transforms& tf) noexcept
 	{
-		TransformCbuf::UpdateAndBind(gfx);
-		pPcbuf->Update(gfx, GenerateTransform(gfx));
+		
+		pPcbuf->Update(gfx, tf);
 		pPcbuf->Bind(gfx);
+	}
+	void TransformCbufDoubleBoi::Bind(Graphics& gfx) noexcept
+	{
+		const auto tf = GenerateTransform(gfx);
+		TransformCbuf::UpdateAndBind(gfx, tf);
+		UpdateAndBind(gfx, tf);
 	}
 	std::unique_ptr<PixelConstantBuffer<TransformCbufDoubleBoi::Transforms>> TransformCbufDoubleBoi::pPcbuf;
 }

@@ -21,15 +21,15 @@ namespace Bind {
 	}
 
 
-	void TransformCbuf::UpdateAndBind(Graphics& gfx) noexcept
+	void TransformCbuf::UpdateAndBind(Graphics& gfx, const Transforms& tf) noexcept
 	{
-		pVcbuf->Update(gfx, GenerateTransform(gfx));
+		pVcbuf->Update(gfx, tf);
 		pVcbuf->Bind(gfx);
 	}
 	
 	void TransformCbuf::Bind(Graphics& gfx) noexcept
 	{
-		UpdateAndBind(gfx);
+		UpdateAndBind(gfx, GenerateTransform(gfx));
 	}
 	std::unique_ptr<VertexConstantBuffer<TransformCbuf::Transforms>> TransformCbuf::pVcbuf;
 }

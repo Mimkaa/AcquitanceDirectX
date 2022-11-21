@@ -13,10 +13,10 @@ namespace Bind {
 		};
 	public:
 		virtual Transforms GenerateTransform(Graphics& gfx) noexcept;
-		virtual void UpdateAndBind(Graphics& gfx) noexcept;
+		virtual void UpdateAndBind(Graphics& gfx, const Transforms& tf) noexcept;
 
 		TransformCbuf(Graphics& gfx, const Drawable& parent, UINT slot = 0);
-		void Bind(Graphics& gfx) noexcept override;
+		virtual void Bind(Graphics& gfx) noexcept override;
 		
 	private:
 		static std::unique_ptr<VertexConstantBuffer<Transforms>> pVcbuf;
