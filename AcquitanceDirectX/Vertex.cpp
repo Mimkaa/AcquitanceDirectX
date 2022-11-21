@@ -182,6 +182,12 @@ namespace Dvtx {
 		:
 		layout(std::move(layout_in))
 	{}
+	VertexBuffer::VertexBuffer(VertexLayout layout_in, size_t size)
+		:
+		layout(std::move(layout_in))
+	{
+		Reserve(size);
+	}
 
 	const VertexLayout& VertexBuffer::GetLayout() const noexcept
 	{

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <DirectXMath.h>
-
+#include "Vertex.h"
 class IndexedTriangleList
 {
 public:
@@ -15,8 +15,9 @@ public:
 		assert(indices.size() % 3 == 0);
 	}
 
-	/*void SetNormalsIndependentFlat() noxnd
+	void SetNormalsIndependentFlat() noxnd
 	{
+		using Type = Dvtx::VertexLayout::ElementType;
 		using namespace DirectX;
 		assert(indices.size() % 3 == 0 && indices.size() > 0);
 		for (int j = 0; j < indices.size() / 3; j++)
@@ -24,19 +25,22 @@ public:
 			const int i0 = indices[j * 3 + 0];
 			const int i1 = indices[j * 3 + 1];
 			const int i2 = indices[j * 3 + 2];
-			auto& v0 = vertices[i0];
-			auto& v1 = vertices[i1];
-			auto& v2 = vertices[i2];
-			const auto p0 = XMLoadFloat3(&v0.pos);
-			const auto p1 = XMLoadFloat3(&v1.pos);
-			const auto p2 = XMLoadFloat3(&v2.pos);
+			auto v0 = vertices[i0];
+			auto v1 = vertices[i1];
+			auto v2 = vertices[i2];
+			const auto p0 = XMLoadFloat3(&v0.Attr<Type::Position3D>());
+			const auto p1 = XMLoadFloat3(&v1.Attr<Type::Position3D>());
+			const auto p2 = XMLoadFloat3(&v2.Attr<Type::Position3D>());
 			const auto normal =XMVector3Normalize (XMVector3Cross((p1 - p0), (p2 - p0)));
-			XMStoreFloat3(&v0.n, normal);
-			XMStoreFloat3(&v1.n, normal);
-			XMStoreFloat3(&v2.n, normal);
+			XMFLOAT3 norm;
+			XMStoreFloat3(&norm, normal);
+			vertices[i0].Attr<Type::Normal>() = norm;
+			vertices[i1].Attr<Type::Normal>() = norm;
+			vertices[i2].Attr<Type::Normal>() = norm;
+			
 		}
 		
-	}*/
+	}
 
 
 	void Transform(DirectX::FXMMATRIX matrix)

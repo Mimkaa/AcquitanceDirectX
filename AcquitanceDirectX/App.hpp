@@ -8,6 +8,7 @@
 #include <set>
 #include "Mesh.h"
 #include "TestPlane.h"
+#include "TestCube.h"
 class App
 {
 public:
@@ -28,6 +29,7 @@ private:
 	Model nano{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
 	Model nano1{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
 	TestPlane plane{wnd.Gfx()};
+	TestCube cube{ wnd.Gfx() };
 	int x = 0;
 	int y = 0;
 	

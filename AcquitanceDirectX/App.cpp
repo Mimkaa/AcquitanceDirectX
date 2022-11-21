@@ -55,7 +55,8 @@ void App::DoFrame()
 	nano.Draw();
 	nano1.Draw();
 	light.Draw(wnd.Gfx());
-	plane.Draw(wnd.Gfx());
+	//plane.Draw(wnd.Gfx());
+	cube.Draw(wnd.Gfx());
 	while (const auto e = wnd.kbd.ReadKey())
 	{
 		if (e->IsPress() && e->GetCode() == VK_ESCAPE)
@@ -116,8 +117,8 @@ void App::DoFrame()
 
 	// control model
 	nano.ShowWindow("nano") ;
-	plane.ShowControlWindow(wnd.Gfx());
-	
+	//plane.ShowControlWindow(wnd.Gfx());
+	cube.ShowControlWindow(wnd.Gfx());
 	// imgui window for camera
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();

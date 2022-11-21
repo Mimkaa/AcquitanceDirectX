@@ -224,6 +224,7 @@ namespace Dvtx {
 	{
 	public:
 		VertexBuffer(VertexLayout layout_in);
+		VertexBuffer(VertexLayout layout_in, size_t size);
 		const VertexLayout& GetLayout() const noexcept;
 		size_t Size() const noxnd;
 		size_t SizeBytes() const noxnd;
@@ -234,6 +235,16 @@ namespace Dvtx {
 		ConstVertex Front() const noxnd;
 		ConstVertex operator[](size_t i) const noxnd;
 		const char* GetData()const noxnd;
+		void Reserve(size_t num)
+		{
+			const int size = buffer.size();
+			if (buffer.size() < num)
+			{
+				buffer.resize(layout.Size() * num - size);
+			}
+		
+		
+		}
 
 		template <typename ...Params >
 		void EmplaceBack(Params&&... params)
