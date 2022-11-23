@@ -55,6 +55,14 @@ namespace Dvtx {
 	{
 		return sizeof(Map<Float4Color>::SysType);
 	}
+	case(Tangent):
+	{
+		return sizeof(Map<Tangent>::SysType);
+	}
+	case(Bytangent) :
+	{
+		return sizeof(Map<Bytangent>::SysType);
+	}
 	case(BGRAColor):
 	{
 		return sizeof(Map<BGRAColor>::SysType);
@@ -84,6 +92,10 @@ namespace Dvtx {
 			return Map<Float4Color>::code;
 		case BGRAColor:
 			return Map<BGRAColor>::code;
+		case Tangent:
+			return Map<Tangent>::code;
+		case Bytangent:
+			return Map<Bytangent>::code;
 		}
 		assert("Invalid element type");
 		return "Invalid";
@@ -108,7 +120,13 @@ namespace Dvtx {
 			return GenerateDesc<Float4Color>(GetOffset());
 		case BGRAColor:
 			return GenerateDesc<BGRAColor>(GetOffset());
+		case Tangent:
+			return GenerateDesc<Tangent>(GetOffset());
+		case Bytangent:
+			return GenerateDesc<Bytangent>(GetOffset());
 		}
+		
+
 		assert("Invalid element type" && false);
 		return { "INVALID",0,DXGI_FORMAT_UNKNOWN,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 };
 	}

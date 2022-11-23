@@ -14,6 +14,7 @@ Mesh::Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>>binds_in)
 		AddBind(std::move(b));
 		
 	}
+
 	AddBind(std::make_shared<Bind::TransformCbuf>(gfx, *this));
 }
 
@@ -171,7 +172,8 @@ Model::Model(Graphics& gfx, const char* filename)
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_ConvertToLeftHanded |
-		aiProcess_GenNormals
+		aiProcess_GenNormals |
+		aiProcess_CalcTangentSpace
 	);
 	if (!scene)
 	{
@@ -196,20 +198,24 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 	namespace dx = DirectX;
 	std::vector<std::shared_ptr<Bind::Bindable>> currBinds;
 	using namespace std::string_literals;
-	std::string base = "Models\\nano_textured\\";
+	std::string base = "Models\\brick_wall\\";
 
 	using Dvtx::VertexLayout;
 	Dvtx::VertexBuffer vb{ std::move(VertexLayout{}
 	.Append(VertexLayout::Position3D)
 	.Append(VertexLayout::Normal)
-	.Append(VertexLayout::Texture2D)) };
+	.Append(VertexLayout::Texture2D))
+	.Append((VertexLayout::Tangent))
+	.Append((VertexLayout::Bytangent))};
 
 	for (int i = 0; i < mesh_in->mNumVertices; i++)
 	{
 		vb.EmplaceBack(
 			dx::XMFLOAT3{ mesh_in->mVertices[i].x * scale,mesh_in->mVertices[i].y * scale ,mesh_in->mVertices[i].z * scale },
 			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh_in->mNormals[i]),
-			*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh_in->mTextureCoords[0][i])
+			*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh_in->mTextureCoords[0][i]),
+			*reinterpret_cast<dx::XMFLOAT3*>(&mesh_in->mTangents[i]),
+			*reinterpret_cast<dx::XMFLOAT3*>(&mesh_in->mBitangents[i])
 		);
 	}
 
@@ -242,6 +248,9 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 		{
 			material.Get(AI_MATKEY_SHININESS, shininess);
 		}
+		// normal texture
+		material.GetTexture(aiTextureType_NORMALS, 0, &textureSrc);
+		currBinds.push_back(Texture::Resolve(gfx, base + textureSrc.C_Str(), 2));
 		currBinds.push_back(Sampler::Resolve(gfx));
 		
 	}
@@ -252,19 +261,26 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 
 	currBinds.push_back(IndexBuffer::Resolve(gfx, meshTag, indices));
 
-	auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
+	auto pvs = VertexShader::Resolve(gfx, "PhongSpecNormalVS.cso");
 	auto pvsbc = pvs->GetBytecode();
 	currBinds.push_back(std::move(pvs));
 
 	if (hasSppecularMap) 
 	{
-		currBinds.push_back(PixelShader::Resolve(gfx, "PhongPSSpecMap.cso"));
+		currBinds.push_back(PixelShader::Resolve(gfx, "PhongSpecNormalPS.cso"));
+
+		struct PSMaterialConstant
+		{
+			BOOL  normalMapEnabled = TRUE;
+			float padding[3];
+		} pmc;
+		currBinds.push_back(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
 	}
 	else
 	{
 
 
-		currBinds.push_back(PixelShader::Resolve(gfx, "PhongPS.cso"));
+		currBinds.push_back(PixelShader::Resolve(gfx, "PhingNormalPS.cso"));
 
 
 
@@ -274,7 +290,8 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 
 			float specularIntensity = 0.8f;
 			float specularPower;
-			float padding[2];
+			BOOL  normalMapEnabled = TRUE;
+			float padding[1];
 
 		} materialConstants;
 		materialConstants.specularPower = shininess;

@@ -22,7 +22,9 @@ namespace Dvtx {
 			Float3Color,
 			Float4Color,
 			BGRAColor,
-			Count
+			Count,
+			Tangent,
+			Bytangent
 		};
 		template<ElementType> struct Map;
 		template<> struct Map<Position2D>
@@ -73,6 +75,20 @@ namespace Dvtx {
 			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 			static constexpr const char* semantic = "Color";
 			static constexpr const char* code = "BGR4";
+		};
+		template<> struct Map<Tangent>
+		{
+			using SysType = ::DirectX::XMFLOAT3;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			static constexpr const char* semantic = "Tangent";
+			static constexpr const char* code = "T3";
+		};
+		template<> struct Map<Bytangent>
+		{
+			using SysType = ::DirectX::XMFLOAT3;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			static constexpr const char* semantic = "Bytangent";
+			static constexpr const char* code = "B3";
 		};
 		class Element
 		{
@@ -167,6 +183,12 @@ namespace Dvtx {
 				break;
 			case VertexLayout::BGRAColor:
 				SetAttribute<VertexLayout::BGRAColor>(pAttribute, std::forward<T>(val));
+				break;
+			case VertexLayout::Tangent:
+				SetAttribute<VertexLayout::Tangent>(pAttribute, std::forward<T>(val));
+				break;
+			case VertexLayout::Bytangent:
+				SetAttribute<VertexLayout::Bytangent>(pAttribute, std::forward<T>(val));
 				break;
 			default:
 				assert("Bad element type" && false);
