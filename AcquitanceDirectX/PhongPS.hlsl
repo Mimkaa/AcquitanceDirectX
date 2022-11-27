@@ -20,9 +20,9 @@ cbuffer MaterialCBuf
 Texture2D tex;
 SamplerState smpl;
 
-float4 main(float3 WorldPos : Position, float3 normal : Normal, float2 tec: Texcoord) : SV_Target
+float4 main(float3 ViewPos : Position, float3 normal : Normal, float2 tec: Texcoord) : SV_Target
 {
-    const float3 v_to_l = LightPos - WorldPos;
+    const float3 v_to_l = LightPos - ViewPos;
     const float dist = length(v_to_l);
     const float3 LightDir = v_to_l / dist;
     const float attenuation = 1.0f/
@@ -35,7 +35,7 @@ float4 main(float3 WorldPos : Position, float3 normal : Normal, float2 tec: Texc
 			// opposite direction of the reflection
     const float3 r = w * 2.0f - v_to_l;
 			//specular intensity between view vector an the reflection
-    const float3 specular = attenuation * (light_diffuse * attIntensity) * specularIntensity * pow(max(0.0f, dot(normalize(-r), normalize(WorldPos))), specularPower);
+    const float3 specular = attenuation * (light_diffuse * attIntensity) * specularIntensity * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
     
     
     return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular), 1.0f);

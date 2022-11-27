@@ -28,7 +28,7 @@ Texture2D spec;
 Texture2D norm;
 SamplerState smpl;
 
-float4 main(float3 WorldPos : Position, float3 normal_in : Normal, float2 tec : Texcoord, float3 tan : Tangent, float3 btan : Bytangent) : SV_Target
+float4 main(float3 ViewPos : Position, float3 normal_in : Normal, float2 tec : Texcoord, float3 tan : Tangent, float3 btan : Bytangent) : SV_Target
 {
     float3 normal;
     if (normalsMappingOn == 1)
@@ -48,7 +48,7 @@ float4 main(float3 WorldPos : Position, float3 normal_in : Normal, float2 tec : 
     }
 
 
-    const float3 v_to_l = LightPos - WorldPos;
+    const float3 v_to_l = LightPos - ViewPos;
     const float dist = length(v_to_l);
     const float3 LightDir = v_to_l / dist;
     const float attenuation = 1.0f /
@@ -65,7 +65,7 @@ const float3 r = w * 2.0f - v_to_l;
 const float4 specularSample = spec.Sample(smpl, tec);
 const float3 specularReflectionColor = specularSample.rgb;
 const float  specularPower = pow(2.0f, specularSample.a * 13.0f);
-const float3 specular = attenuation * (light_diffuse * attIntensity) * pow(max(0.0f, dot(normalize(-r), normalize(WorldPos))), specularPower);
+const float3 specular = attenuation * (light_diffuse * attIntensity) * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
 
 
 return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular), 1.0f);

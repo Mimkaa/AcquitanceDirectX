@@ -15,9 +15,9 @@ Texture2D spec;
 
 SamplerState smpl;
 
-float4 main(float3 WorldPos : Position, float3 normal : Normal, float2 tec : Texcoord) : SV_Target
+float4 main(float3 ViewPos : Position, float3 normal : Normal, float2 tec : Texcoord) : SV_Target
 {
-    const float3 v_to_l = lightPos - WorldPos;
+    const float3 v_to_l = lightPos - ViewPos;
     const float dist = length(v_to_l);
     const float3 LightDir = v_to_l / dist;
     const float attenuation = 1.0f / (attConst + attLin * dist + attQuad * (dist*dist));
@@ -32,7 +32,7 @@ float4 main(float3 WorldPos : Position, float3 normal : Normal, float2 tec : Tex
     const float4 specularSample = spec.Sample(smpl, tec);
     const float3 specularReflectionColor = specularSample.rgb;
     const float  specularPower = pow(2.0f, specularSample.a * 13.0f);
-    const float3 specular = attenuation * (diffuseColor * diffuseIntensity) * pow(max(0.0f, dot(normalize(-r), normalize(WorldPos))), specularPower);
+    const float3 specular = attenuation * (diffuseColor * diffuseIntensity) * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
 
     return float4(saturate((d + ambient) * tex.Sample(smpl, tec).rgb + specular * specularReflectionColor), 1.0f);
 

@@ -9,6 +9,7 @@
 #include "Mesh.h"
 #include "TestPlane.h"
 #include "TestCube.h"
+
 class App
 {
 public:
@@ -26,6 +27,7 @@ private:
 	float speed_factor = 1.0f;
 	Camera cam;
 	PointLight light;
+	
 	Model wall{ wnd.Gfx(), "Models\\brick_wall\\brick_wall.obj" };
 	
 	int x = 0;
