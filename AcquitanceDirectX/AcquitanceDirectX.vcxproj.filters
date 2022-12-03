@@ -386,7 +386,10 @@
     <FxCompile Include="PhongSpecNormalVS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="PhingNormalPS.hlsl">
+    <FxCompile Include="PhongNotexVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongNotexPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

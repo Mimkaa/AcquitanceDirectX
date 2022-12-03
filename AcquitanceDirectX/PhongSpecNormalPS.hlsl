@@ -12,7 +12,6 @@ cbuffer LightCBuf
 
 cbuffer MaterialCBuf
 {
-   
     bool normalsMappingOn;
     float padding[3];
 };
@@ -35,9 +34,9 @@ float4 main(float3 ViewPos : Position, float3 normal_in : Normal, float2 tec : T
     {
         float3x3 TBNmat = float3x3(normalize(tan), normalize(btan), normalize(normal_in));
         float3 normalSample = norm.Sample(smpl, tec).xyz;
-        normal.x = normalSample.x * 2 - 1;
-        normal.y = -(normalSample.y * 2 - 1);
-        normal.z = normalSample.z * 2 - 1;
+        normal_in.x = normalSample.x * 2 - 1;
+        normal_in.y = -(normalSample.y * 2 - 1);
+        normal_in.z = normalSample.z * 2 - 1;
         
         normal_in = mul(normal_in,TBNmat);
         normal = normal_in;
@@ -59,16 +58,13 @@ float4 main(float3 ViewPos : Position, float3 normal_in : Normal, float2 tec : T
     // specular highlight
     const float3 w = normal * dot(v_to_l, normal);
     // opposite direction of the reflection
-const float3 r = w * 2.0f - v_to_l;
-//specular intensity between view vector an the reflection
-//specular intensity between view vector an the reflection
-const float4 specularSample = spec.Sample(smpl, tec);
-const float3 specularReflectionColor = specularSample.rgb;
-const float  specularPower = pow(2.0f, specularSample.a * 13.0f);
-const float3 specular = attenuation * (light_diffuse * attIntensity) * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
+    const float3 r = w * 2.0f - v_to_l;
+    //specular intensity between view vector an the reflection
+    const float4 specularSample = spec.Sample(smpl, tec);
+    const float3 specularReflectionColor = specularSample.rgb;
+    const float  specularPower = pow(2.0f, specularSample.a * 13.0f);
+    const float3 specular = attenuation * (light_diffuse * attIntensity) * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
 
 
-return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular), 1.0f);
-
-
+    return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular), 1.0f);
 }

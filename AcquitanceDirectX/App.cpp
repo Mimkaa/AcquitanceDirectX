@@ -52,7 +52,7 @@ void App::DoFrame()
 
 	
 
-	wall.Draw();
+	Gobber.Draw();
 	light.Draw(wnd.Gfx());
 	//plane.Draw(wnd.Gfx());
 
@@ -115,7 +115,7 @@ void App::DoFrame()
 	
 
 	// control model
-	wall.ShowWindow("wall") ;
+	Gobber.ShowWindow("Gobber") ;
 	
 	// imgui window for camera
 	cam.SpawnControlWindow();

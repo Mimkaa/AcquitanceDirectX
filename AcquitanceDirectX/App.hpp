@@ -28,7 +28,7 @@ private:
 	Camera cam;
 	PointLight light;
 	
-	Model wall{ wnd.Gfx(), "Models\\brick_wall\\brick_wall.obj" };
+	Model Gobber{ wnd.Gfx(), "Models\\gobber\\GoblinX.obj" };
 	
 	int x = 0;
 	int y = 0;

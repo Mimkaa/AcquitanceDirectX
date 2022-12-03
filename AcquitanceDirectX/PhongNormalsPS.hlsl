@@ -25,7 +25,7 @@ cbuffer CBufMat
 };
 
 Texture2D tex;
-Texture2D norm;
+Texture2D norm: register(t2);
 SamplerState smpl;
 
 float4 main(float3 ViewPos : Position, float3 normal_in : Normal, float2 tec : Texcoord) : SV_Target
@@ -36,7 +36,7 @@ float4 main(float3 ViewPos : Position, float3 normal_in : Normal, float2 tec : T
         normal = norm.Sample(smpl, tec).rgb;
         normal.x = normal.x * 2 - 1;
         normal.y = -(normal.y * 2 - 1);
-        normal.z = -normal.z;
+        normal.z = -normal.z * 2 -1;
         normal = mul(normal, (float3x3) modelView);
     }
     else
