@@ -11,6 +11,8 @@ namespace Bind {
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> pTexture;
 		Surface surf = Surface::FromFile(path);
+		
+		hasAlphaSet = surf.AlphaLoaded();
 
 		D3D11_TEXTURE2D_DESC tex_des = {};
 		tex_des.Width = surf.GetWidth();
@@ -40,6 +42,11 @@ namespace Bind {
 		GFX_THROW_INFO(GetDevice(gfx)->CreateShaderResourceView(pTexture.Get(), &res_des, &pTextureView));
 
 
+	}
+
+	bool Texture::HasAlpha() const noexcept
+	{
+		return hasAlphaSet;
 	}
 
 	void Texture::Bind(Graphics& gfx) noexcept

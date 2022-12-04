@@ -200,6 +200,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 	bool hasSppecularMap = false;
 	bool hasNormalMap = false;
 	bool hasDiffuseMap = false;
+	bool hasAlphaGloss = false;
 
 	std::vector<std::shared_ptr<Bind::Bindable>> currBinds;
 	using namespace std::string_literals;
@@ -216,12 +217,16 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureSrc) == aiReturn_SUCCESS)
 		{
 			hasSppecularMap = true;
-			currBinds.push_back(Texture::Resolve(gfx, base + textureSrc.C_Str(), 1));
+			auto tex = Texture::Resolve(gfx, base + textureSrc.C_Str(), 1);
+			hasAlphaGloss = tex->HasAlpha();
+			currBinds.push_back(std::move(tex));
+
 		}
-		else
+		if(!hasAlphaGloss)
 		{
 			material.Get(AI_MATKEY_SHININESS, shininess);
 		}
+
 
 		if (material.GetTexture(aiTextureType_NORMALS, 0, &textureSrc) == aiReturn_SUCCESS)
 		{
@@ -293,9 +298,13 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 		
 		struct PSMaterialConstant
 		{
+			BOOL hasAlphaShow;
+			float specularPower;
 			BOOL  normalMapEnabled = TRUE;
-			float padding[3];
+			float padding[1];
 		} pmc;
+		pmc.specularPower = shininess;
+		pmc.hasAlphaShow = hasAlphaGloss ? TRUE : FALSE;
 
 		currBinds.push_back(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
 

@@ -12,8 +12,10 @@ cbuffer LightCBuf
 
 cbuffer MaterialCBuf
 {
+    bool hasAlphaGloass;
+    float specularPowerConst;
     bool normalsMappingOn;
-    float padding[3];
+    float padding[1];
 };
 
 cbuffer CBufMat
@@ -47,6 +49,7 @@ float4 main(float3 ViewPos : Position, float3 normal_in : Normal, float2 tec : T
     }
 
 
+
     const float3 v_to_l = LightPos - ViewPos;
     const float dist = length(v_to_l);
     const float3 LightDir = v_to_l / dist;
@@ -59,10 +62,21 @@ float4 main(float3 ViewPos : Position, float3 normal_in : Normal, float2 tec : T
     const float3 w = normal * dot(v_to_l, normal);
     // opposite direction of the reflection
     const float3 r = w * 2.0f - v_to_l;
+    
     //specular intensity between view vector an the reflection
     const float4 specularSample = spec.Sample(smpl, tec);
     const float3 specularReflectionColor = specularSample.rgb;
-    const float  specularPower = pow(2.0f, specularSample.a * 13.0f);
+    float  specularPower ;
+
+    if (hasAlphaGloass == 1)
+    {
+        specularPower = pow(2.0f, specularSample.a * 13.0f);
+    }
+    else
+    {
+        specularPower = specularPowerConst;
+
+    }
     const float3 specular = attenuation * (light_diffuse * attIntensity) * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
 
 
