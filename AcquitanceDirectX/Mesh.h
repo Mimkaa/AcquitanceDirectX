@@ -41,13 +41,27 @@ class Node
 {
 	friend class Model;
 	friend class WindowMenu;
+
+public:
+	struct PSMaterialConstantFullMante
+	{
+		BOOL specularMapEnabled = TRUE;
+		DirectX::XMFLOAT3 specularColor = { 0.3f, 0.8f, 0.7f };
+		float specularMapWeight = 0.6f;
+		BOOL hasGlossMap;
+		float specularPower = 35.0f;
+		BOOL  normalMapEnabled = TRUE;
+		
+	};
+
 public:
 	Node(int id_in, const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation);
 	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) noxnd;
 	DirectX::XMMATRIX GetAppliedTransform() const noexcept;
 	void SetAppliedTransform(const DirectX::FXMMATRIX& appTrans) noexcept;
 	DirectX::XMMATRIX GetBaseTransform() const noexcept;
-	int GetId() const;
+	int GetId() const; 
+	void ControlMeDaddy(Graphics& gfx, PSMaterialConstantFullMante& pm_in) const noexcept;
 	
 	
 private:
@@ -77,7 +91,7 @@ private:
 	
 public :
 	void Draw();
-	void ShowWindow(const char* windowName) noexcept;
+	void ShowWindow(Graphics& gfx, const char* windowName) noexcept;
 	
 private:
 	std::vector<std::unique_ptr<Mesh>> meshes;

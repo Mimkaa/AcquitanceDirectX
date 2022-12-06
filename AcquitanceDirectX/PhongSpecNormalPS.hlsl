@@ -12,10 +12,13 @@ cbuffer LightCBuf
 
 cbuffer MaterialCBuf
 {
+    bool EnableSpecular;
+    float3 SpecularColor;
+    float specularWeight;
     bool hasAlphaGloass;
     float specularPowerConst;
     bool normalsMappingOn;
-    float padding[1];
+    
 };
 
 cbuffer CBufMat
@@ -64,21 +67,22 @@ float4 main(float3 ViewPos : Position, float3 normal_in : Normal, float2 tec : T
     const float3 r = w * 2.0f - v_to_l;
     
     //specular intensity between view vector an the reflection
-    const float4 specularSample = spec.Sample(smpl, tec);
-    const float3 specularReflectionColor = specularSample.rgb;
-    float  specularPower ;
 
-    if (hasAlphaGloass == 1)
+    float  specularPower = specularPowerConst;
+    float3 specularReflectionColor = SpecularColor * specularWeight;
+    if (EnableSpecular)
     {
-        specularPower = pow(2.0f, specularSample.a * 13.0f);
+        const float4 specularSample = spec.Sample(smpl, tec);
+        specularReflectionColor = specularSample.rgb * specularWeight;
+        if (hasAlphaGloass == 1)
+        {
+            specularPower = pow(2.0f, specularSample.a * 13.0f);
+        }
+       
     }
-    else
-    {
-        specularPower = specularPowerConst;
-
-    }
+ 
     const float3 specular = attenuation * (light_diffuse * attIntensity) * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
 
 
-    return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular), 1.0f);
+    return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular * specularReflectionColor), 1.0f);
 }

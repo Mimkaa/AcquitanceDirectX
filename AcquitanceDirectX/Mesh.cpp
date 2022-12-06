@@ -104,6 +104,39 @@ void Node::AddChild(std::unique_ptr<Node> node_in)
 		children.push_back(std::move(node_in));
 }
 
+void Node::ControlMeDaddy(Graphics& gfx, Node::PSMaterialConstantFullMante& c) const noexcept
+{
+	if (meshes.empty())
+	{
+		return;
+	}
+
+	if (auto pcb = meshes.front()->QueryBindables<Bind::PixelConstantBuffer<Node::PSMaterialConstantFullMante>>())
+	{
+		ImGui::Text("Material");
+
+		bool normalMapEnabled = (bool)c.normalMapEnabled;
+		ImGui::Checkbox("Norm Map", &normalMapEnabled);
+		c.normalMapEnabled = normalMapEnabled ? TRUE : FALSE;
+
+		bool specularMapEnabled = (bool)c.specularMapEnabled;
+		ImGui::Checkbox("Spec Map", &specularMapEnabled);
+		c.specularMapEnabled = specularMapEnabled ? TRUE : FALSE;
+
+		bool hasGlossMap = (bool)c.hasGlossMap;
+		ImGui::Checkbox("Gloss Alpha", &hasGlossMap);
+		c.hasGlossMap = hasGlossMap ? TRUE : FALSE;
+
+		ImGui::SliderFloat("Spec Weight", &c.specularMapWeight, 0.0f, 2.0f);
+
+		ImGui::SliderFloat("Spec Pow", &c.specularPower, 0.0f, 1000.0f, "%f", 5.0f);
+
+		ImGui::ColorPicker3("Spec Color", reinterpret_cast<float*>(&c.specularColor));
+
+		pcb->Update(gfx, c);
+	}
+}
+
 
 // model
 class WindowMenu//pImpl Idiom : class whose implementation can be found only in this cpp
@@ -119,7 +152,7 @@ public:
 		float yaw = 0.0f;
 	};
 
-	void Show(const char* windowName, const Node& root)
+	void Show(Graphics& gfx, const char* windowName, const Node& root)
 	{
 	
 		windowName = windowName ? windowName : "Model";
@@ -142,7 +175,7 @@ public:
 				ImGui::SliderAngle("pitch", &transform.pitch, -180.0f, 180.0f, "%.2f deg");
 				ImGui::SliderAngle("yaw", &transform.yaw, -180.0f, 180.0f, "%.2f deg");
 				selectedNode->SetAppliedTransform(GetTransformation(transform));
-
+				selectedNode->ControlMeDaddy(gfx, pm);
 			}
 			ImGui::Columns();
 		}
@@ -158,7 +191,7 @@ public:
 private:
 	
 	Node* selectedNode = nullptr;
-	
+	Node::PSMaterialConstantFullMante pm;
 	std::unordered_map<int, Transformations> transforms;
 };
 
@@ -296,17 +329,11 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 		
 		currBinds.push_back(PixelShader::Resolve(gfx, "PhongSpecNormalPS.cso"));
 		
-		struct PSMaterialConstant
-		{
-			BOOL hasAlphaShow;
-			float specularPower;
-			BOOL  normalMapEnabled = TRUE;
-			float padding[1];
-		} pmc;
+		Node::PSMaterialConstantFullMante pmc;
 		pmc.specularPower = shininess;
-		pmc.hasAlphaShow = hasAlphaGloss ? TRUE : FALSE;
+		pmc.hasGlossMap = hasAlphaGloss ? TRUE : FALSE;
 
-		currBinds.push_back(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
+		currBinds.push_back(PixelConstantBuffer<Node::PSMaterialConstantFullMante>::Resolve(gfx, pmc, 1u));
 
 
 		currBinds.push_back(InputLayout::Resolve(gfx, vb.GetLayout(), pvsbc));
@@ -414,6 +441,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 
 		struct PSMaterialConstantDiffuse
 		{
+
 			float specularIntensity = 0.18f;
 			float specularPower;
 			float padding[2];
@@ -490,9 +518,9 @@ void Model::Draw()
 	pRoot->Draw(gfx, pRoot->GetAppliedTransform() * pRoot->GetBaseTransform());
 }
 
-void Model::ShowWindow(const char* windowName) noexcept
+void Model::ShowWindow(Graphics& gfx, const char* windowName) noexcept
 {
-	pWindow->Show(windowName, *pRoot);
+	pWindow->Show(gfx, windowName, *pRoot);
 }
 
 

@@ -115,7 +115,7 @@ void App::DoFrame()
 	
 
 	// control model
-	Gobber.ShowWindow("Gobber") ;
+	Gobber.ShowWindow(wnd.Gfx(), "Gobber") ;
 	
 	// imgui window for camera
 	cam.SpawnControlWindow();
