@@ -241,6 +241,9 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 	const std::string meshTag = base + "%" + mesh_in->mName.C_Str();
 	float shininess = 35.0f;
 
+	dx::XMFLOAT4 diffuseColor = { 0.65f,0.65f,0.85f,1.0f };
+	dx::XMFLOAT4 specularColor = { 0.7f, 0.8f, 0.7f, 1.0f };
+
 	if (mesh_in->mMaterialIndex >= 0)
 	{
 		auto& material = *ppMaterials[mesh_in->mMaterialIndex];
@@ -254,6 +257,10 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 			hasAlphaGloss = tex->HasAlpha();
 			currBinds.push_back(std::move(tex));
 
+		}
+		else
+		{
+			material.Get(AI_MATKEY_COLOR_SPECULAR, reinterpret_cast<aiColor4D&>(diffuseColor));
 		}
 		if(!hasAlphaGloss)
 		{
@@ -270,6 +277,10 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 		{
 			hasDiffuseMap = true;
 			currBinds.push_back(Texture::Resolve(gfx, base + textureSrc.C_Str(), 0));
+		}
+		else
+		{
+			material.Get(AI_MATKEY_COLOR_DIFFUSE, reinterpret_cast<aiColor4D&>(specularColor));
 		}
 		
 
@@ -495,11 +506,13 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 
 	struct PSMaterialConstantDiffuse
 	{
-		dx::XMFLOAT4 material = { 0.65f,0.65f,0.85f,1.0f };
-		float specularIntensity = 0.18f;
+		dx::XMFLOAT4 material ;
+		float specularIntensity;
 		float specularPower;
 		float padding[2];
 	} pmc;
+	pmc.material = diffuseColor;
+	pmc.specularIntensity = (specularColor.x + specularColor.y + specularColor.z)/3;
 	pmc.specularPower = shininess;
 	currBinds.push_back(PixelConstantBuffer<PSMaterialConstantDiffuse>::Resolve(gfx, pmc, 1u));
 
