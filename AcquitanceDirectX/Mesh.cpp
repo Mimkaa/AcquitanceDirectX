@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include <unordered_map>
 #include <sstream>
+#include <type_traits>
 #include "Surface.h"
 // mesh
 Mesh::Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>>binds_in)
@@ -104,37 +105,62 @@ void Node::AddChild(std::unique_ptr<Node> node_in)
 		children.push_back(std::move(node_in));
 }
 
-void Node::ControlMeDaddy(Graphics& gfx, Node::PSMaterialConstantFullMante& c) const noexcept
+template <class C>
+bool Node::ControlMeDaddy(Graphics& gfx, C& c) const noexcept
 {
-	if (meshes.empty())
+	
+	if constexpr (std::is_same<C, Node::PSMaterialConstantFullMante>::value)
 	{
-		return;
-	}
+		if (!meshes.empty())
+		{
+			if (auto pcb = meshes.front()->QueryBindables<Bind::PixelConstantBuffer<C>>())
+			{
+				ImGui::Text("Material");
 
-	if (auto pcb = meshes.front()->QueryBindables<Bind::PixelConstantBuffer<Node::PSMaterialConstantFullMante>>())
+				bool normalMapEnabled = (bool)c.normalMapEnabled;
+				ImGui::Checkbox("Norm Map", &normalMapEnabled);
+				c.normalMapEnabled = normalMapEnabled ? TRUE : FALSE;
+
+				bool specularMapEnabled = (bool)c.specularMapEnabled;
+				ImGui::Checkbox("Spec Map", &specularMapEnabled);
+				c.specularMapEnabled = specularMapEnabled ? TRUE : FALSE;
+
+				bool hasGlossMap = (bool)c.hasGlossMap;
+				ImGui::Checkbox("Gloss Alpha", &hasGlossMap);
+				c.hasGlossMap = hasGlossMap ? TRUE : FALSE;
+
+				ImGui::SliderFloat("Spec Weight", &c.specularMapWeight, 0.0f, 2.0f);
+
+				ImGui::SliderFloat("Spec Pow", &c.specularPower, 0.0f, 1000.0f, "%f", 5.0f);
+
+				ImGui::ColorPicker3("Spec Color", reinterpret_cast<float*>(&c.specularColor));
+
+				pcb->Update(gfx, c);
+				return true;
+			}
+		}
+		
+	}
+	else if constexpr (std::is_same<C, Node::PSMaterialNotex>::value)
 	{
-		ImGui::Text("Material");
+		if (!meshes.empty()) {
+			if (auto pcb = meshes.front()->QueryBindables<Bind::PixelConstantBuffer<C>>())
+			{
+				ImGui::Text("Material");
 
-		bool normalMapEnabled = (bool)c.normalMapEnabled;
-		ImGui::Checkbox("Norm Map", &normalMapEnabled);
-		c.normalMapEnabled = normalMapEnabled ? TRUE : FALSE;
+				ImGui::SliderFloat("Spec Inten.", &c.specularIntensity, 0.0f, 1.0f);
 
-		bool specularMapEnabled = (bool)c.specularMapEnabled;
-		ImGui::Checkbox("Spec Map", &specularMapEnabled);
-		c.specularMapEnabled = specularMapEnabled ? TRUE : FALSE;
+				ImGui::SliderFloat("Spec Pow", &c.specularPower, 0.0f, 1000.0f, "%f", 5.0f);
 
-		bool hasGlossMap = (bool)c.hasGlossMap;
-		ImGui::Checkbox("Gloss Alpha", &hasGlossMap);
-		c.hasGlossMap = hasGlossMap ? TRUE : FALSE;
+				ImGui::ColorPicker3("Diff Color", reinterpret_cast<float*>(&c.material));
 
-		ImGui::SliderFloat("Spec Weight", &c.specularMapWeight, 0.0f, 2.0f);
-
-		ImGui::SliderFloat("Spec Pow", &c.specularPower, 0.0f, 1000.0f, "%f", 5.0f);
-
-		ImGui::ColorPicker3("Spec Color", reinterpret_cast<float*>(&c.specularColor));
-
-		pcb->Update(gfx, c);
+				pcb->Update(gfx, c);
+				return true;
+			}
+		}
+	
 	}
+	return false;
 }
 
 
@@ -175,7 +201,10 @@ public:
 				ImGui::SliderAngle("pitch", &transform.pitch, -180.0f, 180.0f, "%.2f deg");
 				ImGui::SliderAngle("yaw", &transform.yaw, -180.0f, 180.0f, "%.2f deg");
 				selectedNode->SetAppliedTransform(GetTransformation(transform));
-				selectedNode->ControlMeDaddy(gfx, pm);
+				if (!selectedNode->ControlMeDaddy<Node::PSMaterialConstantFullMante>(gfx, pm))
+				{
+					selectedNode->ControlMeDaddy<Node::PSMaterialNotex>(gfx, pmn);
+				}
 			}
 			ImGui::Columns();
 		}
@@ -192,6 +221,7 @@ private:
 	
 	Node* selectedNode = nullptr;
 	Node::PSMaterialConstantFullMante pm;
+	Node::PSMaterialNotex pmn;
 	std::unordered_map<int, Transformations> transforms;
 };
 
@@ -504,17 +534,12 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 
 	currBinds.push_back(InputLayout::Resolve(gfx, vb.GetLayout(), pvsbc));
 
-	struct PSMaterialConstantDiffuse
-	{
-		dx::XMFLOAT4 material ;
-		float specularIntensity;
-		float specularPower;
-		float padding[2];
-	} pmc;
+	
+	Node::PSMaterialNotex pmc;
 	pmc.material = diffuseColor;
 	pmc.specularIntensity = (specularColor.x + specularColor.y + specularColor.z)/3;
 	pmc.specularPower = shininess;
-	currBinds.push_back(PixelConstantBuffer<PSMaterialConstantDiffuse>::Resolve(gfx, pmc, 1u));
+	currBinds.push_back(PixelConstantBuffer<Node::PSMaterialNotex>::Resolve(gfx, pmc, 1u));
 
 	}
 	

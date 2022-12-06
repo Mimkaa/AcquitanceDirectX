@@ -54,6 +54,14 @@ public:
 		
 	};
 
+	struct PSMaterialNotex
+	{
+		DirectX::XMFLOAT4 material;
+		float specularIntensity;
+		float specularPower;
+		float padding[2];
+	} pmc;
+
 public:
 	Node(int id_in, const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation);
 	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) noxnd;
@@ -61,7 +69,9 @@ public:
 	void SetAppliedTransform(const DirectX::FXMMATRIX& appTrans) noexcept;
 	DirectX::XMMATRIX GetBaseTransform() const noexcept;
 	int GetId() const; 
-	void ControlMeDaddy(Graphics& gfx, PSMaterialConstantFullMante& pm_in) const noexcept;
+
+	template <class C>
+	bool ControlMeDaddy(Graphics& gfx, C& pm_in) const noexcept;
 	
 	
 private:
