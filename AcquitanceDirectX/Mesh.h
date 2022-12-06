@@ -57,9 +57,9 @@ public:
 	struct PSMaterialNotex
 	{
 		DirectX::XMFLOAT4 material;
-		float specularIntensity;
+		DirectX::XMFLOAT4 specularColor;
 		float specularPower;
-		float padding[2];
+		float padding[3];
 	} pmc;
 
 public:

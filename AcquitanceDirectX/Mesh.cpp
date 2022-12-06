@@ -147,12 +147,15 @@ bool Node::ControlMeDaddy(Graphics& gfx, C& c) const noexcept
 			if (auto pcb = meshes.front()->QueryBindables<Bind::PixelConstantBuffer<C>>())
 			{
 				ImGui::Text("Material");
+				ImGui::ColorPicker3("Spec Color", reinterpret_cast<float*>(&c.specularColor));
 
-				ImGui::SliderFloat("Spec Inten.", &c.specularIntensity, 0.0f, 1.0f);
+				float specularPower = c.specularPower;
+				ImGui::SliderFloat("Spec Pow", &specularPower, 0.0f, 1000.0f, "%f", 5.0f);
+				c.specularPower = specularPower;
 
-				ImGui::SliderFloat("Spec Pow", &c.specularPower, 0.0f, 1000.0f, "%f", 5.0f);
-
-				ImGui::ColorPicker3("Diff Color", reinterpret_cast<float*>(&c.material));
+				DirectX::XMFLOAT4 mat= c.material;
+				ImGui::ColorPicker3("Diff Color", reinterpret_cast<float*>(&mat));
+				c.material = mat;
 
 				pcb->Update(gfx, c);
 				return true;
@@ -537,7 +540,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 	
 	Node::PSMaterialNotex pmc;
 	pmc.material = diffuseColor;
-	pmc.specularIntensity = (specularColor.x + specularColor.y + specularColor.z)/3;
+	pmc.specularColor = specularColor;
 	pmc.specularPower = shininess;
 	currBinds.push_back(PixelConstantBuffer<Node::PSMaterialNotex>::Resolve(gfx, pmc, 1u));
 

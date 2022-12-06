@@ -7,13 +7,14 @@ cbuffer LightCBuf
     float constant_attenuation;
     float linear_attenuation;
     float quadratic_attenuation;
+    
 };
 
 
 cbuffer MaterialCBuf
 {
     float4 materialColor;
-    float specularIntensity;
+    float4 specularColor;
     float specularPower;
     float padding[2];
 };
@@ -35,10 +36,10 @@ float4 main(float3 ViewPos : Position, float3 normal : Normal) : SV_Target
     // opposite direction of the reflection
 const float3 r = w * 2.0f - v_to_l;
 //specular intensity between view vector an the reflection
-const float3 specular = attenuation * (light_diffuse * attIntensity) * specularIntensity * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
+const float4 specular = attenuation * float4(light_diffuse * attIntensity,1.0f) * specularColor * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
 
 
-return float4(saturate(materialColor * (d + light_ambient) + specular), 1.0f);
+return saturate(materialColor * float4(d + light_ambient,1.0f) + specular);
 
 
 }
