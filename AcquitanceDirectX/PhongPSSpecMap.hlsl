@@ -17,6 +17,7 @@ SamplerState smpl;
 
 float4 main(float3 ViewPos : Position, float3 normal : Normal, float2 tec : Texcoord) : SV_Target
 {
+    normal = normalize(normal);
     const float3 v_to_l = lightPos - ViewPos;
     const float dist = length(v_to_l);
     const float3 LightDir = v_to_l / dist;

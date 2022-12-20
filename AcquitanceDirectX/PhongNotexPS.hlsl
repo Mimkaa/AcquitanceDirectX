@@ -21,18 +21,19 @@ cbuffer MaterialCBuf
 
 SamplerState smpl;
 
-float4 main(float3 ViewPos : Position, float3 normal : Normal) : SV_Target
+float4 main(float3 ViewPos : Position, float3 normalView : Normal) : SV_Target
 {
+    normalView = normalize(normalView);
     const float3 v_to_l = LightPos - ViewPos;
     const float dist = length(v_to_l);
     const float3 LightDir = v_to_l / dist;
     const float attenuation = 1.0f /
                 (constant_attenuation + linear_attenuation * dist + quadratic_attenuation * pow(dist, 2));
 
-    const float3 d = light_diffuse * attenuation * attIntensity * max(0.0f, dot(normal, LightDir));
+    const float3 d = light_diffuse * attenuation * attIntensity * max(0.0f, dot(normalView, LightDir));
 
     // specular highlight
-    const float3 w = normal * dot(v_to_l, normal);
+    const float3 w = normalView * dot(v_to_l, normalView);
     // opposite direction of the reflection
 const float3 r = w * 2.0f - v_to_l;
 //specular intensity between view vector an the reflection

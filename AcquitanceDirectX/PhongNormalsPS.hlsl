@@ -28,9 +28,9 @@ Texture2D tex;
 Texture2D norm: register(t2);
 SamplerState smpl;
 
-float4 main(float3 ViewPos : Position, float3 normal_in : Normal, float2 tec : Texcoord) : SV_Target
+float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : Texcoord) : SV_Target
 {
-    float3 normal;
+    float3 normal = normalView;
     if (normalsMappingOn == 1)
     {
         normal = norm.Sample(smpl, tec).rgb;
@@ -38,11 +38,9 @@ float4 main(float3 ViewPos : Position, float3 normal_in : Normal, float2 tec : T
         normal.y = -(normal.y * 2 - 1);
         normal.z = -normal.z * 2 -1;
         normal = mul(normal, (float3x3) modelView);
+        
     }
-    else
-    {
-        normal = normal_in;
-    }
+    normal = normalize(normal);
     
 
     const float3 v_to_l = LightPos - ViewPos;

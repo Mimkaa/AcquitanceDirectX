@@ -32,24 +32,21 @@ Texture2D spec;
 Texture2D norm;
 SamplerState smpl;
 
-float4 main(float3 ViewPos : Position, float3 normal_in : Normal, float2 tec : Texcoord, float3 tan : Tangent, float3 btan : Bytangent) : SV_Target
+float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : Texcoord, float3 tan : Tangent, float3 btan : Bytangent) : SV_Target
 {
-    float3 normal;
+    float3 normal = normalView;
     if (normalsMappingOn == 1)
     {
-        float3x3 TBNmat = float3x3(normalize(tan), normalize(btan), normalize(normal_in));
+        float3x3 TBNmat = float3x3(normalize(tan), normalize(btan), normalize(normalView));
         float3 normalSample = norm.Sample(smpl, tec).xyz;
-        normal_in.x = normalSample.x * 2 - 1;
-        normal_in.y = -(normalSample.y * 2 - 1);
-        normal_in.z = normalSample.z * 2 - 1;
+        normalView.x = normalSample.x * 2 - 1;
+        normalView.y = -(normalSample.y * 2 - 1);
+        normalView.z = normalSample.z * 2 - 1;
         
-        normal_in = mul(normal_in,TBNmat);
-        normal = normal_in;
+        normalView = mul(normalView,TBNmat);
+        normal = normalView;
     }
-    else
-    {
-        normal = normal_in;
-    }
+    normal = normalize(normal);
 
 
 
