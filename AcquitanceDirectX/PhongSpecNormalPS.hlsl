@@ -42,6 +42,29 @@ float3 MapNormalViewSpace(const float3 tan, const float3 btan, float3 normalView
      
 }
 
+float Attenuation(uniform float constant_attenuation, uniform float linear_attenuation, uniform float quadratic_attenuation, const in float dist)
+{
+    return 1/(constant_attenuation + linear_attenuation * dist + quadratic_attenuation * pow(dist, 2));
+}
+
+float3 Diffuse(uniform float3 light_diffuse, uniform float attIntensity, const in float attenuation, const in float3 normal, const in float3 LightDir)
+{
+    return light_diffuse * attenuation * attIntensity * max(0.0f, dot(normal, LightDir));
+}
+
+float3 Speculate(const in float attenuation, const in float specularIntensity, const in float3 SpecularColor, const in float3 normal,
+const in float3 v_to_l, const in float3 ViewPos, const in float specularPower
+)
+{
+    // specular highlight
+    const float3 w = normal * dot(v_to_l, normal);
+    // opposite direction of the reflection
+    const float3 r = w * 2.0f - v_to_l;
+    // vector from camera to fragment (in view space) renormalization is used here
+    const float3 viewCamToFrag = normalize(ViewPos);
+    return attenuation * specularIntensity * SpecularColor * pow(max(0.0f, dot(normalize(-r), normalize(viewCamToFrag))), specularPower);
+}
+
 float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : Texcoord, float3 tan : Tangent, float3 btan : Bytangent) : SV_Target
 {
     float3 normal = normalize(normalView);
@@ -51,17 +74,14 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
 
     }
     
-
-
-
     const float3 v_to_l = LightPos - ViewPos;
     const float dist = length(v_to_l);
     const float3 LightDir = v_to_l / dist;
-    const float attenuation = 1.0f /
-                (constant_attenuation + linear_attenuation * dist + quadratic_attenuation * pow(dist, 2));
+    const float attenuation = Attenuation(constant_attenuation, linear_attenuation, quadratic_attenuation, dist);
 
-    const float3 d = light_diffuse * attenuation * attIntensity * max(0.0f, dot(normal, LightDir));
-
+    const float3 d = Diffuse(light_diffuse, attIntensity, attenuation, normal, LightDir);
+    
+    
     // specular highlight
     const float3 w = normal * dot(v_to_l, normal);
     // opposite direction of the reflection
@@ -82,8 +102,8 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
        
     }
  
-    const float3 specular = attenuation * (light_diffuse * attIntensity) * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
-
+    const float3 specular = Speculate(attenuation, 1.0f, specularReflectionColor, normal, v_to_l, ViewPos, specularPower);
+    
 
     return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular * specularReflectionColor), 1.0f);
 }
