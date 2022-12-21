@@ -3,6 +3,7 @@
 #include <sstream>
 #include <type_traits>
 #include "Surface.h"
+#include <filesystem>
 // mesh
 Mesh::Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>>binds_in)
 {
@@ -228,13 +229,13 @@ private:
 	std::unordered_map<int, Transformations> transforms;
 };
 
-Model::Model(Graphics& gfx, const char* filename)
+Model::Model(Graphics& gfx, const std::string& pathname)
 	:
 	gfx(gfx),
 	pWindow(std::make_unique<WindowMenu>())
 {
 	Assimp::Importer importer;
-	const auto scene = importer.ReadFile(filename,
+	const auto scene = importer.ReadFile(pathname.c_str(),
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_ConvertToLeftHanded |
@@ -247,7 +248,7 @@ Model::Model(Graphics& gfx, const char* filename)
 	}
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
-		ParseMesh(scene->mMeshes[i], 1.0f, scene->mMaterials);
+		ParseMesh(scene->mMeshes[i], 1.0f, scene->mMaterials, pathname);
 	}
 	int firstNodeId = 0;
 	pRoot = ParseNode(firstNodeId, scene->mRootNode);
@@ -258,7 +259,7 @@ Model::~Model() noexcept
 {
 }
 
-void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const* ppMaterials)
+void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* const* ppMaterials, const std::filesystem::path& path)
 {
 	using namespace Bind;
 	namespace dx = DirectX;
@@ -270,7 +271,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial*const
 
 	std::vector<std::shared_ptr<Bind::Bindable>> currBinds;
 	using namespace std::string_literals;
-	std::string base = "Models\\gobber\\"s;
+	std::string base = path.parent_path().string() + "\\";
 	const std::string meshTag = base + "%" + mesh_in->mName.C_Str();
 	float shininess = 35.0f;
 

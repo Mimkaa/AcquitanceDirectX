@@ -11,6 +11,7 @@
 #include "imgui/imgui.h"
 #include <optional>
 #include "ChiliException.hpp"
+#include <filesystem>
 
 
 class ModelException :public ChiliException
@@ -91,10 +92,10 @@ class Model
 {
 	
 public:
-	Model(Graphics& gfx, const char* filename);
+	Model(Graphics& gfx, const std::string& pathname);
 	~Model() noexcept;
 private:
-	void ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* const* ppMaterials);
+	void ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* const* ppMaterials, const std::filesystem::path& path);
 	
 	std::unique_ptr<Node> ParseNode(int& node_id, aiNode* node_in);
 	
