@@ -34,7 +34,7 @@ SamplerState smpl;
 
 float3 MapNormalViewSpace(const float3 tan, const float3 btan, float3 normalView, const float2 tec, Texture2D nmap, SamplerState splr)
 {
-    float3x3 TBNmat = float3x3(normalize(tan), normalize(btan), normalize(normalView));
+    float3x3 TBNmat = float3x3(tan, btan, normalView);
     float3 normalSample = norm.Sample(splr, tec).xyz;
     const float3 tanNormal = normalSample * 2.0f - 1.0f;
         
@@ -70,7 +70,7 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
     float3 normal = normalize(normalView);
     if (normalsMappingOn == 1)
     {
-        normal = MapNormalViewSpace(tan, btan, normalView, tec, norm, smpl);
+        normal = MapNormalViewSpace(normalize(tan), normalize(btan), normalize(normalView), tec, norm, smpl);
 
     }
     
