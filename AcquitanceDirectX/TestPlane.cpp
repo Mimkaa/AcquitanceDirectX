@@ -13,10 +13,10 @@ TestPlane::TestPlane(Graphics& gfx)
 
 	auto plane = Plane::Make(std::move(layout));
 	std::string TagName = "wall$";
-	std::string base = "images\\";
+	std::string base = "Models\\brick_wall\\";
 
-	AddBind(Texture::Resolve(gfx, base + "brickwall.jpg", 0));
-	AddBind(Texture::Resolve(gfx, base + "brickwall_normal.jpg", 2));
+	AddBind(Texture::Resolve(gfx, base + "brick_wall_diffuse.jpg", 0));
+	AddBind(Texture::Resolve(gfx, base + "brick_wall_normal_rotatedX.jpg", 2));
 
 	AddBind(Sampler::Resolve(gfx));
 

@@ -41,5 +41,5 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
 
 return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular), 1.0f);
 
-
+    
 }

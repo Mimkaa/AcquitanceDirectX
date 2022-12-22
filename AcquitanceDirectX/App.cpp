@@ -6,16 +6,38 @@
 #include "GDIPlusManager.h"
 #include "imgui/imgui.h"
 #include "VertexShader.h"
+#include "NormalMapTwerker.h"
+#include <shellapi.h>
+
 namespace dx = DirectX;
 GDIPlusManager gdipm;
 
 
-App::App()
+App::App(const std::string& commandLine )
 	:
+	commandLine(commandLine),
 	wnd(1000, 550, L"I understood how it works)))"),
 	light(wnd.Gfx())
 	
 {
+	if (this->commandLine != "")
+	{
+		int nArgs;
+		const auto pLineW = GetCommandLineW();
+		const auto pArgs = CommandLineToArgvW(pLineW, &nArgs);
+		if (nArgs >= 4 && std::wstring(pArgs[1]) == L"--ntwerk-rotx180")
+		{
+			const std::wstring inputStr = pArgs[2];
+			const std::wstring outputStr = pArgs[3];
+			NormalTwerker::RotateXAxis180(
+				std::string(inputStr.begin(), inputStr.end()),
+				std::string(outputStr.begin(), outputStr.end())
+			);
+			throw std::runtime_error("Normal map processed successfully. Just kidding about that whole runtime error thing.");
+
+		}
+
+	}
 	
 	wall.SetPos(dx::XMMatrixTranslation( 2.5f,0.0f,1.0f ));
 	Gobber.SetRootTransform(dx::XMMatrixTranslation(0.0f, 0.0f, 1.0f));

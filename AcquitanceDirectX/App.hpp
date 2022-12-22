@@ -13,7 +13,7 @@
 class App
 {
 public:
-	App();
+	App(const std::string& commandLine = "");
 	~App();
 	// message loop
 	int Go();
@@ -21,8 +21,9 @@ private:
 	void DoFrame();
 	
 private:
+	std::string commandLine;
 	ImguiManager imgui;
-	Window wnd;
+	Window wnd; 
 	Timer timer;
 	float speed_factor = 1.0f;
 	Camera cam;

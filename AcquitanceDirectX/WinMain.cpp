@@ -7,7 +7,7 @@
 int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	try {
-		App{}.Go();
+		App{ lpCmdLine }.Go();
 	}
 	catch (const ChiliException& e)
 	{

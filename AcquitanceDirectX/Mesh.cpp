@@ -392,6 +392,10 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 		
 
 	}
+	else if (hasDiffuseMap && !hasNormalMap && hasSppecularMap)
+	{
+
+	}
 	else if (hasDiffuseMap && hasNormalMap)
 	{
 		using Dvtx::VertexLayout;
