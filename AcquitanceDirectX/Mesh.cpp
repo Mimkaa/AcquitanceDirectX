@@ -4,6 +4,7 @@
 #include <type_traits>
 #include "Surface.h"
 #include <filesystem>
+#include "ChilliExtractAT.h"
 // mesh
 Mesh::Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>>binds_in)
 {
@@ -197,7 +198,26 @@ public:
 
 			if (selectedNode)
 			{
-				auto& transform = transforms[selectedNode->GetId()];
+				const auto id = selectedNode->GetId();
+				auto i = transforms.find(id);
+				if (i == transforms.end())
+				{
+					DirectX::XMFLOAT4X4 float4X4mat;
+					const auto loadedApply= selectedNode->GetAppliedTransform();
+					DirectX::XMStoreFloat4x4(&float4X4mat,loadedApply);
+					const auto angle = ExtractEulerAngles(float4X4mat);
+					const auto translation = ExtractTranslation(float4X4mat);
+					Transformations tf;
+					tf.x = translation.x;
+					tf.y = translation.y;
+					tf.z = translation.z;
+					tf.yaw = angle.y;
+					tf.pitch = angle.x;
+					tf.roll = angle.z;
+					std::tie(i, std::ignore) = transforms.insert({ id, tf });
+				}
+
+				auto& transform = i->second;
 				ImGui::Text("Position");
 				ImGui::SliderFloat("x_offset", &transform.x, -20.0f, 20.0f);
 				ImGui::SliderFloat("y_offset", &transform.y, -20.0f, 20.0f);
@@ -394,6 +414,57 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 	}
 	else if (hasDiffuseMap && !hasNormalMap && hasSppecularMap)
 	{
+		using Dvtx::VertexLayout;
+		Dvtx::VertexBuffer vb{ std::move(VertexLayout{}
+		.Append(VertexLayout::Position3D)
+		.Append(VertexLayout::Normal)
+		.Append(VertexLayout::Texture2D)) };
+
+		for (int i = 0; i < mesh_in->mNumVertices; i++)
+		{
+			vb.EmplaceBack(
+				dx::XMFLOAT3{ mesh_in->mVertices[i].x * scale,mesh_in->mVertices[i].y * scale ,mesh_in->mVertices[i].z * scale },
+				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh_in->mNormals[i]),
+				*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh_in->mTextureCoords[0][i])
+			);
+		}
+
+		// reinterpert indices
+		std::vector<unsigned short> indices;
+		indices.reserve(mesh_in->mNumFaces * 3);
+		for (int i = 0; i < mesh_in->mNumFaces; i++)
+		{
+			indices.push_back(mesh_in->mFaces[i].mIndices[0]);
+			indices.push_back(mesh_in->mFaces[i].mIndices[1]);
+			indices.push_back(mesh_in->mFaces[i].mIndices[2]);
+		}
+		currBinds.push_back(VertexBuffer::Resolve(gfx, meshTag, vb));
+
+		currBinds.push_back(IndexBuffer::Resolve(gfx, meshTag, indices));
+
+		auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
+		auto pvsbc = pvs->GetBytecode();
+		currBinds.push_back(std::move(pvs));
+
+		currBinds.push_back(PixelShader::Resolve(gfx, "PhongSpecPS.cso"));
+
+		currBinds.push_back(InputLayout::Resolve(gfx, vb.GetLayout(), pvsbc));
+
+		struct PSMaterialConstantDiffuseSpec
+		{
+			float specularPowerConst;
+			BOOL hasGloss;
+			float specularMapWeight;
+			float padding;
+		} pmc;
+		pmc.specularPowerConst = shininess;
+		pmc.hasGloss = hasAlphaGloss ? TRUE : FALSE;
+		pmc.specularMapWeight = 1.0f;
+		// this is CLEARLY an issue... all meshes will share same mat const, but may have different
+		// Ns (specular power) specified for each in the material properties... bad conflict
+		currBinds.push_back(PixelConstantBuffer<PSMaterialConstantDiffuseSpec>::Resolve(gfx, pmc, 1u));
+
+
 
 	}
 	else if (hasDiffuseMap && hasNormalMap)

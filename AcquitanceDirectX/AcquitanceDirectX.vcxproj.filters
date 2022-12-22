@@ -168,6 +168,9 @@
     <ClCompile Include="TestCube.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
+    <ClCompile Include="ChilliExtractAT.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowMessageMap.hpp">
@@ -345,6 +348,9 @@
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="NormalMapTwerker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChilliExtractAT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
