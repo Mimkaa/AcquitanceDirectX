@@ -1,6 +1,6 @@
 #include "PointLight.hlsl"
 #include "ShaderOps.hlsl"
-
+#include "LightVectorData.hlsl"
 
 cbuffer MaterialCBuf
 {
@@ -34,18 +34,16 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
 
     }
     
-    const float3 v_to_l = LightPos - ViewPos;
-    const float dist = length(v_to_l);
-    const float3 LightDir = v_to_l / dist;
-    const float attenuation = Attenuation(constant_attenuation, linear_attenuation, quadratic_attenuation, dist);
+    const LightVectorData lv = CalculateLightVectorData(LightPos, ViewPos);
+    const float attenuation = Attenuation(constant_attenuation, linear_attenuation, quadratic_attenuation, lv.distToL);
 
-    const float3 d = Diffuse(light_diffuse, attIntensity, attenuation, normal, LightDir);
+    const float3 d = Diffuse(light_diffuse, attIntensity, attenuation, normal, lv.dirToL);
     
     
     // specular highlight
-    const float3 w = normal * dot(v_to_l, normal);
+    const float3 w = normal * dot(lv.vToL, normal);
     // opposite direction of the reflection
-    const float3 r = w * 2.0f - v_to_l;
+    const float3 r = w * 2.0f - lv.vToL;
     
     //specular intensity between view vector an the reflection
 
@@ -62,7 +60,7 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
        
     }
  
-    const float3 specular = Speculate(attenuation, 1.0f, specularReflectionColor, normal, v_to_l, ViewPos, specularPower);
+    const float3 specular = Speculate(attenuation, 1.0f, specularReflectionColor, normal, lv.vToL, ViewPos, specularPower);
     
 
     return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular * specularReflectionColor), 1.0f);

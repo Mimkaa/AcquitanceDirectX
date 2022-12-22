@@ -6,6 +6,7 @@ class TestPlane :public Drawable
 public:
 	TestPlane(Graphics& gfx);
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
+	void SetPos(const DirectX::XMMATRIX mat) noexcept;
 	void ShowControlWindow(Graphics& gfx) noexcept;
 private:
 	struct

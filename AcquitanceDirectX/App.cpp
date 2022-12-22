@@ -16,6 +16,10 @@ App::App()
 	light(wnd.Gfx())
 	
 {
+	
+	wall.SetPos(dx::XMMatrixTranslation( 2.5f,0.0f,1.0f ));
+	Gobber.SetRootTransform(dx::XMMatrixTranslation(0.0f, 0.0f, 1.0f));
+	nano.SetRootTransform(dx::XMMatrixTranslation(-2.0f, -7.0f, 1.0f));
 
 wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
 // check if we get the same pointer in this case
@@ -53,6 +57,9 @@ void App::DoFrame()
 	
 
 	Gobber.Draw();
+	nano.Draw();
+	wall.Draw(wnd.Gfx());
+
 	light.Draw(wnd.Gfx());
 	//plane.Draw(wnd.Gfx());
 
@@ -116,6 +123,8 @@ void App::DoFrame()
 
 	// control model
 	Gobber.ShowWindow(wnd.Gfx(), "Gobber") ;
+	nano.ShowWindow(wnd.Gfx(), "nano");
+	wall.ShowControlWindow(wnd.Gfx());
 	
 	// imgui window for camera
 	cam.SpawnControlWindow();

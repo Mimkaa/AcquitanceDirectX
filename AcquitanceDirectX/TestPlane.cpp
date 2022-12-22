@@ -16,7 +16,7 @@ TestPlane::TestPlane(Graphics& gfx)
 	std::string base = "images\\";
 
 	AddBind(Texture::Resolve(gfx, base + "brickwall.jpg", 0));
-	AddBind(Texture::Resolve(gfx, base + "brickwall_normal.jpg", 1));
+	AddBind(Texture::Resolve(gfx, base + "brickwall_normal.jpg", 2));
 
 	AddBind(Sampler::Resolve(gfx));
 
@@ -48,6 +48,15 @@ TestPlane::TestPlane(Graphics& gfx)
 DirectX::XMMATRIX TestPlane::GetTransformXM() const noexcept 
 {
 	return DirectX::XMMatrixRotationRollPitchYaw(pos.pitch, pos.yaw, pos.roll) * DirectX::XMMatrixTranslation(pos.pos.x, pos.pos.y, pos.pos.z);
+}
+
+void TestPlane::SetPos(const DirectX::XMMATRIX mat) noexcept
+{
+	DirectX::XMVECTOR poss = DirectX::XMLoadFloat3(&pos.pos);
+
+	DirectX::XMVECTOR transPos = DirectX::XMVector3Transform(poss, mat);
+
+	DirectX::XMStoreFloat3(&pos.pos, transPos);
 }
 
 void TestPlane::ShowControlWindow(Graphics& gfx) noexcept

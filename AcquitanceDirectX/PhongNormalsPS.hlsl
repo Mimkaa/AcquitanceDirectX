@@ -1,14 +1,6 @@
-cbuffer LightCBuf
-{
-    float3 LightPos;
-    float3 light_ambient;
-    float3 light_diffuse;
-    float attIntensity;
-    float constant_attenuation;
-    float linear_attenuation;
-    float quadratic_attenuation;
-};
-
+#include "PointLight.hlsl"
+#include "ShaderOps.hlsl"
+#include "LightVectorData.hlsl"
 
 cbuffer MaterialCBuf
 {
@@ -18,11 +10,7 @@ cbuffer MaterialCBuf
     float padding[1];
 };
 
-cbuffer CBufMat
-{
-    matrix modelView;
-    matrix modelViewProj;
-};
+#include "Transformation.hlsl"
 
 Texture2D tex;
 Texture2D norm: register(t2);
@@ -30,34 +18,26 @@ SamplerState smpl;
 
 float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : Texcoord) : SV_Target
 {
-    float3 normal = normalView;
+    float3 normal = normalize(normalView);
     if (normalsMappingOn == 1)
     {
-        normal = norm.Sample(smpl, tec).rgb;
-        normal.x = normal.x * 2 - 1;
-        normal.y = -(normal.y * 2 - 1);
-        normal.z = -normal.z * 2 -1;
-        normal = mul(normal, (float3x3) modelView);
+        const float3 normalSample = norm.Sample(smpl, tec).rgb;
+        const float3 objNormal = normalSample * 2 - 1;
+        
+        normal = mul(objNormal, (float3x3) modelView);
         
     }
-    normal = normalize(normal);
     
+    const LightVectorData lv = CalculateLightVectorData(LightPos, ViewPos);
+    const float attenuation = Attenuation(constant_attenuation, linear_attenuation, quadratic_attenuation, lv.distToL);
 
-    const float3 v_to_l = LightPos - ViewPos;
-    const float dist = length(v_to_l);
-    const float3 LightDir = v_to_l / dist;
-    const float attenuation = 1.0f /
-                (constant_attenuation + linear_attenuation * dist + quadratic_attenuation * pow(dist, 2));
 
-    const float3 d = light_diffuse * attenuation * attIntensity * max(0.0f, dot(normal, LightDir));
+    const float3 d = Diffuse(light_diffuse, attIntensity, attenuation, normal, lv.dirToL);;
 
-    // specular highlight
-    const float3 w = normal * dot(v_to_l, normal);
-    // opposite direction of the reflection
-const float3 r = w * 2.0f - v_to_l;
+    
 //specular intensity between view vector an the reflection
-const float3 specular = attenuation * (light_diffuse * attIntensity) * specularIntensity * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
-
+ const float3 specular = Speculate(attenuation, 1.0f, specularIntensity.rrr, normal, lv.vToL, ViewPos, specularPower);
+    
 
 return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular), 1.0f);
 

@@ -64,6 +64,8 @@ DirectX::XMMATRIX Node::GetBaseTransform() const noexcept
 	return DirectX::XMLoadFloat4x4(&transform);
 }
 
+
+
 void Node::ShowTree(Node*& selectedNode) const noxnd
 {
 	// recursively increment the index of a node
@@ -229,7 +231,7 @@ private:
 	std::unordered_map<int, Transformations> transforms;
 };
 
-Model::Model(Graphics& gfx, const std::string& pathname)
+Model::Model(Graphics& gfx, const std::string& pathname, const float scale)
 	:
 	gfx(gfx),
 	pWindow(std::make_unique<WindowMenu>())
@@ -248,11 +250,16 @@ Model::Model(Graphics& gfx, const std::string& pathname)
 	}
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
-		ParseMesh(scene->mMeshes[i], 1.0f, scene->mMaterials, pathname);
+		ParseMesh(scene->mMeshes[i], scale, scene->mMaterials, pathname);
 	}
 	int firstNodeId = 0;
 	pRoot = ParseNode(firstNodeId, scene->mRootNode);
 	
+}
+
+void  Model::SetRootTransform(const DirectX::FXMMATRIX& rt) noexcept
+{
+	pRoot->SetAppliedTransform(rt);
 }
 
 Model::~Model() noexcept
@@ -272,7 +279,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 	std::vector<std::shared_ptr<Bind::Bindable>> currBinds;
 	using namespace std::string_literals;
 	std::string base = path.parent_path().string() + "\\";
-	const std::string meshTag = base + "%" + mesh_in->mName.C_Str();
+	const std::string meshTag = path.string() + "%" + mesh_in->mName.C_Str();
 	float shininess = 35.0f;
 
 	dx::XMFLOAT4 diffuseColor = { 0.65f,0.65f,0.85f,1.0f };

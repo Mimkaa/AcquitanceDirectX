@@ -29,6 +29,8 @@ private:
 	PointLight light;
 	
 	Model Gobber{ wnd.Gfx(), "Models\\gobber\\GoblinX.obj" };
+	Model nano{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
+	TestPlane wall{ wnd.Gfx()};
 	
 	int x = 0;
 	int y = 0;

@@ -92,7 +92,7 @@ class Model
 {
 	
 public:
-	Model(Graphics& gfx, const std::string& pathname);
+	Model(Graphics& gfx, const std::string& pathname, const float scale = 1.0f);
 	~Model() noexcept;
 private:
 	void ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* const* ppMaterials, const std::filesystem::path& path);
@@ -101,6 +101,7 @@ private:
 	
 	
 public :
+	void SetRootTransform(const DirectX::FXMMATRIX& rt) noexcept;
 	void Draw();
 	void ShowWindow(Graphics& gfx, const char* windowName) noexcept;
 	

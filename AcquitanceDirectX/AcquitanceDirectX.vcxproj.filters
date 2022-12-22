@@ -394,5 +394,11 @@
     <None Include="PointLight.hlsl">
       <Filter>Shader</Filter>
     </None>
+    <None Include="LightVectorData.hlsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Transformation.hlsl">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
