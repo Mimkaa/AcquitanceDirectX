@@ -16,15 +16,12 @@ Texture2D tex;
 Texture2D norm: register(t2);
 SamplerState smpl;
 
-float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : Texcoord) : SV_Target
+float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : Texcoord, float3 tan : Tangent, float3 btan : Bytangent) : SV_Target
 {
     float3 normal = normalize(normalView);
     if (normalsMappingOn == 1)
     {
-        const float3 normalSample = norm.Sample(smpl, tec).rgb;
-        const float3 objNormal = normalSample * 2 - 1;
-        
-        normal = mul(objNormal, (float3x3) modelView);
+        normal = MapNormalViewSpace(normalize(tan), normalize(btan), normalize(normalView), tec, norm, smpl);
         
     }
     

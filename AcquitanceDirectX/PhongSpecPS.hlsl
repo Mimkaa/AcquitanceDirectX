@@ -16,6 +16,7 @@ Texture2D spec;
 SamplerState splr;
 
 
+
 float4 main(float3 viewFragPos : Position, float3 viewNormal : Normal, float2 tc : Texcoord) : SV_Target
 {
     // normalize the mesh normal

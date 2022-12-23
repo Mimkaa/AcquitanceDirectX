@@ -29,9 +29,10 @@ private:
 	Camera cam;
 	PointLight light;
 	
-	Model Gobber{ wnd.Gfx(), "Models\\gobber\\GoblinX.obj" };
-	Model nano{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
-	TestPlane wall{ wnd.Gfx()};
+	//Model Gobber{ wnd.Gfx(), "Models\\gobber\\GoblinX.obj" };
+	//Model nano{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
+	//TestPlane wall{ wnd.Gfx()};
+	Model sponza{ wnd.Gfx(), "Models\\Sponza\\sponza.obj",1.0f/20};
 	
 	int x = 0;
 	int y = 0;

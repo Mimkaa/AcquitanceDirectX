@@ -505,7 +505,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 
 		currBinds.push_back(IndexBuffer::Resolve(gfx, meshTag, indices));
 		// no specular mapping
-		auto pvs = VertexShader::Resolve(gfx, "PhongNormalsVS.cso");
+		auto pvs = VertexShader::Resolve(gfx, "PhongSpecNormalVS.cso");
 		auto pvsbc = pvs->GetBytecode();
 		currBinds.push_back(std::move(pvs));
 
