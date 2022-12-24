@@ -4,14 +4,15 @@
 #include "ChiliMath.h"
 #include <string>
 #include <DirectXMath.h>
+#include <filesystem>
 
 class NormalTwerker
 {
 public:
-	void static RotateXAxis180(const std::string& pathIn, const std::string& pathOut)
+	template <class F>
+	void static TransformFile(const std::string& pathIn, const std::string& pathOut, F&& func)
 	{
 		using namespace DirectX;
-		const auto rotation = XMMatrixRotationX(PI);
 		auto sIn = Surface::FromFile(pathIn);
 
 		const auto nPixels = sIn.GetHeight() * sIn.GetWidth();
@@ -20,16 +21,46 @@ public:
 		for (auto pCurrent = pBegin; pCurrent < pEnd; pCurrent++)
 		{
 			auto n = ColorToVector(*pCurrent);
-			const auto transformedV = XMVector3Transform(n, rotation);
-			*pCurrent = VectorToColor(transformedV);
+			*pCurrent = VectorToColor(func(n));
 		}
 		sIn.Save(pathOut);
 
 	}
-	static void RotateXAxis180(const std::string& pathIn)
+	void static TransformAllFiles(const std::string& objPath)
 	{
-		return RotateXAxis180(pathIn, pathIn);
+		using namespace DirectX;
+		const auto parPath = std::filesystem::path(objPath).parent_path().string() + "\\";
+		Assimp::Importer importer;
+		const auto scene = importer.ReadFile(objPath.c_str(),0u);
+
+		const auto yFlip = XMVectorSet(1.0f, -1.0f, 1.0f, 1.0f);
+
+		const auto func = [yFlip](XMVECTOR transVec) -> XMVECTOR
+		{
+			const auto result = XMVectorMultiply(transVec, yFlip);
+			return result;
+		};
+
+		if (!scene)
+		{
+			throw ModelException(__LINE__, __FILE__, importer.GetErrorString());
+		}
+
+		for (int i = 0; i < scene->mNumMaterials; i++)
+		{
+			aiString textureSrc;
+			auto& mat = *scene->mMaterials[i];
+			if (mat.GetTexture(aiTextureType_NORMALS, 0, &textureSrc) == aiReturn_SUCCESS)
+			{
+				const auto inpPath = parPath + textureSrc.C_Str();
+				const auto endPath = parPath + "myTextures\\" + textureSrc.C_Str();
+				TransformFile(inpPath, endPath, func);
+			}
+		}
+
+
 	}
+
 private:
 	static DirectX::XMVECTOR ColorToVector(Surface::Color c)
 	{

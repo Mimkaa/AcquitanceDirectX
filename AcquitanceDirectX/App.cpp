@@ -25,13 +25,12 @@ App::App(const std::string& commandLine )
 		int nArgs;
 		const auto pLineW = GetCommandLineW();
 		const auto pArgs = CommandLineToArgvW(pLineW, &nArgs);
-		if (nArgs >= 4 && std::wstring(pArgs[1]) == L"--ntwerk-rotx180")
+		if (nArgs >= 3 && std::wstring(pArgs[1]) == L"--ntwerk-flipY")
 		{
 			const std::wstring inputStr = pArgs[2];
-			const std::wstring outputStr = pArgs[3];
-			NormalTwerker::RotateXAxis180(
-				std::string(inputStr.begin(), inputStr.end()),
-				std::string(outputStr.begin(), outputStr.end())
+			NormalTwerker::TransformAllFiles(
+				std::string(inputStr.begin(), inputStr.end())
+				
 			);
 			throw std::runtime_error("Normal map processed successfully. Just kidding about that whole runtime error thing.");
 
