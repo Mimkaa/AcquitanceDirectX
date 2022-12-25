@@ -11,6 +11,9 @@ namespace Bind {
 		sam_des.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 		sam_des.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		sam_des.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		sam_des.MipLODBias = 0.0f;
+		sam_des.MinLOD = 0.0f;
+		sam_des.MaxLOD = D3D11_FLOAT32_MAX;
 
 		GFX_THROW_INFO(GetDevice(gfx)->CreateSamplerState(&sam_des, &pSamplerState));
 

@@ -17,30 +17,36 @@ namespace Bind {
 		D3D11_TEXTURE2D_DESC tex_des = {};
 		tex_des.Width = surf.GetWidth();
 		tex_des.Height = surf.GetHeight();
-		tex_des.MipLevels = 1u;
+		tex_des.MipLevels = 0u;
 		tex_des.ArraySize = 1u;
 		tex_des.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		tex_des.Usage = D3D11_USAGE_DEFAULT;
-		tex_des.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		tex_des.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 		tex_des.CPUAccessFlags = 0u;
-		tex_des.MiscFlags = 0u;
+		tex_des.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 		tex_des.SampleDesc.Count = 1u;
 		tex_des.SampleDesc.Quality = 0u;
 
-		D3D11_SUBRESOURCE_DATA sd = {};
-		sd.pSysMem = surf.GetBufferPtr();
-		sd.SysMemPitch = (surf.GetWidth() * sizeof(Surface::Color));
+		
 
-		GFX_THROW_INFO(GetDevice(gfx)->CreateTexture2D(&tex_des, &sd, &pTexture));
+		GFX_THROW_INFO(GetDevice(gfx)->CreateTexture2D(&tex_des, nullptr, &pTexture));
+
+		// write image data into top mip level
+		GetContext(gfx)->UpdateSubresource(
+			pTexture.Get(), 0u, nullptr, surf.GetBufferPtrConst(), surf.GetWidth() * sizeof(Surface::Color), 0u
+		);
+
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC res_des = {};
 		res_des.Format = tex_des.Format;
 		res_des.Texture2D.MostDetailedMip = 0u;
-		res_des.Texture2D.MipLevels = 1u;
+		res_des.Texture2D.MipLevels = -1;
 		res_des.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 
 		GFX_THROW_INFO(GetDevice(gfx)->CreateShaderResourceView(pTexture.Get(), &res_des, &pTextureView));
 
+		// generate the mip chain using the gpu rendering pipeline
+		GetContext(gfx)->GenerateMips(pTextureView.Get());
 
 	}
 
