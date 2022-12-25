@@ -7,10 +7,11 @@ namespace Bind {
 		INFOMAN(gfx);
 
 		D3D11_SAMPLER_DESC sam_des = {};
+		sam_des.Filter = D3D11_FILTER_ANISOTROPIC;
 		sam_des.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 		sam_des.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 		sam_des.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		sam_des.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		sam_des.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY;
 		sam_des.MipLODBias = 0.0f;
 		sam_des.MinLOD = 0.0f;
 		sam_des.MaxLOD = D3D11_FLOAT32_MAX;
