@@ -62,6 +62,7 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
  
     const float3 specular = Speculate(attenuation, 1.0f, specularReflectionColor, normal, lv.vToL, ViewPos, specularPower);
     
-
-    return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular * specularReflectionColor), 1.0f);
+    // sample texture
+    float4 difSam = tex.Sample(smpl, tec);
+    return float4(saturate((d + light_ambient) * difSam.rgb + specular * specularReflectionColor), difSam.a);
 }

@@ -295,6 +295,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 	bool hasNormalMap = false;
 	bool hasDiffuseMap = false;
 	bool hasAlphaGloss = false;
+	bool diffuseHasAlpha = false;
 
 	std::vector<std::shared_ptr<Bind::Bindable>> currBinds;
 	using namespace std::string_literals;
@@ -337,7 +338,9 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &textureSrc) == aiReturn_SUCCESS)
 		{
 			hasDiffuseMap = true;
-			currBinds.push_back(Texture::Resolve(gfx, base + textureSrc.C_Str(), 0));
+			auto tex = Texture::Resolve(gfx, base + textureSrc.C_Str(), 0);
+			diffuseHasAlpha = tex->HasAlpha();
+			currBinds.push_back(std::move(tex));
 		}
 		else
 		{
@@ -628,7 +631,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 	currBinds.push_back(PixelConstantBuffer<Node::PSMaterialNotex>::Resolve(gfx, pmc, 1u));
 
 	}
-	
+	currBinds.push_back(Blender::Resolve(gfx, diffuseHasAlpha));
 	
 	meshes.push_back(std::make_unique<Mesh>(gfx, std::move(currBinds)));
 
