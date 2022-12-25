@@ -631,7 +631,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 	currBinds.push_back(PixelConstantBuffer<Node::PSMaterialNotex>::Resolve(gfx, pmc, 1u));
 
 	}
-	currBinds.push_back(Blender::Resolve(gfx, diffuseHasAlpha));
+	
 	
 	meshes.push_back(std::make_unique<Mesh>(gfx, std::move(currBinds)));
 

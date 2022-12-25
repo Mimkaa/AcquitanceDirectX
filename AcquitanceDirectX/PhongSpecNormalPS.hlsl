@@ -27,6 +27,9 @@ SamplerState smpl;
 
 float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : Texcoord, float3 tan : Tangent, float3 btan : Bytangent) : SV_Target
 {
+    // sample texture
+    float4 difSam = tex.Sample(smpl, tec);
+    clip(difSam.a < 0.1 ? -1 : 1);
     float3 normal = normalize(normalView);
     if (normalsMappingOn == 1)
     {
@@ -62,7 +65,6 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
  
     const float3 specular = Speculate(attenuation, 1.0f, specularReflectionColor, normal, lv.vToL, ViewPos, specularPower);
     
-    // sample texture
-    float4 difSam = tex.Sample(smpl, tec);
+    
     return float4(saturate((d + light_ambient) * difSam.rgb + specular * specularReflectionColor), difSam.a);
 }
