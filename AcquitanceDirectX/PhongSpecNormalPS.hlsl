@@ -29,6 +29,11 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
 {
     // sample texture
     float4 difSam = tex.Sample(smpl, tec);
+    // flip normal if it faces same direction as the camera does
+    if (dot(ViewPos, normalView) > 0.0f)
+    {
+        normalView = -normalView;
+    }
     clip(difSam.a < 0.1 ? -1 : 1);
     float3 normal = normalize(normalView);
     if (normalsMappingOn == 1)

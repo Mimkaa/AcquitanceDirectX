@@ -12,3 +12,4 @@
 #include "Sampler.h"
 #include "TransformCbufDoubleBoi.h"
 #include "Blender.h"
+#include "Rasterizer.h"
