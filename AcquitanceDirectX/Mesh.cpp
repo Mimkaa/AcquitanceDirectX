@@ -402,7 +402,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 
 		
 		
-		currBinds.push_back(PixelShader::Resolve(gfx, "PhongSpecNormalPS.cso"));
+		currBinds.push_back(PixelShader::Resolve(gfx, !diffuseHasAlpha?"PhongSpecNormalPS.cso":"PhongSpecNormalMaskPS.cso"));
 		
 		Node::PSMaterialConstantFullMante pmc;
 		pmc.specularPower = shininess;
