@@ -632,6 +632,8 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 
 	}
 	currBinds.push_back(Rasterizer::Resolve(gfx, diffuseHasAlpha));
+	currBinds.push_back(Blender::Resolve(gfx, false));
+	
 	
 	meshes.push_back(std::make_unique<Mesh>(gfx, std::move(currBinds)));
 

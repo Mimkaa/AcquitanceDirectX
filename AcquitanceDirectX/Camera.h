@@ -10,7 +10,7 @@ public :
 	void Reset() noexcept;
 	void Rotate(const int dx, const int dy);
 	void Translate(DirectX::XMFLOAT3 translation);
-
+	DirectX::XMVECTOR GetPosition();
 
 private:
 	DirectX::XMFLOAT3 pos;

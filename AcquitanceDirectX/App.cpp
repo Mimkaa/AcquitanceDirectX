@@ -20,6 +20,8 @@ App::App(const std::string& commandLine )
 	light(wnd.Gfx())
 	
 {
+	plane.SetPos(cam.GetPosition());
+
 	if (this->commandLine != "")
 	{
 		int nArgs;
@@ -44,6 +46,7 @@ App::App(const std::string& commandLine )
 
 wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 400.0f));
 // check if we get the same pointer in this case
+
 
 }
 
@@ -82,6 +85,7 @@ void App::DoFrame()
 	wall.Draw(wnd.Gfx());*/
 
 	light.Draw(wnd.Gfx());
+	plane.Draw(wnd.Gfx());
 	//plane.Draw(wnd.Gfx());
 
 	while (const auto e = wnd.kbd.ReadKey())
@@ -143,6 +147,7 @@ void App::DoFrame()
 	
 
 	// control model
+	plane.ShowControlWindow(wnd.Gfx());
 	sponza.ShowWindow(wnd.Gfx(), "Sponza");
 	/*Gobber.ShowWindow(wnd.Gfx(), "Gobber") ;
 	nano.ShowWindow(wnd.Gfx(), "nano");

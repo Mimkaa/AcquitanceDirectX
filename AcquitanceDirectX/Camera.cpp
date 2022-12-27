@@ -39,6 +39,11 @@ void Camera::SpawnControlWindow() noexcept
 	ImGui::End();
 }
 
+DirectX::XMVECTOR Camera::GetPosition()
+{
+	return DirectX::XMLoadFloat3(&pos);
+}
+
 void Camera::Reset() noexcept
 {
 	pos = { 0.0f, 15.0f, 3.0f };

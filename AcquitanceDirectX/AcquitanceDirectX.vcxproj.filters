@@ -413,6 +413,12 @@
     <FxCompile Include="PhongSpecNormalMaskPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="SolidPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="SolidVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShaderOps.hlsl">

@@ -33,7 +33,7 @@ private:
 	//Model nano{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
 	//TestPlane wall{ wnd.Gfx()};
 	Model sponza{ wnd.Gfx(), "Models\\Sponza\\sponza.obj",1.0f/20};
-	
+	TestPlane plane{ wnd.Gfx(), {0.3f,0.3f,1.0f,0.0f} };
 	int x = 0;
 	int y = 0;
 	

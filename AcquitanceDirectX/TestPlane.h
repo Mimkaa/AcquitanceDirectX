@@ -4,9 +4,10 @@
 class TestPlane :public Drawable
 {
 public:
-	TestPlane(Graphics& gfx);
+	TestPlane(Graphics& gfx, DirectX::XMFLOAT4 color_in ={1.0f,1.0f,1.0f,0.0f});
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 	void SetPos(const DirectX::XMMATRIX mat) noexcept;
+	void SetPos(const DirectX::XMVECTOR vec) noexcept;
 	void ShowControlWindow(Graphics& gfx) noexcept;
 private:
 	struct
@@ -19,10 +20,8 @@ private:
 
 	struct PSConstant
 	{
-		float specularIntensity = 1.0f;
-		float specularPower = 20;
-		BOOL normalsOn = TRUE;
-		float padding[1];
+		DirectX::XMFLOAT4 color;
+		
 	} Const;
 
 	
