@@ -8,6 +8,7 @@
 #include "VertexShader.h"
 #include "NormalMapTwerker.h"
 #include <shellapi.h>
+#include "dxtex/DirectXTex.h"
 
 namespace dx = DirectX;
 GDIPlusManager gdipm;
@@ -20,6 +21,15 @@ App::App(const std::string& commandLine )
 	light(wnd.Gfx())
 	
 {
+
+	auto image = DirectX::ScratchImage{};
+	HRESULT hr = DirectX::LoadFromWICFile(L"Models\\brick_wall\\brick_wall_diffuse.jpg", DirectX::WIC_FLAGS_NONE, nullptr, image);
+	const DirectX::Image* img = image.GetImage(0, 0, 0);
+	auto a = img->pixels[0];
+	auto b = img->pixels[1];
+	auto c = img->pixels[2];
+	auto d = img->pixels[3];
+
 	plane.SetPos(cam.GetPosition());
 
 	if (this->commandLine != "")
