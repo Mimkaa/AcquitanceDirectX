@@ -1,220 +1,192 @@
 #define FULL_WINTARD
 #include "Surface.h"
 #include <algorithm>
-namespace Gdiplus
-{
-	using std::min;
-	using std::max;
-}
-#include <gdiplus.h>
+#include <filesystem>
+#include "Window.hpp"
+
+
 #include <sstream>
 
-#pragma comment( lib,"gdiplus.lib" )
+
 
 Surface::Surface(unsigned int width, unsigned int height, unsigned int pitch) noexcept
-	:
-	pBuffer(std::make_unique<Color[]>(pitch* height)),
-	width(width),
-	height(height)
-{}
-
-Surface& Surface::operator=(Surface&& donor) noexcept
 {
-	width = donor.width;
-	height = donor.height;
-	pBuffer = std::move(donor.pBuffer);
-	donor.pBuffer = nullptr;
-	return *this;
+	HRESULT hr = scratch.Initialize2D(format, width, height, 1u, 1u);
+	if (FAILED(hr))
+	{
+		throw Surface::Exception(__LINE__, __FILE__, "Failed to initialize ScratchImage",  hr);
+	}
 }
+
+
 
 Surface::Surface(unsigned int width, unsigned int height) noexcept
 	:
 	Surface(width, height, width)
 {}
 
-Surface::Surface(Surface&& source) noexcept
+Surface::Surface(DirectX::ScratchImage scratch_in) noexcept
 	:
-	pBuffer(std::move(source.pBuffer)),
-	width(source.width),
-	height(source.height)
+	scratch(std::move(scratch_in))
 {}
 
-Surface::~Surface()
-{}
+
 
 void Surface::Clear(Color fillValue) noexcept
 {
-	memset(pBuffer.get(), fillValue.dword, width * height * sizeof(Color));
+	int width = GetWidth();
+	int height = GetHeight();
+	auto& ImageData = *scratch.GetImage(0,0,0);
+	for (size_t y = 0; y < height; y++)
+	{
+		auto rowBegin = reinterpret_cast<Color*>(ImageData.pixels + ImageData.rowPitch * y);
+		std::fill(rowBegin, rowBegin + width, fillValue);
+	}
+	
 }
 
 void Surface::PutPixel(unsigned int x, unsigned int y, Color c) noxnd
 {
+	int width = GetWidth();
+	int height = GetHeight();
 	assert(x >= 0);
 	assert(y >= 0);
 	assert(x < width);
 	assert(y < height);
-	pBuffer[y * width + x] = c;
+	auto& ImageData = *scratch.GetImage(0, 0, 0);
+	reinterpret_cast<Color*>(&ImageData.pixels[ImageData.rowPitch*y])[x] = c;
+	
 }
 
 Surface::Color Surface::GetPixel(unsigned int x, unsigned int y) const noxnd
 {
+	int width = GetWidth();
+	int height = GetHeight();
 	assert(x >= 0);
 	assert(y >= 0);
 	assert(x < width);
 	assert(y < height);
-	return pBuffer[y * width + x];
+	auto& ImageData = *scratch.GetImage(0, 0, 0);
+	return reinterpret_cast<Color*>(&ImageData.pixels[ImageData.rowPitch * y])[x];
 }
 
 unsigned int Surface::GetWidth() const noexcept
 {
-	return width;
+	return scratch.GetMetadata().width;
 }
 
 unsigned int Surface::GetHeight() const noexcept
 {
-	return height;
+	return scratch.GetMetadata().height;
 }
 
 Surface::Color* Surface::GetBufferPtr() noexcept
 {
-	return pBuffer.get();
+	return reinterpret_cast<Color*>(scratch.GetPixels());
 }
 
 const Surface::Color* Surface::GetBufferPtr() const noexcept
 {
-	return pBuffer.get();
+	return const_cast<Surface*>(this)->GetBufferPtr();
 }
 
 const Surface::Color* Surface::GetBufferPtrConst() const noexcept
 {
-	return pBuffer.get();
+	return const_cast<Surface*>(this)->GetBufferPtr();
 }
 
 Surface Surface::FromFile(const std::string& name)
 {
-	unsigned int width = 0;
-	unsigned int height = 0;
-	unsigned int pitch = 0;
-	std::unique_ptr<Color[]> pBuffer;
-	bool alphaLoaded = false;
+	wchar_t wideName[512];
+	mbstowcs_s(nullptr, wideName, name.c_str(), _TRUNCATE);
+
+	auto scratch = DirectX::ScratchImage{};
+	HRESULT hr = DirectX::LoadFromWICFile(wideName, DirectX::WIC_FLAGS_NONE, nullptr, scratch);
+
+	if (FAILED(hr))
 	{
-		// convert filenam to wide string (for Gdiplus)
-		wchar_t wideName[512];
-		mbstowcs_s(nullptr, wideName, name.c_str(), _TRUNCATE);
-
-		Gdiplus::Bitmap bitmap(wideName);
-		if (bitmap.GetLastStatus() != Gdiplus::Status::Ok)
-		{
-			std::stringstream ss;
-			ss << "Loading image [" << name << "]: failed to load.";
-			throw Exception(__LINE__, __FILE__, ss.str());
-		}
-
-		height = bitmap.GetHeight();
-		width = bitmap.GetWidth();
-		pBuffer = std::make_unique<Color[]>(width * height);
-
-		for (unsigned int y = 0; y < height; y++)
-		{
-			for (unsigned int x = 0; x < width; x++)
-			{
-				Gdiplus::Color c;
-				bitmap.GetPixel(x, y, &c);
-				pBuffer[y * width + x] = c.GetValue();
-				if (c.GetAlpha() != 255)
-				{
-					alphaLoaded = true;
-				}
-			}
-		}
+		throw Surface::Exception(__LINE__, __FILE__, "Failed to create ScratchImage", hr);
 	}
 
-	return Surface(width, height, std::move(pBuffer), alphaLoaded);
+	if (scratch.GetImage(0, 0, 0)->format != format)
+	{
+		auto converted = DirectX::ScratchImage{};
+		HRESULT hr = DirectX::Convert(*scratch.GetImage(0,0,0), format, DirectX::TEX_FILTER_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, converted);
+		if (FAILED(hr))
+		{
+			throw Surface::Exception(__LINE__, __FILE__, "Failed to convert the format", hr);
+
+		}
+		return Surface(std::move(converted));
+	}
+	return Surface(std::move(scratch));
+
+	
 }
 
 void Surface::Save(const std::string& filename) const
 {
-	auto GetEncoderClsid = [&filename](const WCHAR* format, CLSID* pClsid) -> void
-	{
-		UINT  num = 0;          // number of image encoders
-		UINT  size = 0;         // size of the image encoder array in bytes
-
-		Gdiplus::ImageCodecInfo* pImageCodecInfo = nullptr;
-
-		Gdiplus::GetImageEncodersSize(&num, &size);
-		if (size == 0)
+	const auto GetCodecID = [](const std::string& filename) {
+		const std::filesystem::path path = filename;
+		const auto ext = path.extension().string();
+		if (ext == ".png")
 		{
-			std::stringstream ss;
-			ss << "Saving surface to [" << filename << "]: failed to get encoder; size == 0.";
-			throw Exception(__LINE__, __FILE__, ss.str());
+			return DirectX::WIC_CODEC_PNG;
 		}
-
-		pImageCodecInfo = (Gdiplus::ImageCodecInfo*)(malloc(size));
-		if (pImageCodecInfo == nullptr)
+		else if (ext == ".jpg")
 		{
-			std::stringstream ss;
-			ss << "Saving surface to [" << filename << "]: failed to get encoder; failed to allocate memory.";
-			throw Exception(__LINE__, __FILE__, ss.str());
+			return DirectX::WIC_CODEC_JPEG;
 		}
-
-		GetImageEncoders(num, size, pImageCodecInfo);
-
-		for (UINT j = 0; j < num; ++j)
+		else if (ext == ".bmp")
 		{
-			if (wcscmp(pImageCodecInfo[j].MimeType, format) == 0)
-			{
-				*pClsid = pImageCodecInfo[j].Clsid;
-				free(pImageCodecInfo);
-				return;
-			}
+			return DirectX::WIC_CODEC_BMP;
 		}
-
-		free(pImageCodecInfo);
-		std::stringstream ss;
-		ss << "Saving surface to [" << filename <<
-			"]: failed to get encoder; failed to find matching encoder.";
-		throw Exception(__LINE__, __FILE__, ss.str());
+		throw Exception(__LINE__, __FILE__, filename, "Image format not supported");
 	};
 
-	CLSID bmpID;
-	GetEncoderClsid(L"image/bmp", &bmpID);
-
-
-	// convert filenam to wide string (for Gdiplus)
 	wchar_t wideName[512];
 	mbstowcs_s(nullptr, wideName, filename.c_str(), _TRUNCATE);
 
-	Gdiplus::Bitmap bitmap(width, height, width * sizeof(Color), PixelFormat32bppARGB, (BYTE*)pBuffer.get());
-	if (bitmap.Save(wideName, &bmpID, nullptr) != Gdiplus::Status::Ok)
+	HRESULT hr = DirectX::SaveToWICFile(
+		*scratch.GetImage(0, 0, 0),
+		DirectX::WIC_FLAGS_NONE,
+		GetWICCodec(GetCodecID(filename)),
+		wideName
+	);
+	if (FAILED(hr))
 	{
-		std::stringstream ss;
-		ss << "Saving surface to [" << filename << "]: failed to save.";
-		throw Exception(__LINE__, __FILE__, ss.str());
+		throw Surface::Exception(__LINE__, __FILE__, filename, "Failed to save image", hr);
 	}
 }
 
-void Surface::Copy(const Surface& src) noxnd
-{
-	assert(width == src.width);
-	assert(height == src.height);
-	memcpy(pBuffer.get(), src.pBuffer.get(), width * height * sizeof(Color));
-}
 
-Surface::Surface(unsigned int width, unsigned int height, std::unique_ptr<Color[]> pBufferParam, bool AlphaLoaded) noexcept
-	:
-	width(width),
-	height(height),
-	pBuffer(std::move(pBufferParam)),
-	alphaLoaded(AlphaLoaded)
-{}
 
 
 // surface exception stuff
-Surface::Exception::Exception(int line, const char* file, std::string note) noexcept
+Surface::Exception::Exception(int line, const char* file, std::string note, std::string filename, std::optional<HRESULT> hr) noexcept
 	:
-	ChiliException(line, file),
-	note(std::move(note))
-{}
+	ChiliException(line, file)
+
+{
+	using namespace std::string_literals;
+	note = "[FileName]"s + filename + " "s + "[Note]"s + note;
+	if (hr)
+	{
+		note = "[HRESULT ERROR STRING]"s + Window::Exception::TranslateErrorCode(*hr) + note;
+	}
+}
+Surface::Exception::Exception(int line, const char* file, std::string note, std::optional<HRESULT> hr) noexcept
+	:
+	ChiliException(line, file)
+
+{
+	using namespace std::string_literals;
+	note = "[FileName]"s + std::string(file) + " "s + "[Note]"s + note;
+	if (hr)
+	{
+		note = "[HRESULT ERROR STRING]"s + Window::Exception::TranslateErrorCode(*hr) + note;
+	}
+}
 
 const char* Surface::Exception::what() const noexcept
 {
@@ -237,5 +209,5 @@ const std::string& Surface::Exception::GetNote() const noexcept
 
 bool Surface::AlphaLoaded() const noexcept
 {
-	return alphaLoaded;
+	return !scratch.IsAlphaAllOpaque();
 }

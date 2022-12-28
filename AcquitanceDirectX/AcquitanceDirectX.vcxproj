@@ -167,7 +167,6 @@
     <ClCompile Include="ChilliExtractAT.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DxgiInfoManager.cpp" />
-    <ClCompile Include="GDIPlusManager.cpp" />
     <ClCompile Include="GetErrorStringFromHresult.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="ImguiManager.cpp" />
@@ -220,7 +219,6 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="DxgiInfoManager.hpp" />
-    <ClInclude Include="GDIPlusManager.h" />
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="GraphicsThrowHeader.h" />
     <ClInclude Include="ImguiManager.h" />

@@ -114,9 +114,6 @@
     <ClCompile Include="Surface.cpp">
       <Filter>Source Files\GDI</Filter>
     </ClCompile>
-    <ClCompile Include="GDIPlusManager.cpp">
-      <Filter>Source Files\GDI</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
@@ -276,9 +273,6 @@
       <Filter>Header Files\GeometryPrimitives</Filter>
     </ClInclude>
     <ClInclude Include="Surface.h">
-      <Filter>Header Files\GDI</Filter>
-    </ClInclude>
-    <ClInclude Include="GDIPlusManager.h">
       <Filter>Header Files\GDI</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
