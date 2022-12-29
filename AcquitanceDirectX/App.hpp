@@ -9,6 +9,8 @@
 #include "Mesh.h"
 #include "TestPlane.h"
 #include "TestCube.h"
+#include "ScriptCommander.h"
+#include "NormalMapTwerker.h"
 
 class App
 {
@@ -36,6 +38,6 @@ private:
 	TestPlane plane{ wnd.Gfx(), {0.3f,0.3f,1.0f,0.0f} };
 	int x = 0;
 	int y = 0;
-	
+	ScriptCommander sc;
 };
 

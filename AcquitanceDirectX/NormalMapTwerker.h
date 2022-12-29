@@ -5,6 +5,10 @@
 #include <string>
 #include <DirectXMath.h>
 #include <filesystem>
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h> 
+#include "Mesh.h"
 
 class NormalTwerker
 {

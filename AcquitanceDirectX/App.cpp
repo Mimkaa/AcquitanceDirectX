@@ -3,12 +3,12 @@
 #include <algorithm>
 #include "ChiliMath.h"
 #include "Surface.h"
-
+#include "ScriptCommander.h"
 #include "imgui/imgui.h"
 #include "VertexShader.h"
-#include "NormalMapTwerker.h"
 #include <shellapi.h>
 #include "dxtex/DirectXTex.h"
+#include"ChilliStringUtils.h"
 
 namespace dx = DirectX;
 
@@ -18,30 +18,15 @@ App::App(const std::string& commandLine )
 	:
 	commandLine(commandLine),
 	wnd(1000, 550, L"I understood how it works)))"),
-	light(wnd.Gfx())
+	light(wnd.Gfx()),
+	sc(TokenizeQuoted(commandLine))
 	
 {
 
 	
 	plane.SetPos(cam.GetPosition());
 
-	if (this->commandLine != "")
-	{
-		int nArgs;
-		const auto pLineW = GetCommandLineW();
-		const auto pArgs = CommandLineToArgvW(pLineW, &nArgs);
-		if (nArgs >= 3 && std::wstring(pArgs[1]) == L"--ntwerk-flipY")
-		{
-			const std::wstring inputStr = pArgs[2];
-			NormalTwerker::TransformAllFiles(
-				std::string(inputStr.begin(), inputStr.end())
-				
-			);
-			throw std::runtime_error("Normal map processed successfully. Just kidding about that whole runtime error thing.");
-
-		}
-
-	}
+	
 	
 	/*wall.SetPos(dx::XMMatrixTranslation( 2.5f,0.0f,1.0f ));
 	Gobber.SetRootTransform(dx::XMMatrixTranslation(0.0f, 0.0f, 1.0f));
