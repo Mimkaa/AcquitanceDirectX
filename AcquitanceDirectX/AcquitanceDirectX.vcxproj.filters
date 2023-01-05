@@ -46,6 +46,12 @@
     <Filter Include="Header Files\imgui">
       <UniqueIdentifier>{961b1673-05ea-4fb6-a565-d4f0705004b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\DynamicConstantBuffer">
+      <UniqueIdentifier>{b4f806db-8d37-46de-9127-bc0a51d8b095}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\DynamicConstantantBuffer">
+      <UniqueIdentifier>{1007ad2e-6717-444f-a4d3-bd4155e50dee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -179,6 +185,9 @@
     </ClCompile>
     <ClCompile Include="ScriptCommander.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicConstantBuffer.cpp">
+      <Filter>Resource Files\DynamicConstantantBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -373,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="ScriptCommander.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicConstantBuffer.h">
+      <Filter>Header Files\DynamicConstantBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
