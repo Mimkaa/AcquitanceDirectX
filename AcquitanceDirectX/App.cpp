@@ -9,7 +9,7 @@
 #include <shellapi.h>
 #include "dxtex/DirectXTex.h"
 #include"ChilliStringUtils.h"
-
+#include "Testing.h"
 namespace dx = DirectX;
 
 
@@ -22,7 +22,8 @@ App::App(const std::string& commandLine )
 	sc(TokenizeQuoted(commandLine))
 	
 {
-
+	// testing
+	TestDynamicConstantBuff();
 	
 	plane.SetPos(cam.GetPosition());
 

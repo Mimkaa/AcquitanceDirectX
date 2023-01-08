@@ -189,6 +189,9 @@
     <ClCompile Include="DynamicConstantBuffer.cpp">
       <Filter>Resource Files\DynamicConstantantBuffer</Filter>
     </ClCompile>
+    <ClCompile Include="Testing.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowMessageMap.hpp">
@@ -385,6 +388,9 @@
     </ClInclude>
     <ClInclude Include="DynamicConstantBuffer.h">
       <Filter>Header Files\DynamicConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
