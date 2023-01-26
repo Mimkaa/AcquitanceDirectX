@@ -637,6 +637,7 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 	
 	meshes.push_back(std::make_unique<Mesh>(gfx, std::move(currBinds)));
 
+
 	
 
 }
