@@ -67,7 +67,7 @@ namespace Dcbf
 	};
 	template<> struct Map<Int>
 	{
-		using SysType = int;
+		using SysType = unsigned int;
 		static constexpr size_t size = sizeof(SysType);
 		static constexpr bool valid = true;
 		static constexpr const char* code = "INT";
@@ -86,19 +86,20 @@ namespace Dcbf
 	#undef X
 
 	// generate a reverse map
-	template<typename T> 
-	struct ReverseMap
+	template<typename T> struct ReverseMap
 	{
 		static constexpr bool valid = false;
 
 	};
 	// "\" continuation of the line
-	#define X(el) template<> struct ReverseMap<Map<el>::SysType>\
-		{\
-			static constexpr Type EnumType = el;\
-			static constexpr bool valid = true;\
-		};\
-		LEAFTYPES
+	#define X(el) \
+	template<> struct ReverseMap<typename Map<el>::SysType> \
+	{ \
+		static constexpr Type EnumType = el; \
+		static constexpr bool valid = true; \
+	};
+
+	LEAFTYPES
 	#undef X
 
 	
@@ -431,14 +432,14 @@ namespace Dcbf
 		template <typename T>
 		operator T& ()const
 		{
-			//static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsuported SysType");
+			static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsupported SysType used in refernce conversion");
 			return *reinterpret_cast<T*>(bytes + offset + element->Resolve<T>());
 		}
 
 		template<typename T>
 		T& operator = (const T& rhs) const // rhs - right hand side  
 		{
-			//static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsuported SysType");
+			static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsupported SysType used in pointer conversion");
 			//static_assert(std::is_same<Map<element->type>::SysType, T>::value, "cannot assign this value to the element");
 			return static_cast<T&>(*this) = rhs;
 		}
@@ -532,7 +533,7 @@ namespace Dcbf
 			:
 			pLayout{ cookedIn.RelinquishRoot() },
 			buffer(pLayout->GetOffsetEnd())
-
+		
 		{}
 
 		Buffer(const Buffer& buf_in)

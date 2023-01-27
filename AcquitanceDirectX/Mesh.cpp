@@ -568,6 +568,8 @@ void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* cons
 		currBinds.push_back(PixelShader::Resolve(gfx, "PhongPS.cso"));
 
 		currBinds.push_back(InputLayout::Resolve(gfx, vb.GetLayout(), pvsbc));
+		
+
 
 		struct PSMaterialConstantDiffuse
 		{
