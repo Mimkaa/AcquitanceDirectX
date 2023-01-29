@@ -13,3 +13,4 @@
 #include "TransformCbufDoubleBoi.h"
 #include "Blender.h"
 #include "Rasterizer.h"
+#include "Stencel.h"

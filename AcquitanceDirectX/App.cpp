@@ -25,7 +25,7 @@ App::App(const std::string& commandLine )
 	// testing
 	TestDynamicConstantBuff();
 	
-	plane.SetPos(cam.GetPosition());
+	//plane.SetPos(cam.GetPosition());
 
 	
 	
@@ -68,13 +68,16 @@ void App::DoFrame()
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 
 	
-	sponza.Draw();
+	//sponza.Draw();
 	/*Gobber.Draw();
 	nano.Draw();
 	wall.Draw(wnd.Gfx());*/
 
 	light.Draw(wnd.Gfx());
-	plane.Draw(wnd.Gfx());
+	cubby.Draw(wnd.Gfx());
+	cubby.outline = true;
+	cubby.DrawOutline(wnd.Gfx());
+	//plane.Draw(wnd.Gfx());
 	//plane.Draw(wnd.Gfx());
 
 	while (const auto e = wnd.kbd.ReadKey())
@@ -136,8 +139,8 @@ void App::DoFrame()
 	
 
 	// control model
-	plane.ShowControlWindow(wnd.Gfx());
-	sponza.ShowWindow(wnd.Gfx(), "Sponza");
+	//plane.ShowControlWindow(wnd.Gfx());
+	//sponza.ShowWindow(wnd.Gfx(), "Sponza");
 	/*Gobber.ShowWindow(wnd.Gfx(), "Gobber") ;
 	nano.ShowWindow(wnd.Gfx(), "nano");
 	wall.ShowControlWindow(wnd.Gfx());*/
@@ -145,7 +148,8 @@ void App::DoFrame()
 	// imgui window for camera
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
-
+	cubby.ShowControlWindow(wnd.Gfx());
+	
 	
 	
 

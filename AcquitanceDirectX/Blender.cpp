@@ -17,7 +17,7 @@ namespace Bind
 		}
 
 		
-		D3D11_BLEND_DESC blendDesc = CD3D11_BLEND_DESC{ CD3D11_DEFAULT{} };;
+		D3D11_BLEND_DESC blendDesc = CD3D11_BLEND_DESC{ CD3D11_DEFAULT{} };
 		auto& brt = blendDesc.RenderTarget[0];
 		if (hasAlpha)
 		{

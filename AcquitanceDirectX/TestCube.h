@@ -1,16 +1,34 @@
 #pragma once
 #include "Drawable.h"
 #include "ConstantBuffers.h"
+#include <memory>
+#include "Bindable.h"
+#include "IndexBuffer.h"
 class TestCube :public Drawable
 {
 public:
+	bool outline = false;
 	TestCube(Graphics& gfx);
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 	void ShowControlWindow(Graphics& gfx) noexcept;
+
+	void DrawOutline(Graphics& gfx) 
+	{
+		for (auto& b : outlineBinds)
+		{
+			b->Bind(gfx);
+		}
+
+		gfx.DrawIndexed(QueryBindables<Bind::IndexBuffer>()->GetCount());
+		outline = false;
+		
+	}
+
 private:
+	std::vector<std::shared_ptr<Bind::Bindable>> outlineBinds;
 	struct
 	{
-		DirectX::XMFLOAT3 pos = { -1,1, -1 };
+		DirectX::XMFLOAT3 pos = { 0,15, 5 };
 		float roll = 0.0f;
 		float pitch = 0.0f;
 		float yaw = 0.0f;

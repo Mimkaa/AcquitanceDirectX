@@ -259,6 +259,7 @@
     <ClInclude Include="ScriptCommander.h" />
     <ClInclude Include="SolidSphere.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Stencel.h" />
     <ClInclude Include="StringToWstring.hpp" />
     <ClInclude Include="Surface.h" />
     <ClInclude Include="TestCube.h" />

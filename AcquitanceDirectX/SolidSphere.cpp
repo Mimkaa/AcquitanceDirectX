@@ -2,6 +2,7 @@
 #include "BindableCommon.h"
 #include "GraphicsThrowHeader.h"
 #include "Sphere.h"
+#include"Stencel.h"
 
 SolidSphere::SolidSphere(Graphics& gfx, float radius)
 {
@@ -43,7 +44,8 @@ SolidSphere::SolidSphere(Graphics& gfx, float radius)
 
 	AddBind(std::make_shared<Blender>(gfx, false));
 	AddBind(std::make_shared<Rasterizer>(gfx, false));
-
+	AddBind(std::make_shared<Stencil>(gfx, Stencil::Style::Off));
+	
 	
 }
 

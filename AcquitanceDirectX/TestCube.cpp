@@ -18,18 +18,18 @@ TestCube::TestCube(Graphics& gfx)
 	std::string base = "images\\";
 
 	AddBind(Texture::Resolve(gfx, base + "brickwall.jpg", 0));
-	AddBind(Texture::Resolve(gfx, base + "brickwall_normal.jpg", 1));
-
 	AddBind(Sampler::Resolve(gfx));
 
 	AddBind(VertexBuffer::Resolve(gfx, TagName, cube.vertices));
 	AddBind(IndexBuffer::Resolve(gfx, TagName, cube.indices));
 
+	
+
 	auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
 	auto pvsbc = pvs->GetBytecode();
 	AddBind(std::move(pvs));
 
-	AddBind(PixelShader::Resolve(gfx, "PhongNormalsPS.cso"));
+	AddBind(PixelShader::Resolve(gfx, "PhongPS.cso"));
 
 
 
@@ -43,13 +43,43 @@ TestCube::TestCube(Graphics& gfx)
 	AddBind(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 
-	AddBind(std::make_shared<Bind::TransformCbufDoubleBoi>(gfx, *this, 0, 2));
+
+
+	auto tcbdb = std::make_shared<Bind::TransformCbufDoubleBoi>(gfx, *this, 0u, 2u);
+
+	AddBind(tcbdb);
+	AddBind(std::make_shared<Bind::Stencil>(gfx, Bind::Stencil::Style::Write));
+
+	outlineBinds.push_back(VertexBuffer::Resolve(gfx, TagName, cube.vertices));
+	outlineBinds.push_back(IndexBuffer::Resolve(gfx, TagName, cube.indices));
+
+	
+
+	pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
+	pvsbc = pvs->GetBytecode();
+	outlineBinds.push_back(std::move(pvs));
+	outlineBinds.push_back(PixelShader::Resolve(gfx, "SolidPS.cso"));
+	struct SolidColorBuffer
+	{
+		DirectX::XMFLOAT4 color = { 1.0f,0.4f,0.4f,1.0f };
+	} scb;
+	outlineBinds.push_back(PixelConstantBuffer<SolidColorBuffer>::Resolve(gfx, scb, 1u));
+	outlineBinds.push_back(InputLayout::Resolve(gfx, cube.vertices.GetLayout(), pvsbc));
+	outlineBinds.push_back(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	outlineBinds.push_back(std::move(tcbdb));
+	outlineBinds.push_back(std::make_shared<Stencil>(gfx, Stencil::Style::Mask));
+
 
 }
 
 DirectX::XMMATRIX TestCube::GetTransformXM() const noexcept
 {
-	return DirectX::XMMatrixRotationRollPitchYaw(pos.pitch, pos.yaw, pos.roll) * DirectX::XMMatrixTranslation(pos.pos.x, pos.pos.y, pos.pos.z);
+	auto tr = (DirectX::XMMatrixRotationRollPitchYaw(pos.pitch, pos.yaw, pos.roll) * DirectX::XMMatrixTranslation(pos.pos.x, pos.pos.y, pos.pos.z));
+	if (outline)
+	{
+		tr = DirectX::XMMatrixScaling(1.03f, 1.03f, 1.03f) * tr;
+	}
+	return tr;
 }
 
 void TestCube::ShowControlWindow(Graphics& gfx) noexcept

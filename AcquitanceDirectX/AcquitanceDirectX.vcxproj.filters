@@ -398,6 +398,9 @@
     <ClInclude Include="LayoutCodex.h">
       <Filter>Header Files\DynamicConstantBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="Stencel.h">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AcquitanceDirectX1.rc">
