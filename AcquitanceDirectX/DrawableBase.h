@@ -30,11 +30,11 @@ protected:
 		{
 			if (const auto p = dynamic_cast<Bind::IndexBuffer*>(b.get()))
 			{
-				pIndexBuffer = p;
+				pIndexBuff = std::make_shared(p);
 				return;
 			}
 		}
-		assert("Failed to find index buffer in static binds" && pIndexBuffer == nullptr);
+		assert("Failed to find index buffer in static binds" && pIndexBuff == nullptr);
 	}
 private:
 	const std::vector<std::unique_ptr<Bind::Bindable>>& GetStaticBinds() const noexcept

@@ -1,28 +1,34 @@
 #include "Drawable.h"
-#include "GraphicsThrowHeader.h"
-#include "IndexBuffer.h"
-#include <cassert>
-#include <typeinfo>
+#include "BindableCommon.h"
+#include "BindableCodex.h"
 using namespace Bind;
 
-void Drawable::Draw(Graphics& gfx) const noxnd
+void Drawable::Bind(Graphics& gfx) const
 {
-	for (auto& b : binds)
-	{
-		b->Bind(gfx);
-	}
-	
-	gfx.DrawIndexed(pIndexBuffer->GetCount());
+	pVertBuff->Bind(gfx);
+	pTopology->Bind(gfx);
+	pIndexBuff->Bind(gfx);
 }
 
-void Drawable::AddBind(std::shared_ptr<Bindable> bind) noxnd
+size_t Drawable::GetIndexCount() const
 {
-	
-	if (typeid(*bind) == typeid(IndexBuffer))
-	{
-		assert("*Must* use only one index buffer" && pIndexBuffer == nullptr);
-		pIndexBuffer = &static_cast<IndexBuffer&>(*bind);
-	}
-	binds.push_back(std::move(bind));
+	auto ret = pIndexBuff->GetCount();
+	return ret;
 }
+
+void Drawable::Submit(class FrameComander& frame) const noexcept
+{
+	for (auto& t : techniques)
+	{
+		t.Submit(frame, *this);
+	}
+}
+
+void Drawable::AddTechnique(Technique tecnique_in) noxnd
+{
+	tecnique_in.InitializeParentReference(*this);
+	techniques.push_back(std::move(tecnique_in));
+}
+
+
 

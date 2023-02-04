@@ -10,6 +10,7 @@
 #include "dxtex/DirectXTex.h"
 #include"ChilliStringUtils.h"
 #include "Testing.h"
+
 namespace dx = DirectX;
 
 
@@ -73,12 +74,14 @@ void App::DoFrame()
 	nano.Draw();
 	wall.Draw(wnd.Gfx());*/
 
-	light.Draw(wnd.Gfx());
-	cubby.Draw(wnd.Gfx());
-	cubby.outline = true;
-	cubby.DrawOutline(wnd.Gfx());
+	light.Submit(fc);
+	cubby.Submit(fc);
+	
+
 	//plane.Draw(wnd.Gfx());
 	//plane.Draw(wnd.Gfx());
+
+	fc.Execute(wnd.Gfx());
 
 	while (const auto e = wnd.kbd.ReadKey())
 	{
@@ -151,7 +154,7 @@ void App::DoFrame()
 	cubby.ShowControlWindow(wnd.Gfx());
 	
 	
-	
+	fc.Reset();
 
 	wnd.Gfx().EndFrame();
 	

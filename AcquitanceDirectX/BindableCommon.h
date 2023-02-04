@@ -14,3 +14,4 @@
 #include "Blender.h"
 #include "Rasterizer.h"
 #include "Stencel.h"
+#include "NonePixelShader.h"

@@ -52,6 +52,12 @@
     <Filter Include="Resource Files\DynamicConstantantBuffer">
       <UniqueIdentifier>{1007ad2e-6717-444f-a4d3-bd4155e50dee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Jobber">
+      <UniqueIdentifier>{0f3dff76-5426-47cb-9fe7-c5f320b03e15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Jobber">
+      <UniqueIdentifier>{1b57ece3-76bd-41fd-b0a4-f35990bfe73b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -111,7 +117,7 @@
     <ClCompile Include="Drawable.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
-    <ClCompile Include="TranformCbuf.cpp">
+    <ClCompile Include="TransformCbuf.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
     <ClCompile Include="Bindable.cpp">
@@ -194,6 +200,15 @@
     </ClCompile>
     <ClCompile Include="LayoutCodex.cpp">
       <Filter>Resource Files\DynamicConstantantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Job.cpp">
+      <Filter>Source Files\Jobber</Filter>
+    </ClCompile>
+    <ClCompile Include="Step.cpp">
+      <Filter>Source Files\Jobber</Filter>
+    </ClCompile>
+    <ClCompile Include="Technique.cpp">
+      <Filter>Source Files\Jobber</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -399,6 +414,24 @@
       <Filter>Header Files\DynamicConstantBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Stencel.h">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Technique.h">
+      <Filter>Header Files\Jobber</Filter>
+    </ClInclude>
+    <ClInclude Include="Step.h">
+      <Filter>Header Files\Jobber</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass.h">
+      <Filter>Header Files\Jobber</Filter>
+    </ClInclude>
+    <ClInclude Include="Job.h">
+      <Filter>Header Files\Jobber</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameCommander.h">
+      <Filter>Header Files\Jobber</Filter>
+    </ClInclude>
+    <ClInclude Include="NonePixelShader.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
   </ItemGroup>

@@ -28,11 +28,11 @@ private:
 class Mesh:public Drawable
 {
 public:
-	Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>>binds_in);
-
+	//Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>>binds_in);
+	using Drawable::Drawable;
 	DirectX::XMMATRIX GetTransformXM() const noexcept;
 
-	void Draw(Graphics& gfx, const DirectX::FXMMATRIX& accumulatedTransform) const noxnd;
+	void Submit(FrameComander& frame, DirectX::FXMMATRIX accumulatedTranform) const noxnd;
 private:
 	mutable DirectX::XMFLOAT4X4 transform;
 };
@@ -64,6 +64,7 @@ public:
 	} pmc;
 
 public:
+	void Submit(FrameComander& frame, DirectX::FXMMATRIX accumulatedTransform) const noxnd;
 	Node(int id_in, const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation);
 	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) noxnd;
 	DirectX::XMMATRIX GetAppliedTransform() const noexcept;
@@ -92,6 +93,7 @@ class Model
 {
 	
 public:
+
 	Model(Graphics& gfx, const std::string& pathname, const float scale = 1.0f);
 	~Model() noexcept;
 private:
@@ -101,6 +103,7 @@ private:
 	
 	
 public :
+	void Submit(FrameComander& frame) const noxnd;
 	void SetRootTransform(const DirectX::FXMMATRIX& rt) noexcept;
 	void Draw();
 	void ShowWindow(Graphics& gfx, const char* windowName) noexcept;

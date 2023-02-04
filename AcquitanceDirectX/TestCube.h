@@ -12,17 +12,7 @@ public:
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 	void ShowControlWindow(Graphics& gfx) noexcept;
 
-	void DrawOutline(Graphics& gfx) 
-	{
-		for (auto& b : outlineBinds)
-		{
-			b->Bind(gfx);
-		}
-
-		gfx.DrawIndexed(QueryBindables<Bind::IndexBuffer>()->GetCount());
-		outline = false;
-		
-	}
+	
 
 private:
 	std::vector<std::shared_ptr<Bind::Bindable>> outlineBinds;

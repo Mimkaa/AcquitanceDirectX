@@ -2,11 +2,16 @@
 #include "Graphics.hpp"
 #include <DirectXMath.h>
 #include <memory>
+#include "Technique.h"
+
+
 
 namespace Bind
 {
 	class Bindable;
 	class IndexBuffer;
+	class VertexBuffer;
+	class Topology;
 }
 
 class Drawable
@@ -18,24 +23,26 @@ public:
 	virtual DirectX::XMMATRIX GetTransformXM() const noexcept = 0;
 	void Draw(Graphics& gfx) const noxnd;
 	virtual ~Drawable() = default;
+
+	void Submit(class FrameComander& frame) const noexcept;
+
 	
-	template <class T>
-	T* QueryBindables()
-	{
-		for (auto& b : binds)
-		{
-			if (auto ptr = dynamic_cast<T*>(b.get()))
-			{
-				return ptr;
-			}
-		}
-		return nullptr;
-	}
+	void Bind(Graphics& gfx) const;
+
+
+	size_t GetIndexCount() const;
+	
+	
+	void AddTechnique(Technique tecnique_in) noxnd;
+	
+
+
+	
 protected:
-	void AddBind(std::shared_ptr<Bind::Bindable> bind) noxnd;
+	std::shared_ptr<Bind::IndexBuffer> pIndexBuff;
+	std::shared_ptr<Bind::VertexBuffer> pVertBuff;
+	std::shared_ptr<Bind::Topology> pTopology;
+	std::vector<Technique> techniques;
 
-
-private:
-	const Bind::IndexBuffer* pIndexBuffer = nullptr;
-	std::vector<std::shared_ptr<Bind::Bindable>> binds;
+	
 };

@@ -1,8 +1,10 @@
-cbuffer CBuf
+cbuffer CBuf : register(b0)
 {
     matrix model;
     matrix modelViewProj;
 };
+
+
 
 float4 main(float3 pos : Position) : SV_Position
 {

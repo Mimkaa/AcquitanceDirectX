@@ -1,7 +1,7 @@
 #pragma once
 #include "Graphics.hpp"
 
-
+class Drawable;
 // if the base class is a friend class, children are not
 namespace Bind {
 	class Bindable
@@ -14,6 +14,9 @@ namespace Bind {
 			assert(false);
 			return " ";
 		}
+		virtual void InitializeParentReference(const Drawable& drawable) noexcept
+		{}
+
 	protected:// only available to children and friends
 
 		// we create these to access members of Graphics 
