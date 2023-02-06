@@ -1,19 +1,19 @@
 #define DCB_IMPL_SOURCE
 #include "DynamicConstantBuffer.h"
-namespace Dcbf
+namespace Dcb
 {
 	struct ExtraData
 	{
 
 
-		struct StructData : public Dcbf::LayoutElement::ExtraDataBase
+		struct StructData : public Dcb::LayoutElement::ExtraDataBase
 		{
-			std::vector<std::pair<std::string, Dcbf::LayoutElement>> data;
+			std::vector<std::pair<std::string, Dcb::LayoutElement>> data;
 		};
 
 		struct ArrayData : public LayoutElement::ExtraDataBase
 		{
-			std::optional<Dcbf::LayoutElement> type;
+			std::optional<Dcb::LayoutElement> type;
 			size_t size;
 			size_t element_size;
 		};
@@ -108,7 +108,7 @@ namespace Dcbf
 		return *(data -> type);
 	}
 
-	size_t LayoutElement::GetOffsetBegin()
+	size_t LayoutElement::GetOffsetBegin() const
 	{
 		return *offset;
 	}
@@ -148,7 +148,7 @@ namespace Dcbf
 
 	}
 
-	size_t LayoutElement::GetSizeBytes() 
+	size_t LayoutElement::GetSizeBytes() const
 	{
 		return GetOffsetEnd() - GetOffsetBegin();
 	}

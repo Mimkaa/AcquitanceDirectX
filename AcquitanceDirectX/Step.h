@@ -4,7 +4,7 @@
 #include "Bindable.h"
 #include "Graphics.hpp"
 
-
+#include "TechniqueProbe.h"
 
 
 class Step
@@ -25,7 +25,13 @@ public:
 
 	void InitializeParentReference(const class Drawable& drawable) noexcept;
 	
-
+	void Accept(TechniqueProbe& probe)
+	{
+		for (auto& s : bindables)
+		{
+			s->Accept(probe);
+		}
+	}
 private:
 	const size_t index;
 	std::vector<std::shared_ptr<Bind::Bindable>> bindables;

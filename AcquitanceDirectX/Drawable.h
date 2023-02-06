@@ -4,7 +4,7 @@
 #include <memory>
 #include "Technique.h"
 
-
+class TechniqueProbe;
 
 namespace Bind
 {
@@ -35,7 +35,7 @@ public:
 	
 	void AddTechnique(Technique tecnique_in) noxnd;
 	
-
+	void Accept(TechniqueProbe& probe);
 
 	
 protected:

@@ -25,6 +25,7 @@ namespace Bind {
 
 
 
+
 	void TransformCbuf::UpdateAndBind(Graphics& gfx, const Transforms& tf) noexcept
 	{
 		pVcbuf->Update(gfx, tf);

@@ -2,7 +2,7 @@
 #include "DynamicConstantBuffer.h"
 void TestDynamicConstantBuff()
 {
-	using namespace Dcbf;
+	using namespace Dcb;
 	RawLayout row{};
 	row.Add<Type::Float>("test");
 	row.Add<Type::Array>("arr");

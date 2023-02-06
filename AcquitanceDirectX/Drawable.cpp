@@ -30,5 +30,14 @@ void Drawable::AddTechnique(Technique tecnique_in) noxnd
 	techniques.push_back(std::move(tecnique_in));
 }
 
+void Drawable::Accept(TechniqueProbe& probe)
+{
+	
+	for (auto& t : techniques)
+	{
+		probe.SetTech(&t);
+		t.Accept(probe);
+	}
+}
 
 

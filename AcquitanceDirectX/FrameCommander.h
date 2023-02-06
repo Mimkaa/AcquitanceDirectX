@@ -34,11 +34,6 @@ public:
 		passes[1].Execute(gfx);
 
 		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Mask)->Bind(gfx);
-		struct SolidColorBuffer
-		{
-			DirectX::XMFLOAT4 color = { 1.0f,0.4f,0.4f,1.0f };
-		} scb;
-		Bind::PixelConstantBuffer<SolidColorBuffer>::Resolve(gfx, scb, 1u);
 		passes[2].Execute(gfx);
 		
 	}

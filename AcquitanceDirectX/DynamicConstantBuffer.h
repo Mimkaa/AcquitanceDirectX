@@ -9,7 +9,7 @@
 #include <type_traits>
 #include <unordered_map>
 
-namespace Dcbf
+namespace Dcb
 {
 	namespace dx = DirectX;
 
@@ -21,6 +21,7 @@ namespace Dcbf
 	X(Bool)\
 	X(Int)\
 	X(Matrix)\
+	X(Float4)\
 
 	enum Type
 	{
@@ -36,6 +37,13 @@ namespace Dcbf
 	{
 		static constexpr bool valid = false;
 
+	};
+	template<> struct Map<Float4>
+	{
+		using SysType = dx::XMFLOAT4;
+		static constexpr size_t size = sizeof(SysType);
+		static constexpr bool valid = true;
+		static constexpr const char* code = "FL4";
 	};
 	template<> struct Map<Float>
 	{
@@ -168,7 +176,7 @@ namespace Dcbf
 			return const_cast<LayoutElement*>(this)->T();
 		}
 
-		size_t GetOffsetBegin();
+		size_t GetOffsetBegin() const;
 		
 
 		size_t AdvanceToBoudary(size_t val_in) const;
@@ -181,7 +189,7 @@ namespace Dcbf
 
 		size_t GetOffsetEnd() const;
 		
-		size_t GetSizeBytes() ;
+		size_t GetSizeBytes() const ;
 		
 
 		LayoutElement& Add(Type type_in, std::string str_in);
@@ -341,7 +349,7 @@ namespace Dcbf
 			operator const T* ()const
 			{
 				static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsuported SysType");
-				return &static_cast<const T&>(*this);
+				return &static_cast<const T&>(*ref);
 			}
 		private:
 			Ptr(const ConstElementRef* ref_in)
@@ -407,7 +415,7 @@ namespace Dcbf
 			operator T* ()const
 			{
 				static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsuported SysType");
-				return &static_cast<T&>(*this);
+				return &static_cast<T&>(*ref);
 			}
 		private:
 			Ptr(ElementRef* ref_in)
@@ -489,7 +497,7 @@ namespace Dcbf
 	class LayoutCodex
 	{
 	public:
-		static CookedLayout Resolve(Dcbf::RawLayout&& raw)
+		static CookedLayout Resolve(Dcb::RawLayout&& raw)
 		{
 			auto& map = Get_().map;
 			auto sign = raw.GetSignature();
