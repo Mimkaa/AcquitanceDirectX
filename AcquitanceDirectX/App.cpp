@@ -24,10 +24,23 @@ App::App(const std::string& commandLine )
 	
 {
 	// testing
-	TestDynamicConstantBuff();
-	
+	//TestDynamicConstantBuff();
+	//TestDynamicVertexBuff();
+	TestMaterialSystemLoading(wnd.Gfx());
 	//plane.SetPos(cam.GetPosition());
-
+	{
+		std::string path = "Models\\brick_wall\\brick_wall.obj";
+		Assimp::Importer imp;
+		const auto pScene = imp.ReadFile(path,
+			aiProcess_Triangulate |
+			aiProcess_JoinIdenticalVertices |
+			aiProcess_ConvertToLeftHanded |
+			aiProcess_GenNormals |
+			aiProcess_CalcTangentSpace
+		);
+		Material mat{ wnd.Gfx(),*pScene->mMaterials[1],path };
+		pLoaded = std::make_unique<Mesh>(wnd.Gfx(), mat, *pScene->mMeshes[0]);
+	}
 	
 	
 	/*wall.SetPos(dx::XMMatrixTranslation( 2.5f,0.0f,1.0f ));
@@ -76,7 +89,7 @@ void App::DoFrame()
 
 	light.Submit(fc);
 	cubby.Submit(fc);
-	
+	pLoaded->Submit(fc, DirectX::XMMatrixIdentity());
 
 	//plane.Draw(wnd.Gfx());
 	//plane.Draw(wnd.Gfx());

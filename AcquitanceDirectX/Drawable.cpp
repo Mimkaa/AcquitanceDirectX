@@ -1,6 +1,7 @@
 #include "Drawable.h"
 #include "BindableCommon.h"
 #include "BindableCodex.h"
+#include "Material.h"
 using namespace Bind;
 
 void Drawable::Bind(Graphics& gfx) const
@@ -21,6 +22,18 @@ void Drawable::Submit(class FrameComander& frame) const noexcept
 	for (auto& t : techniques)
 	{
 		t.Submit(frame, *this);
+	}
+}
+
+Drawable::Drawable(Graphics& gfx, const Material& mat, const aiMesh& mesh) noexcept
+{
+	pVertBuff = mat.CtreateVertexBuffer(gfx, mesh);
+	pIndexBuff = mat.CtreateIndexBuffer(gfx, mesh);
+	pTopology = Bind::Topology::Resolve(gfx);
+
+	for (auto& t : mat.GetTechniques())
+	{
+		AddTechnique(std::move(t));
 	}
 }
 

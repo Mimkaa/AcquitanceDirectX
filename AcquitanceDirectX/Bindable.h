@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics.hpp"
+#include <memory>
 
 class Drawable;
 class TechniqueProbe;
@@ -28,5 +29,11 @@ namespace Bind {
 		static ID3D11DeviceContext* GetContext(Graphics& gfx) noexcept;
 		static ID3D11Device* GetDevice(Graphics& gfx) noexcept;
 		static DxgiInfoManager& GetInfoManager(Graphics& gfx) noxnd;
+	};
+
+	class CloningBindable : public Bindable
+	{
+	public:
+		virtual std::unique_ptr<CloningBindable> Clone() const noexcept = 0;
 	};
 }

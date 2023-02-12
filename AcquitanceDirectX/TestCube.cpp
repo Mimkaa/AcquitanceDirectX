@@ -52,7 +52,7 @@ TestCube::TestCube(Graphics& gfx)
 
 			buf["specularIntensity"] = 1.0f;
 			buf["specularPower"] = 20.0f;
-			buf["normalsOn"] = TRUE;
+			buf["normalsOn"] = true;
 
 			lambertine.AddBindable(std::make_shared<CachingPixelConstantBufferEx>(gfx, buf, 1));
 			//lambertine.AddBindable(PixelConstantBuffer<PSConstant>::Resolve(gfx, Const, 1u));

@@ -68,21 +68,21 @@ namespace Dcb
 	};
 	template<> struct Map<Bool>
 	{
-		using SysType = int;
-		static constexpr size_t size = sizeof(SysType);
+		using SysType = bool;
+		static constexpr size_t size = 4u;
 		static constexpr bool valid = true;
 		static constexpr const char* code = "BL";
 	};
 	template<> struct Map<Int>
 	{
-		using SysType = unsigned int;
+		using SysType =  int;
 		static constexpr size_t size = sizeof(SysType);
 		static constexpr bool valid = true;
 		static constexpr const char* code = "INT";
 	};
 	template<> struct Map<Matrix>
 	{
-		using SysType = dx::XMMATRIX;
+		using SysType = dx::XMFLOAT4X4;
 		static constexpr size_t size = sizeof(SysType);
 		static constexpr bool valid = true;
 		static constexpr const char* code = "MT";
@@ -217,11 +217,12 @@ namespace Dcb
 			return Set(typen, size);
 		}
 
-
+		
 		
 		template<typename T>
 		size_t Resolve() const 
 		{
+			
 			switch (type)
 			{
 			#define X(el) case el: assert(typeid(Map<el>::SysType) == typeid(T)); return *offset;
@@ -447,7 +448,7 @@ namespace Dcb
 		template<typename T>
 		T& operator = (const T& rhs) const // rhs - right hand side  
 		{
-			static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsupported SysType used in pointer conversion");
+			static_assert(ReverseMap<std::remove_const_t<T>>::valid, "Unsupported SysType used in refrence conversion");
 			//static_assert(std::is_same<Map<element->type>::SysType, T>::value, "cannot assign this value to the element");
 			return static_cast<T&>(*this) = rhs;
 		}
@@ -550,7 +551,7 @@ namespace Dcb
 			buffer(buf_in.buffer)
 		{}
 		
-		Buffer(Buffer&& buf_in)
+		Buffer(Buffer&& buf_in) noexcept
 			:
 			pLayout(std::move(buf_in.pLayout)),
 			buffer(std::move(buf_in.buffer))

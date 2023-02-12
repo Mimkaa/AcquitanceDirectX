@@ -9,7 +9,7 @@
 #include "TestCube.h"
 #include "ScriptCommander.h"
 #include "NormalMapTwerker.h"
-
+#include "Material.h"
 #include "FrameCommander.h"
 
 class App
@@ -36,6 +36,7 @@ private:
 	//TestPlane wall{ wnd.Gfx()};
 	//Model sponza{ wnd.Gfx(), "Models\\Sponza\\sponza.obj",1.0f/20};
 	//TestPlane plane{ wnd.Gfx(), {0.3f,0.3f,1.0f,0.0f} };
+	std::unique_ptr<Mesh> pLoaded;
 	TestCube cubby{ wnd.Gfx() };
 	int x = 0;
 	int y = 0;

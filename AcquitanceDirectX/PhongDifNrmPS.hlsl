@@ -4,10 +4,11 @@
 
 cbuffer MaterialCBuf
 {
-    float specularIntensity;
-    float specularPower;
-    bool normalsMappingOn;
-    float padding[1];
+    float3 specularColor;
+    float specularWeight;
+    float specularGloss;
+    bool useNormalMap;
+    float normalMapWeight;
 };
 
 #include "Transformation.hlsl"
@@ -19,7 +20,7 @@ SamplerState smpl;
 float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : Texcoord, float3 tan : Tangent, float3 btan : Bytangent) : SV_Target
 {
     float3 normal = normalize(normalView);
-    if (normalsMappingOn == 1)
+    if (useNormalMap)
     {
         normal = MapNormalViewSpace(normalize(tan), normalize(btan), normalize(normalView), tec, norm, smpl);
         
@@ -33,7 +34,8 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
 
     
 //specular intensity between view vector an the reflection
- const float3 specular = Speculate(attenuation, 1.0f, specularIntensity.rrr, normal, lv.vToL, ViewPos, specularPower);
+    const float3 specular = Speculate(light_diffuse * attIntensity * specularColor, specularWeight, normalView,
+        lv.vToL, ViewPos, attenuation, specularGloss);
     
 
 return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular), 1.0f);

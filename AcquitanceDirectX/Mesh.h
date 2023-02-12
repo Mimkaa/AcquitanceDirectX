@@ -12,6 +12,9 @@
 #include <optional>
 #include "ChiliException.hpp"
 #include <filesystem>
+#include <string>
+
+class Material;
 
 
 class ModelException :public ChiliException
@@ -28,6 +31,7 @@ private:
 class Mesh:public Drawable
 {
 public:
+	Mesh(Graphics& gfx, const Material& mat, const aiMesh& mesh) noexcept;
 	//Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>>binds_in);
 	using Drawable::Drawable;
 	DirectX::XMMATRIX GetTransformXM() const noexcept;

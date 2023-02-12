@@ -58,6 +58,9 @@
     <Filter Include="Source Files\Jobber">
       <UniqueIdentifier>{1b57ece3-76bd-41fd-b0a4-f35990bfe73b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Material">
+      <UniqueIdentifier>{9e543efa-1816-4a3c-ab9a-e97e7cfe4c86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -209,6 +212,9 @@
     </ClCompile>
     <ClCompile Include="Technique.cpp">
       <Filter>Source Files\Jobber</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -440,6 +446,9 @@
     <ClInclude Include="TechniqueProbe.h">
       <Filter>Header Files\Jobber</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AcquitanceDirectX1.rc">
@@ -464,10 +473,10 @@
     <FxCompile Include="PhongPSSpecMap.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="PhongNormalsPS.hlsl">
+    <FxCompile Include="PhongDifNrmPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="PhongNormalsVS.hlsl">
+    <FxCompile Include="PhongDifNrmVS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="PhongSpecNormalPS.hlsl">
