@@ -87,13 +87,13 @@ void App::DoFrame()
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 
 	
-	//sponza.Draw();
+	sponza.Submit(fc);
 	/*Gobber.Draw();
 	nano.Draw();
 	wall.Draw(wnd.Gfx());*/
-	Gobber.Submit(fc);
-	light.Submit(fc);
-	cubby.Submit(fc);
+	//Gobber.Submit(fc);
+	//light.Submit(fc);
+	//cubby.Submit(fc);
 	
 
 
