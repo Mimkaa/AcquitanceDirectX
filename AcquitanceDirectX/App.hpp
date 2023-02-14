@@ -31,7 +31,7 @@ private:
 	Camera cam;
 	PointLight light;
 	FrameComander fc;
-	//Model Gobber{ wnd.Gfx(), "Models\\gobber\\GoblinX.obj" };
+	Model Gobber{ wnd.Gfx(), "Models\\gobber\\GoblinX.obj" };
 	//Model nano{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
 	//TestPlane wall{ wnd.Gfx()};
 	//Model sponza{ wnd.Gfx(), "Models\\Sponza\\sponza.obj",1.0f/20};

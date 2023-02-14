@@ -5,9 +5,10 @@
 
 cbuffer ObjectCBuf
 {
-    float specularPowerConst;
-    bool hasGloss;
-    float specularMapWeight;
+    bool useGlossAlpha;
+    float3 specularColor;
+    float specularWeight;
+    float specularGloss;
 };
 
 Texture2D tex;
@@ -24,10 +25,10 @@ float4 main(float3 viewFragPos : Position, float3 viewNormal : Normal, float2 tc
 	// fragment to light vector data
     const LightVectorData lv = CalculateLightVectorData(LightPos, viewFragPos);
     // specular parameters
-    float specularPower = specularPowerConst;
+    float specularPower = specularGloss;
     const float4 specularSample = spec.Sample(splr, tc);
-    const float3 specularReflectionColor = specularSample.rgb * specularMapWeight;
-    if (hasGloss)
+    const float3 specularReflectionColor = specularSample.rgb * specularWeight;
+    if (useGlossAlpha)
     {
         specularPower = pow(2.0f, specularSample.a * 13.0f);
     }

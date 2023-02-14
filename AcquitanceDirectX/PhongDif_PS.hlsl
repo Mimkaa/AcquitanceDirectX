@@ -10,11 +10,11 @@ cbuffer LightCBuf
 };
 
 
-cbuffer MaterialCBuf
+cbuffer ObjectCBuf
 {
-    float specularIntensity;
-    float specularPower;
-    float padding[2];
+    float3 specularColor;
+    float specularWeight;
+    float specularGloss;
 };
 
 Texture2D tex;
@@ -36,7 +36,7 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec: T
 			// opposite direction of the reflection
     const float3 r = w * 2.0f - v_to_l;
 			//specular intensity between view vector an the reflection
-    const float3 specular = attenuation * (light_diffuse * attIntensity) * specularIntensity * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
+    const float3 specular = attenuation * (light_diffuse * attIntensity) * specularWeight * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularGloss);
     
     
     return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular), 1.0f);

@@ -43,28 +43,28 @@ DirectX::XMMATRIX Node::GetBaseTransform() const noexcept
 
 
 
-void Node::ShowTree(Node*& selectedNode) const noxnd
-{
-	// recursively increment the index of a node
-	const int currentNodeId = (selectedNode == nullptr) ? -1 : selectedNode->GetId();
-	// build up flags for current node
-	const auto node_flags = ImGuiTreeNodeFlags_OpenOnArrow
-		| ((GetId() == currentNodeId) ? ImGuiTreeNodeFlags_Selected : 0)
-		| ((children.size() == 0) ? ImGuiTreeNodeFlags_Leaf : 0);
-	// if tree node expanded, recursively render all children
-	const auto expanded = ImGui::TreeNodeEx((void*)(intptr_t)GetId(), node_flags, name.c_str());
-	if (ImGui::IsItemClicked())
-	{
-		selectedNode = const_cast<Node*>(this);
-	}
-	if (expanded) {
-
-
-		for (const auto& child : children)
-			child->ShowTree(selectedNode);
-		ImGui::TreePop();
-	}
-}
+//void Node::ShowTree(Node*& selectedNode) const noxnd
+//{
+//	// recursively increment the index of a node
+//	const int currentNodeId = (selectedNode == nullptr) ? -1 : selectedNode->GetId();
+//	// build up flags for current node
+//	const auto node_flags = ImGuiTreeNodeFlags_OpenOnArrow
+//		| ((GetId() == currentNodeId) ? ImGuiTreeNodeFlags_Selected : 0)
+//		| ((children.size() == 0) ? ImGuiTreeNodeFlags_Leaf : 0);
+//	// if tree node expanded, recursively render all children
+//	const auto expanded = ImGui::TreeNodeEx((void*)(intptr_t)GetId(), node_flags, name.c_str());
+//	if (ImGui::IsItemClicked())
+//	{
+//		selectedNode = const_cast<Node*>(this);
+//	}
+//	if (expanded) {
+//
+//
+//		for (const auto& child : children)
+//			child->ShowTree(selectedNode);
+//		ImGui::TreePop();
+//	}
+//}
 
 void Node::Submit(FrameComander& frame, DirectX::FXMMATRIX accumulatedTransform) const noxnd
 {

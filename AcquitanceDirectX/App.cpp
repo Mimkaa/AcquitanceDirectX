@@ -91,7 +91,7 @@ void App::DoFrame()
 	/*Gobber.Draw();
 	nano.Draw();
 	wall.Draw(wnd.Gfx());*/
-
+	Gobber.Submit(fc);
 	light.Submit(fc);
 	cubby.Submit(fc);
 	

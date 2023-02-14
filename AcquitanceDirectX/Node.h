@@ -28,7 +28,7 @@ public:
 
 private:
 	void AddChild(std::unique_ptr<Node> node_in);
-	void ShowTree(Node*& eslectedNode) const noxnd;
+	//void ShowTree(Node*& eslectedNode) const noxnd;
 private:
 	std::vector<Mesh*> meshes;
 	std::vector<std::unique_ptr<Node>> children;

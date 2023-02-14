@@ -1,46 +1,30 @@
-cbuffer LightCBuf
+#include "ShaderOps.hlsl"
+#include "LightVectorData.hlsl"
+
+#include "PointLight.hlsl"
+
+cbuffer ObjectCBuf
 {
-    float3 LightPos;
-    float3 light_ambient;
-    float3 light_diffuse;
-    float attIntensity;
-    float constant_attenuation;
-    float linear_attenuation;
-    float quadratic_attenuation;
+    float3 materialColor;
+    float3 specularColor;
+    float specularWeight;
+    float specularGloss;
+};
+
+
+float4 main(float3 viewFragPos : Position, float3 viewNormal : Normal) : SV_Target
+{
+    // normalize the mesh normal
+    viewNormal = normalize(viewNormal);
+	// fragment to light vector data
+    const LightVectorData lv = CalculateLightVectorData(viewLightPos, viewFragPos);
+	// attenuation
+    const float att = Attenuation(attConst, attLin, attQuad, lv.distToL);
+	// diffuse
+    const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, viewNormal);
+    // specular 
+    const float3 specular = Speculate(att, specularWeight, specularColor, viewNormal, lv.vToL, viewFragPos, specularGloss);
     
-};
-
-
-cbuffer MaterialCBuf
-{
-    float4 materialColor;
-    float4 specularColor;
-    float specularPower;
-    float padding[2];
-};
-
-SamplerState smpl;
-
-float4 main(float3 ViewPos : Position, float3 normalView : Normal) : SV_Target
-{
-    normalView = normalize(normalView);
-    const float3 v_to_l = LightPos - ViewPos;
-    const float dist = length(v_to_l);
-    const float3 LightDir = v_to_l / dist;
-    const float attenuation = 1.0f /
-                (constant_attenuation + linear_attenuation * dist + quadratic_attenuation * pow(dist, 2));
-
-    const float3 d = light_diffuse * attenuation * attIntensity * max(0.0f, dot(normalView, LightDir));
-
-    // specular highlight
-    const float3 w = normalView * dot(v_to_l, normalView);
-    // opposite direction of the reflection
-const float3 r = w * 2.0f - v_to_l;
-//specular intensity between view vector an the reflection
-const float4 specular = attenuation * float4(light_diffuse * attIntensity,1.0f) * specularColor * pow(max(0.0f, dot(normalize(-r), normalize(ViewPos))), specularPower);
-
-
-return saturate(materialColor * float4(d + light_ambient,1.0f) + specular);
-
-
+	// final color
+    return float4(saturate((diffuse + ambient) * materialColor + specular), 1.0f);
 }

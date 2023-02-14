@@ -6,6 +6,7 @@
 #include "ModelWindow.h"
 #include "Node.h"
 #include "Mesh.h"
+#include "Material.h"
 
 namespace dx = DirectX;
 
@@ -26,9 +27,16 @@ Model::Model(Graphics& gfx, const std::string& pathname, const float scale)
 	{
 		throw ModelException(__LINE__, __FILE__, importer.GetErrorString());
 	}
+	std::vector<Material> materials;
+	materials.reserve(scene->mNumMaterials);
+	for (int i = 0; i < scene->mNumMaterials; i++)
+	{
+		materials.emplace_back(gfx, *scene->mMaterials[i], pathname);
+	}
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
-		ParseMesh(scene->mMeshes[i], scale, scene->mMaterials, pathname);
+		const auto& mesh = *scene->mMeshes[i];
+		meshes.push_back(std::make_unique<Mesh>(gfx, materials[mesh.mMaterialIndex], mesh));
 	}
 	int firstNodeId = 0;
 	pRoot = ParseNode(firstNodeId, scene->mRootNode);
@@ -45,20 +53,20 @@ Model::~Model() noexcept
 }
 
 
-void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* const* ppMaterials, const std::filesystem::path& path)
-{
-	
-}
+//void Model::ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* const* ppMaterials, const std::filesystem::path& path)
+//{
+//	
+//}
 
 void Model::Submit(FrameComander& frame) const noxnd
 {
 	pRoot->Submit(frame, dx::XMMatrixIdentity());
 }
 
-void Model::ShowWindow(Graphics& gfx, const char* windowName) noexcept
-{
-	pWindow->Show(gfx, windowName, *pRoot);
-}
+//void Model::ShowWindow(Graphics& gfx, const char* windowName) noexcept
+//{
+//	pWindow->Show(gfx, windowName, *pRoot);
+//}
 
 
 

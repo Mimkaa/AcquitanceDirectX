@@ -2,15 +2,14 @@
 #include "ShaderOps.hlsl"
 #include "LightVectorData.hlsl"
 
-cbuffer MaterialCBuf
+cbuffer ObjectCBuf
 {
-    bool EnableSpecular;
-    float3 SpecularColor;
+    bool useGlossAlpha;
+    float3 specularColor;
     float specularWeight;
-    bool hasAlphaGloass;
-    float specularPowerConst;
-    bool normalsMappingOn;
-    
+    float specularGloss;
+    bool useNormalMap;
+    float normalMapWeight;
 };
 
 cbuffer CBufMat
@@ -38,7 +37,7 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
     clip(difSam.a < 0.1 ? -1 : 1);
     #endif
     float3 normal = normalize(normalView);
-    if (normalsMappingOn == 1)
+    if (useNormalMap)
     {
         normal = MapNormalViewSpace(normalize(tan), normalize(btan), normalize(normalView), tec, norm, smpl);
 
@@ -57,18 +56,17 @@ float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : 
     
     //specular intensity between view vector an the reflection
 
-    float  specularPower = specularPowerConst;
-    float3 specularReflectionColor = SpecularColor * specularWeight;
-    if (EnableSpecular)
+    float  specularPower = specularGloss;
+    float3 specularReflectionColor = specularColor * specularWeight;
+   
+    const float4 specularSample = spec.Sample(smpl, tec);
+    specularReflectionColor = specularSample.rgb * specularWeight;
+    if (useGlossAlpha)
     {
-        const float4 specularSample = spec.Sample(smpl, tec);
-        specularReflectionColor = specularSample.rgb * specularWeight;
-        if (hasAlphaGloass == 1)
-        {
-            specularPower = pow(2.0f, specularSample.a * 13.0f);
-        }
-       
+        specularPower = pow(2.0f, specularSample.a * 13.0f);
     }
+       
+    
  
     const float3 specular = Speculate(attenuation, 1.0f, specularReflectionColor, normal, lv.vToL, ViewPos, specularPower);
     
