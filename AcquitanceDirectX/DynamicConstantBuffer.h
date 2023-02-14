@@ -238,6 +238,7 @@ namespace Dcb
 		{
 			return CrossesBoundary(offset_in, size_in) ? AdvanceToBoudary(offset_in) : offset_in;
 		}
+		
 
 		size_t FinalizeForStruct(size_t offset_in);
 		

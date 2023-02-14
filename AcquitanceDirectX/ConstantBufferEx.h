@@ -1,8 +1,7 @@
 #pragma once
-#pragma once
 #include "Bindable.h"
 #include "GraphicsThrowHeader.h"
-#include "DynamicConstantBuffer.h"
+#include  "DynamicConstantBuffer.h"
 #include "TechniqueProbe.h"
 
 namespace Bind
@@ -62,7 +61,7 @@ namespace Bind
 	{
 	public:
 		using ConstantBufferEx::ConstantBufferEx;
-		void Bind(Graphics& gfx) noexcept  override
+		void Bind(Graphics& gfx) noexcept override
 		{
 			INFOMAN_NOHR(gfx);
 			GFX_THROW_INFO_ONLY(GetContext(gfx)->PSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf()));

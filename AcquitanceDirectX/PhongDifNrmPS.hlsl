@@ -2,7 +2,7 @@
 #include "ShaderOps.hlsl"
 #include "LightVectorData.hlsl"
 
-cbuffer MaterialCBuf
+cbuffer MaterialCBuf : register(b1)
 {
     float3 specularColor;
     float specularWeight;
@@ -13,29 +13,29 @@ cbuffer MaterialCBuf
 
 #include "Transformation.hlsl"
 
-Texture2D tex;
+Texture2D tex : register(t0);
 Texture2D norm: register(t2);
-SamplerState smpl;
+SamplerState smpl : register(s0);;
 
 float4 main(float3 ViewPos : Position, float3 normalView : Normal, float2 tec : Texcoord, float3 tan : Tangent, float3 btan : Bytangent) : SV_Target
 {
-    float3 normal = normalize(normalView);
+    normalView = normalize(normalView);
     if (useNormalMap)
     {
-        normal = MapNormalViewSpace(normalize(tan), normalize(btan), normalize(normalView), tec, norm, smpl);
-        
+        const float3 mappedNormal = MapNormalViewSpace(normalize(tan), normalize(btan), normalize(normalView), tec, norm, smpl);
+        normalView = lerp(normalView, mappedNormal, normalMapWeight);
     }
     
     const LightVectorData lv = CalculateLightVectorData(LightPos, ViewPos);
     const float attenuation = Attenuation(constant_attenuation, linear_attenuation, quadratic_attenuation, lv.distToL);
 
 
-    const float3 d = Diffuse(light_diffuse, attIntensity, attenuation, normal, lv.dirToL);;
+    const float3 d = Diffuse(light_diffuse, attIntensity, attenuation, normalView, lv.dirToL);;
 
     
-//specular intensity between view vector an the reflection
-    const float3 specular = Speculate(light_diffuse * attIntensity * specularColor, specularWeight, normalView,
-        lv.vToL, ViewPos, attenuation, specularGloss);
+//specular intensity between view vector and the reflection
+    const float3 specular = Speculate(attenuation, specularWeight, specularColor,
+        normalView, lv.vToL, ViewPos,specularGloss);
     
 
 return float4(saturate((d + light_ambient) * tex.Sample(smpl, tec).rgb + specular), 1.0f);

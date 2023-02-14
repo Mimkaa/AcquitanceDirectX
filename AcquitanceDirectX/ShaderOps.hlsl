@@ -28,5 +28,5 @@ const in float3 v_to_l, const in float3 ViewPos, const in float specularPower
     const float3 r = w * 2.0f - v_to_l;
     // vector from camera to fragment (in view space) renormalization is used here
     const float3 viewCamToFrag = normalize(ViewPos);
-    return attenuation * specularIntensity * SpecularColor * pow(max(0.0f, dot(normalize(-r), normalize(viewCamToFrag))), specularPower);
+    return attenuation * specularIntensity * SpecularColor * pow(dot(normalize(-r), normalize(viewCamToFrag)), specularPower);
 }

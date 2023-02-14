@@ -217,6 +217,7 @@ void TestCube::ShowControlWindow(Graphics& gfx) noexcept
 				{
 					dcheck(ImGui::SliderFloat(tag("Glossiness"), &v, 1.0f, 100.0f, "%.1f", 1.5f));
 				}
+				
 				return dirty;
 			}
 		} probe;

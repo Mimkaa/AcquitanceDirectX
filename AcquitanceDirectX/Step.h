@@ -47,6 +47,7 @@ public:
 	
 	void Accept(TechniqueProbe& probe)
 	{
+		probe.SetStep(this);
 		for (auto& s : bindables)
 		{
 			s->Accept(probe);

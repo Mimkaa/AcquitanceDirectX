@@ -39,6 +39,7 @@ public:
 
 	void Accept(TechniqueProbe& probe)
 	{
+		probe.SetTech(this);
 		for (auto& s : steps)
 		{
 			s.Accept(probe);

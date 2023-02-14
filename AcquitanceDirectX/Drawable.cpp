@@ -48,7 +48,6 @@ void Drawable::Accept(TechniqueProbe& probe)
 	
 	for (auto& t : techniques)
 	{
-		probe.SetTech(&t);
 		t.Accept(probe);
 	}
 }

@@ -120,9 +120,10 @@ namespace Dcb
 
 	bool LayoutElement::CrossesBoundary(size_t offset, size_t val_in)
 	{
-		int start = offset / 16;
-		int end = (offset + val_in) / 16;
-		return (start != end && end % 16 != 0) || val_in > 16;
+		const auto end = offset + val_in;
+		const auto pageStart = offset / 16u;
+		const auto pageEnd = end / 16u;
+		return (pageStart != pageEnd && end % 16 != 0u) || val_in > 16u;
 	}
 
 	size_t LayoutElement::GetOffsetEnd() const
@@ -177,27 +178,26 @@ namespace Dcb
 		data->type = { type_in };
 		return *this;
 	}
-	size_t LayoutElement::FinalizeForStruct(size_t offset_in)
+	size_t LayoutElement::FinalizeForStruct(size_t offsetIn)
 	{
-		auto data = static_cast<ExtraData::StructData*>(extraData.get());
-		assert(data->data.size() > 0 && "the struct is empty");
-		offset = AdvanceToBoudary(offset_in);
-		auto temporaryNext = *offset;
-		for (auto& el : data->data)
+		auto& data = static_cast<ExtraData::StructData&>(*extraData);
+		assert(data.data.size() != 0u);
+		offset = AdvanceToBoudary(offsetIn);
+		auto offsetNext = *offset;
+		for (auto& el : data.data)
 		{
-			temporaryNext += el.second.Finalize(temporaryNext);
+			offsetNext = el.second.Finalize(offsetNext);
 		}
-		return  temporaryNext;
+		return offsetNext;
 	}
 
-	size_t LayoutElement::FinalizeForArray(size_t offset_in)
+	size_t LayoutElement::FinalizeForArray(size_t offsetIn)
 	{
-		//assert(offset_in != 0);
-		auto data = static_cast<ExtraData::ArrayData*>(extraData.get());
-		assert(data->size != 0 && "the array's type is empty");
-		offset = AdvanceToBoudary(offset_in);
-		data->type->Finalize(*offset);
-		data->element_size = AdvanceToBoudary(data->type->GetSizeBytes());
+		auto& data = static_cast<ExtraData::ArrayData&>(*extraData);
+		assert(data.size != 0u);
+		offset = AdvanceToBoudary(offsetIn);
+		data.type->Finalize(*offset);
+		data.element_size = LayoutElement::AdvanceToBoudary(data.type->GetSizeBytes());
 		return GetOffsetEnd();
 	}
 	 
@@ -205,7 +205,7 @@ namespace Dcb
 	{
 		switch (type)
 		{
-			#define X(el) case(el): offset = AdvanceIfCrossesBoundary(offset_in, Map<el>::size); return *offset + Map<el>::size ;
+			#define X(el) case el: offset = AdvanceIfCrossesBoundary(offset_in, Map<el>::size); return *offset + Map<el>::size ;
 				LEAFTYPES
 			#undef X
 			case(Struct):
