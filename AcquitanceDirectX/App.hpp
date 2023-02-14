@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include "PointLight.h"
 #include <set>
-#include "Mesh.h"
+#include "Model.h"
 #include "TestCube.h"
 #include "ScriptCommander.h"
 #include "NormalMapTwerker.h"

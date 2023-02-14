@@ -9,7 +9,7 @@
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h> 
 #include "Mesh.h"
-
+#include "ModelException.h"
 class NormalTwerker
 {
 public:

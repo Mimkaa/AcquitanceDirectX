@@ -61,6 +61,12 @@
     <Filter Include="Header Files\Material">
       <UniqueIdentifier>{9e543efa-1816-4a3c-ab9a-e97e7cfe4c86}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ModelSystem">
+      <UniqueIdentifier>{9ab48b7d-4cc0-4149-8a76-60586838f436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ModelSystem">
+      <UniqueIdentifier>{5e1fefeb-a2bf-4db5-a223-e3b5ab4bee5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -165,9 +171,6 @@
     <ClCompile Include="SolidSphere.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -215,6 +218,21 @@
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Source Files\ModelSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\ModelSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\ModelSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelException.cpp">
+      <Filter>Source Files\ModelSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelWindow.cpp">
+      <Filter>Source Files\ModelSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -365,9 +383,6 @@
     <ClInclude Include="Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -448,6 +463,21 @@
     </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Header Files\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Header Files\ModelSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\ModelSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\ModelSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelException.h">
+      <Filter>Header Files\ModelSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelWindow.h">
+      <Filter>Header Files\ModelSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
