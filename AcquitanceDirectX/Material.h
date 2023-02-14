@@ -12,19 +12,8 @@ class Material
 {
 public:
 	Material(Graphics& gfx, const aiMaterial& material, std::filesystem::path path);
-	std::vector<unsigned short> ExtractIndices(const aiMesh& mesh_in) const noexcept
-	{
-		std::vector<unsigned short> indices;
-		indices.reserve(mesh_in.mNumFaces * 3);
-		for (int i = 0; i < mesh_in.mNumFaces; i++)
-		{
-			const auto& face = mesh_in.mFaces[i];
-			indices.push_back(face.mIndices[0]);
-			indices.push_back(face.mIndices[1]);
-			indices.push_back(face.mIndices[2]);
-		}
-		return indices;
-	}
+	std::vector<unsigned short> ExtractIndices(const aiMesh& mesh_in) const noexcept;
+
 	Dvtx::VertexBuffer ExtractVertices(const aiMesh& mesh_in) const noexcept;
 
 	std::shared_ptr<Bind::IndexBuffer> CtreateIndexBuffer(Graphics& gfx, const aiMesh& mesh_in) const noexcept

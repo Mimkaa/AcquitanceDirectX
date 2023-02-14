@@ -83,10 +83,10 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 		{
 			step.AddBindable(std::make_shared<TransformCbuf>(gfx, 0u));
 			step.AddBindable(Blender::Resolve(gfx, false));
-			auto pvs = VertexShader::Resolve(gfx, shaderCode + "VS.cso");
+			auto pvs = VertexShader::Resolve(gfx, shaderCode + "_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
 			step.AddBindable(std::move(pvs));
-			step.AddBindable(PixelShader::Resolve(gfx, shaderCode + "PS.cso"));
+			step.AddBindable(PixelShader::Resolve(gfx, shaderCode + "_PS.cso"));
 			step.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
 			if (hasTexture)
 			{
@@ -122,13 +122,17 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 		phong.AddStep(std::move(step));
 		techniques.push_back(std::move(phong));
 	}
+
+	
+
+	
 	// outline technique
 	{
 		Technique outline("Outline");
 		{
 			Step mask(1);
 
-			auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
+			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
 			mask.AddBindable(std::move(pvs));
 
@@ -145,12 +149,12 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 			Step draw(2);
 
 			// these can be pass-constant (tricky due to layout issues)
-			auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
+			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
 			draw.AddBindable(std::move(pvs));
 
 			// this can be pass-constant
-			draw.AddBindable(PixelShader::Resolve(gfx, "SolidPS.cso"));
+			draw.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
 
 			Dcb::RawLayout lay;
 			lay.Add<Dcb::Float3>("materialColor");
@@ -207,6 +211,20 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 		}
 		techniques.push_back(std::move(outline));
 	}
+}
+
+std::vector<unsigned short> Material::ExtractIndices(const aiMesh& mesh_in) const noexcept
+{
+	std::vector<unsigned short> indices;
+	indices.reserve(mesh_in.mNumFaces * 3);
+	for (int i = 0; i < mesh_in.mNumFaces; i++)
+	{
+		const auto& face = mesh_in.mFaces[i];
+		indices.push_back(face.mIndices[0]);
+		indices.push_back(face.mIndices[1]);
+		indices.push_back(face.mIndices[2]);
+	}
+	return indices;
 }
 
 Dvtx::VertexBuffer Material::ExtractVertices(const aiMesh& mesh) const noexcept
