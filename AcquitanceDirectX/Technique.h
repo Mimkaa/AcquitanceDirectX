@@ -7,9 +7,10 @@ class Technique
 public:
 	Technique() = default;
 
-	Technique(const std::string& name)
+	Technique(const std::string& name, bool active = true)
 		:
-		name(name)
+		name(name),
+		active(active)
 	{}
 
 	void SetActiveState(bool state_in)

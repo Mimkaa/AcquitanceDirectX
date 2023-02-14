@@ -128,7 +128,7 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 	
 	// outline technique
 	{
-		Technique outline("Outline");
+		Technique outline("Outline", false);
 		{
 			Step mask(1);
 
