@@ -23,7 +23,7 @@ public:
 private:
 	void ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* const* ppMaterials, const std::filesystem::path& path);
 
-	std::unique_ptr<Node> ParseNode(int& node_id, aiNode* node_in);
+	std::unique_ptr<Node> ParseNode(int& node_id, aiNode* node_in, DirectX::FXMMATRIX additionalTransform);
 
 
 public:

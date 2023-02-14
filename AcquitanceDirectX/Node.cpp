@@ -74,11 +74,11 @@ void Node::Submit(FrameComander& frame, DirectX::FXMMATRIX accumulatedTransform)
 		accumulatedTransform;
 	for (const auto pm : meshes)
 	{
-		pm->Submit(frame, accumulatedTransform);
+		pm->Submit(frame, built);
 	}
 	for (const auto& pc : children)
 	{
-		pc->Submit(frame, accumulatedTransform);
+		pc->Submit(frame, built);
 	}
 }
 
