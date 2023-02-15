@@ -72,7 +72,7 @@ void Model::Submit(FrameComander& frame) const noxnd
 
 std::unique_ptr<Node> Model::ParseNode(int& node_id, aiNode* node_in, float scale)
 {
-	const auto transform = ScaleTranslation(DirectX::XMLoadFloat4x4(reinterpret_cast<DirectX::XMFLOAT4X4*>(&node_in->mTransformation)), scale);
+	const auto transform = ScaleTranslation(DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(reinterpret_cast<DirectX::XMFLOAT4X4*>(&node_in->mTransformation))), scale);
 
 	std::vector<Mesh*> nodeMeshes;
 	nodeMeshes.reserve(node_in->mNumMeshes);

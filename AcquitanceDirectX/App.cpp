@@ -90,11 +90,8 @@ void App::DoFrame()
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 
 	
-	sponza.Submit(fc);
-	/*Gobber.Draw();
-	nano.Draw();
-	wall.Draw(wnd.Gfx());*/
-	//Gobber.Submit(fc);
+	//sponza.Submit(fc);
+	Gobber.Submit(fc);
 	//light.Submit(fc);
 	//cubby.Submit(fc);
 	
@@ -155,6 +152,10 @@ void App::DoFrame()
 			{
 				dcheck(ImGui::Checkbox(tag("Spec. Map Enable"), &v));
 			}
+			if (auto v = buf["offset"]; v.Exists())
+			{
+				dcheck(ImGui::SliderFloat(tag("offset"), &v, 0.0f, 1.0f, "%.3f", 2.5f));
+			}
 			return dirty;
 		}
 	};
@@ -170,6 +171,11 @@ void App::DoFrame()
 			model.Accept(*this);
 
 			ImGui::NextColumn();
+			if (pSelectedNode != nullptr)
+			{
+				TP probe;
+				pSelectedNode->Accept(probe);
+			}
 			if (pSelectedNode != nullptr)
 			{
 				bool dirty = false;
@@ -193,11 +199,7 @@ void App::DoFrame()
 					);
 				}
 			}
-			if (pSelectedNode != nullptr)
-			{
-				TP probe;
-				pSelectedNode->Accept(probe);
-			}
+			
 
 			ImGui::End();
 
@@ -241,7 +243,7 @@ void App::DoFrame()
 				private:
 					bool active = false;
 				} pprr;
-			
+				// recursively goes through all the nods and sets them to be 
 				if (pSelectedNode != nullptr)
 				{
 					pprr.SetState(false);
@@ -301,7 +303,7 @@ void App::DoFrame()
 	};
 	static MP modelProbe;
 
-	modelProbe.SpawnWindow(sponza);
+	modelProbe.SpawnWindow(Gobber);
 	//plane.Draw(wnd.Gfx());
 	//plane.Draw(wnd.Gfx());
 
