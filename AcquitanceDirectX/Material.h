@@ -21,9 +21,20 @@ public:
 		return Bind::IndexBuffer::Resolve(gfx, GenerateMeshTag(mesh_in), ExtractIndices(mesh_in));
 	}
 
-	std::shared_ptr<Bind::VertexBuffer> CtreateVertexBuffer(Graphics& gfx, const aiMesh& mesh_in) const noexcept
+	std::shared_ptr<Bind::VertexBuffer> CtreateVertexBuffer(Graphics& gfx, const aiMesh& mesh_in, float scale = 1.0f) const noexcept
 	{
-		return Bind::VertexBuffer::Resolve(gfx, GenerateMeshTag(mesh_in), ExtractVertices(mesh_in));
+		auto vtc = ExtractVertices(mesh_in);
+		if (scale != 1.0f)
+		{
+			for (auto i = 0u; i < vtc.Size(); i++)
+			{
+				DirectX::XMFLOAT3& pos = vtc[i].Attr<Dvtx::VertexLayout::ElementType::Position3D>();
+				pos.x *= scale;
+				pos.y *= scale;
+				pos.z *= scale;
+			}
+		}
+		return Bind::VertexBuffer::Resolve(gfx, GenerateMeshTag(mesh_in), std::move(vtc));
 	}
 
 	std::string GenerateMeshTag(const aiMesh& mesh_in) const

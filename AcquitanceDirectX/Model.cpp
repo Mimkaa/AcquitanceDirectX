@@ -7,7 +7,7 @@
 #include "Node.h"
 #include "Mesh.h"
 #include "Material.h"
-
+#include "ChilliXM.h"
 namespace dx = DirectX;
 
 Model::Model(Graphics& gfx, const std::string& pathname, const float scale)
@@ -36,10 +36,10 @@ Model::Model(Graphics& gfx, const std::string& pathname, const float scale)
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
 		const auto& mesh = *scene->mMeshes[i];
-		meshes.push_back(std::make_unique<Mesh>(gfx, materials[mesh.mMaterialIndex], mesh));
+		meshes.push_back(std::make_unique<Mesh>(gfx, materials[mesh.mMaterialIndex], mesh, scale));
 	}
 	int firstNodeId = 0;
-	pRoot = ParseNode(firstNodeId, scene->mRootNode, DirectX::XMMatrixScaling(scale, scale, scale));
+	pRoot = ParseNode(firstNodeId, scene->mRootNode, scale);
 
 }
 
@@ -70,9 +70,9 @@ void Model::Submit(FrameComander& frame) const noxnd
 
 
 
-std::unique_ptr<Node> Model::ParseNode(int& node_id, aiNode* node_in, DirectX::FXMMATRIX additionalTransform)
+std::unique_ptr<Node> Model::ParseNode(int& node_id, aiNode* node_in, float scale)
 {
-	const auto transform = additionalTransform * DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(reinterpret_cast<DirectX::XMFLOAT4X4*>(&node_in->mTransformation)));
+	const auto transform = ScaleTranslation(DirectX::XMLoadFloat4x4(reinterpret_cast<DirectX::XMFLOAT4X4*>(&node_in->mTransformation)), scale);
 
 	std::vector<Mesh*> nodeMeshes;
 	nodeMeshes.reserve(node_in->mNumMeshes);
@@ -84,7 +84,7 @@ std::unique_ptr<Node> Model::ParseNode(int& node_id, aiNode* node_in, DirectX::F
 	auto pNode = std::make_unique<Node>(node_id++, node_in->mName.C_Str(), std::move(nodeMeshes), transform);
 	for (int i = 0; i < node_in->mNumChildren; i++)
 	{
-		pNode->AddChild(ParseNode(node_id, node_in->mChildren[i], DirectX::XMMatrixIdentity()));
+		pNode->AddChild(ParseNode(node_id, node_in->mChildren[i], scale));
 	}
 	return pNode;
 }

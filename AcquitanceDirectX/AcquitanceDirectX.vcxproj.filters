@@ -183,9 +183,6 @@
     <ClCompile Include="TestCube.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
-    <ClCompile Include="ChilliExtractAT.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="Blender.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
@@ -233,6 +230,9 @@
     </ClCompile>
     <ClCompile Include="ModelWindow.cpp">
       <Filter>Source Files\ModelSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ChilliXM.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -407,9 +407,6 @@
     <ClInclude Include="NormalMapTwerker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ChilliExtractAT.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Blender.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
@@ -478,6 +475,12 @@
     </ClInclude>
     <ClInclude Include="ModelWindow.h">
       <Filter>Header Files\ModelSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelProbe.h">
+      <Filter>Header Files\Jobber</Filter>
+    </ClInclude>
+    <ClInclude Include="ChilliXM.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

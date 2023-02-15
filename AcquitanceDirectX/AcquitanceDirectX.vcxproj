@@ -164,8 +164,8 @@
     <ClCompile Include="Blender.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ChiliException.cpp" />
-    <ClCompile Include="ChilliExtractAT.cpp" />
     <ClCompile Include="ChilliStringUtils.cpp" />
+    <ClCompile Include="ChilliXM.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DxgiInfoManager.cpp" />
     <ClCompile Include="DynamicConstantBuffer.cpp" />
@@ -224,8 +224,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChiliException.hpp" />
     <ClInclude Include="ChiliMath.h" />
-    <ClInclude Include="ChilliExtractAT.h" />
     <ClInclude Include="ChilliStringUtils.h" />
+    <ClInclude Include="ChilliXM.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="ConditionalNoexcept.h" />
     <ClInclude Include="Cone.h" />
@@ -258,6 +258,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelException.h" />
+    <ClInclude Include="ModelProbe.h" />
     <ClInclude Include="ModelWindow.h" />
     <ClInclude Include="Mouse.hpp" />
     <ClInclude Include="MyCone.h" />

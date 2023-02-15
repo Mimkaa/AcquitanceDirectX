@@ -7,6 +7,7 @@
 #include <assimp/postprocess.h>     // Post processing flags
 #include "Graphics.hpp"
 #include "imgui/imgui.h"
+#include "ModelProbe.h"
 
 namespace dx = DirectX;
 Node::Node(int id_in, const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation)
@@ -86,4 +87,17 @@ void Node::AddChild(std::unique_ptr<Node> node_in)
 {
 	assert(node_in);
 	children.push_back(std::move(node_in));
+}
+
+void Node::Accept(class ModelProbe& probe)
+{
+	if (probe.PushNode(*this))
+	{
+		for (auto& c : children)
+		{
+			c->Accept(probe);
+		}
+		probe.PopNode(*this);
+	}
+
 }

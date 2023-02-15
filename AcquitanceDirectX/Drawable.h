@@ -22,7 +22,7 @@ class Drawable
 public:
 	Drawable() = default;
 	Drawable(const Drawable&) = delete;
-	Drawable(Graphics& gfx, const Material& mat, const aiMesh& mesh) noexcept;
+	Drawable(Graphics& gfx, const Material& mat, const aiMesh& mesh, float scale = 1.0f) noexcept;
 	virtual DirectX::XMMATRIX GetTransformXM() const noexcept = 0;
 	void Draw(Graphics& gfx) const noxnd;
 	virtual ~Drawable() = default;

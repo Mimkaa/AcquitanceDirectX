@@ -5,6 +5,8 @@
 #include <filesystem>
 #include "Graphics.hpp"
 #include "ModelWindow.h"
+#include <memory>
+#include "Node.h"
 
 class aiMesh;
 class aiMaterial;
@@ -23,7 +25,7 @@ public:
 private:
 	void ParseMesh(const aiMesh* mesh_in, float scale, const aiMaterial* const* ppMaterials, const std::filesystem::path& path);
 
-	std::unique_ptr<Node> ParseNode(int& node_id, aiNode* node_in, DirectX::FXMMATRIX additionalTransform);
+	std::unique_ptr<Node> ParseNode(int& node_id, aiNode* node_in, float scale);
 
 
 public:
@@ -31,6 +33,11 @@ public:
 	void SetRootTransform(const DirectX::FXMMATRIX& rt) noexcept;
 	void Draw();
 	void ShowWindow(Graphics& gfx, const char* windowName) noexcept;
+	void Accept(ModelProbe& probe)
+	{
+		pRoot->Accept(probe);
+	}
+
 
 private:
 	std::vector<std::unique_ptr<Mesh>> meshes;

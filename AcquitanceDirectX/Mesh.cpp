@@ -11,7 +11,7 @@ DirectX::XMMATRIX Mesh::GetTransformXM() const noexcept
 {
 	return XMLoadFloat4x4(&transform);
 }
-Mesh::Mesh(Graphics& gfx, const Material& mat, const aiMesh& mesh) noexcept
+Mesh::Mesh(Graphics& gfx, const Material& mat, const aiMesh& mesh, float scale) noexcept
 	:
-	Drawable(gfx, mat, mesh)
+	Drawable(gfx, mat, mesh, scale)
 {}

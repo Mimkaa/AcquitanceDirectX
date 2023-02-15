@@ -6,6 +6,7 @@
 class Model;
 class Mesh;
 class FrameComander;
+class ModelProbe;
 
 class Node
 {
@@ -24,6 +25,15 @@ public:
 
 	template <class C>
 	bool ControlMeDaddy(Graphics& gfx, C& pm_in) const noexcept;
+	bool HasChildren() const noexcept
+	{
+		return children.size() > 0;
+	}
+	void Accept(class ModelProbe& probe);
+	const std::string& GetName() const
+	{
+		return name;
+	}
 
 
 private:

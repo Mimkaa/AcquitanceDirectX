@@ -25,9 +25,9 @@ void Drawable::Submit(class FrameComander& frame) const noexcept
 	}
 }
 
-Drawable::Drawable(Graphics& gfx, const Material& mat, const aiMesh& mesh) noexcept
+Drawable::Drawable(Graphics& gfx, const Material& mat, const aiMesh& mesh, float scale) noexcept
 {
-	pVertBuff = mat.CtreateVertexBuffer(gfx, mesh);
+	pVertBuff = mat.CtreateVertexBuffer(gfx, mesh, scale);
 	pIndexBuff = mat.CtreateIndexBuffer(gfx, mesh);
 	pTopology = Bind::Topology::Resolve(gfx);
 
