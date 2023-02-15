@@ -89,6 +89,15 @@ void Node::AddChild(std::unique_ptr<Node> node_in)
 	children.push_back(std::move(node_in));
 }
 
+void Node::Accept(class TechniqueProbe& probe)
+{
+	for (auto& m : meshes)
+	{
+		m->Accept(probe);
+	}
+
+}
+
 void Node::Accept(class ModelProbe& probe)
 {
 	if (probe.PushNode(*this))
