@@ -9,7 +9,9 @@
 #include <memory>
 #include <random>
 #include "ConditionalNoexcept.h"
+#include "GraphicsResourse.h"
 
+class DepthStencil;
 namespace Bind
 {
 	class Bindable;
@@ -18,6 +20,7 @@ namespace Bind
 class Graphics
 {
 	friend class  Bind::Bindable;
+	friend class GraphicsResourse;
 public:
 	class Exception : public ChiliException
 	{
@@ -69,7 +72,10 @@ public:
 	void EnableImgui() noexcept;
 	void DisableImgui() noexcept;
 	bool IsImguiEnabled() const noexcept;
-	
+	UINT GetWidth()const noexcept;
+	UINT GetHeight() const noexcept;
+	void BindSwapBuffer() noexcept;
+	void BindSwapBuffer(const DepthStencil& ds) noexcept;
 private:
 #ifndef NDEBUG
 	DxgiInfoManager infoManager;
@@ -85,6 +91,8 @@ private:
 	bool imguiEnabled = true;
 	DirectX::XMMATRIX projection;
 	DirectX::XMMATRIX camera;
+	UINT width;
+	UINT height;
 
 };
 

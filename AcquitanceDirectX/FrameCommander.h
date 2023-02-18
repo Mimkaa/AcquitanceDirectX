@@ -4,12 +4,17 @@
 #include "Graphics.hpp"
 #include "Job.h"
 #include "Pass.h"
-
+#include "DepthStencil.h"
 
 
 class FrameComander
 {
 public:
+	FrameComander(Graphics& gfx)
+		:
+		ds(gfx, gfx.GetWidth(), gfx.GetHeight())
+	{}
+
 	void Accept(Job job, size_t target)
 	{
 		passes[target].Accept(job);
@@ -25,7 +30,10 @@ public:
 
 	void Execute(Graphics& gfx) const
 	{
-	
+		// setup render target used for all passes
+		ds.Clear(gfx);
+		gfx.BindSwapBuffer(ds);
+
 		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
 		passes[0].Execute(gfx);
 
@@ -39,4 +47,5 @@ public:
 	}
 private:
 	std::array<Pass,3> passes;
+	DepthStencil ds;
 };

@@ -1,12 +1,12 @@
 #pragma once
 #include "Graphics.hpp"
 #include <memory>
-
+#include "GraphicsResourse.h"
 class Drawable;
 class TechniqueProbe;
 // if the base class is a friend class, children are not
-namespace Bind {
-	class Bindable
+namespace Bind{
+	class Bindable :public GraphicsResourse
 	{
 	public:
 		virtual void Bind(Graphics& gfx) noexcept = 0;
@@ -26,9 +26,7 @@ namespace Bind {
 		// using Bindable and at the same time all the children of 
 		// Bindable will have these functions inherited 
 		// hence we can access everything from the graphics in them too
-		static ID3D11DeviceContext* GetContext(Graphics& gfx) noexcept;
-		static ID3D11Device* GetDevice(Graphics& gfx) noexcept;
-		static DxgiInfoManager& GetInfoManager(Graphics& gfx) noxnd;
+		
 	};
 
 	class CloningBindable : public Bindable

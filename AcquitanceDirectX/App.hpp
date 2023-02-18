@@ -30,11 +30,11 @@ private:
 	float speed_factor = 1.0f;
 	Camera cam;
 	PointLight light;
-	FrameComander fc;
-	Model Gobber{ wnd.Gfx(), "Models\\gobber\\GoblinX.obj", 5.0f };
+	FrameComander fc{wnd.Gfx()};
+	//Model Gobber{ wnd.Gfx(), "Models\\gobber\\GoblinX.obj", 5.0f };
 	//Model nano{ wnd.Gfx(), "Models\\nano_textured\\nanosuit.obj" };
 	//TestPlane wall{ wnd.Gfx()};
-	//Model sponza{ wnd.Gfx(), "Models\\Sponza\\sponza.obj",1.0f/20};
+	Model sponza{ wnd.Gfx(), "Models\\Sponza\\sponza.obj",1.0f/20};
 	//TestPlane plane{ wnd.Gfx(), {0.3f,0.3f,1.0f,0.0f} };
 	std::unique_ptr<Mesh> pLoaded;
 	TestCube cubby{ wnd.Gfx() };

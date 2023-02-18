@@ -67,6 +67,9 @@
     <Filter Include="Source Files\ModelSystem">
       <UniqueIdentifier>{5e1fefeb-a2bf-4db5-a223-e3b5ab4bee5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\RenderAssets">
+      <UniqueIdentifier>{37e5a85d-860f-49bc-97cc-2436f01bf8b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -232,6 +235,9 @@
       <Filter>Source Files\ModelSystem</Filter>
     </ClCompile>
     <ClCompile Include="ChilliXM.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsResourse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -481,6 +487,15 @@
     </ClInclude>
     <ClInclude Include="ChilliXM.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>Header Files\RenderAssets</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsResourse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencil.h">
+      <Filter>Header Files\RenderAssets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

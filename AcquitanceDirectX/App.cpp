@@ -31,6 +31,7 @@ App::App(const std::string& commandLine )
 	sc(TokenizeQuoted(commandLine))
 	
 {
+	
 	// testing
 	//TestDynamicConstantBuff();
 	//TestDynamicVertexBuff();
@@ -90,8 +91,8 @@ void App::DoFrame()
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 
 	
-	//sponza.Submit(fc);
-	Gobber.Submit(fc);
+	sponza.Submit(fc);
+	//Gobber.Submit(fc);
 	//light.Submit(fc);
 	//cubby.Submit(fc);
 	
@@ -303,7 +304,7 @@ void App::DoFrame()
 	};
 	static MP modelProbe;
 
-	modelProbe.SpawnWindow(Gobber);
+	modelProbe.SpawnWindow(sponza);
 	//plane.Draw(wnd.Gfx());
 	//plane.Draw(wnd.Gfx());
 

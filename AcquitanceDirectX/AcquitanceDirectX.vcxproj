@@ -171,6 +171,7 @@
     <ClCompile Include="DynamicConstantBuffer.cpp" />
     <ClCompile Include="GetErrorStringFromHresult.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="GraphicsResourse.cpp" />
     <ClCompile Include="ImguiManager.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
@@ -232,11 +233,13 @@
     <ClInclude Include="ConstantBufferEx.h" />
     <ClInclude Include="ConstantBuffers.h" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="DepthStencil.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="DxgiInfoManager.hpp" />
     <ClInclude Include="DynamicConstantBuffer.h" />
     <ClInclude Include="FrameCommander.h" />
     <ClInclude Include="Graphics.hpp" />
+    <ClInclude Include="GraphicsResourse.h" />
     <ClInclude Include="GraphicsThrowHeader.h" />
     <ClInclude Include="ImguiManager.h" />
     <ClInclude Include="imgui\imconfig.h" />
@@ -272,6 +275,7 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Prism.h" />
     <ClInclude Include="Rasterizer.h" />
+    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="Sampler.h" />
