@@ -93,7 +93,7 @@ void App::DoFrame()
 	
 	sponza.Submit(fc);
 	//Gobber.Submit(fc);
-	//light.Submit(fc);
+	light.Submit(fc);
 	//cubby.Submit(fc);
 	
 

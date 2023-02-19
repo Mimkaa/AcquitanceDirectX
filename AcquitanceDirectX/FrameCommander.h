@@ -33,6 +33,7 @@ public:
 		FullPS = Bind::PixelShader::Resolve(gfx, "MapNDStoSurface_PS.cso");
 		FullInputLay = Bind::InputLayout::Resolve(gfx, vl, FullVS->GetBytecode());
 		FullTopology = Bind::Topology::Resolve(gfx);
+		FullSample = Bind::Sampler::Resolve(gfx, false, false);
 		
 	}
 
@@ -74,6 +75,7 @@ public:
 		FullVS->Bind(gfx);
 		//FullTopology->Bind(gfx);
 		FullInputLay->Bind(gfx);
+		FullSample->Bind(gfx);
 		
 		gfx.DrawIndexed(FullIb->GetCount());
 	}
@@ -87,4 +89,5 @@ private:
 	std::shared_ptr<Bind::PixelShader> FullPS;
 	std::shared_ptr<Bind::Topology> FullTopology;
 	std::shared_ptr<Bind::InputLayout> FullInputLay;
+	std::shared_ptr<Bind::Sampler> FullSample;
 };
