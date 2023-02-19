@@ -151,7 +151,7 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 			Step draw(2);
 
 			// these can be pass-constant (tricky due to layout issues)
-			auto pvs = VertexShader::Resolve(gfx, "Offset_VS.cso");
+			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
 			draw.AddBindable(std::move(pvs));
 
@@ -164,13 +164,7 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 			buf["materialColor"] = DirectX::XMFLOAT3{ 1.0f,0.4f,0.4f };
 			draw.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
 
-			{
-				Dcb::RawLayout lay;
-				lay.Add<Dcb::Float>("offset");
-				auto buf = Dcb::Buffer(std::move(lay));
-				buf["offset"] = 0.1f;
-				draw.AddBindable(std::make_shared<Bind::CachingVertexConstantBufferEx>(gfx, buf, 1u));
-			}
+		
 
 			// TODO: better sub-layout generation tech for future consideration maybe
 			draw.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));

@@ -560,7 +560,7 @@
     <FxCompile Include="MapNDStoSurface_VS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="MapNDStoSurface_PS.hlsl">
+    <FxCompile Include="Blurr_PS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

@@ -311,7 +311,7 @@
     <Image Include="icon2.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="MapNDStoSurface_PS.hlsl">
+    <FxCompile Include="Blurr_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

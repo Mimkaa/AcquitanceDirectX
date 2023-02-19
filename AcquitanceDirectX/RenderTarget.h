@@ -59,6 +59,15 @@ public:
 	{
 		GetContext(gfx)->OMSetRenderTargets(1, pTargetView.GetAddressOf(), depthStencil.pDSView.Get());
 	}
+	void Clear(Graphics& gfx) const noexcept
+	{
+		const float color[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		GetContext(gfx)->ClearRenderTargetView(pTargetView.Get(), color);
+	}
+	void Clear(Graphics& gfx, const float* pFirstArrEl) const noexcept
+	{
+		GetContext(gfx)->ClearRenderTargetView(pTargetView.Get(), pFirstArrEl);
+	}
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pResourceView;

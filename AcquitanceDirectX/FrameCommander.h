@@ -30,10 +30,12 @@ public:
 		FullVb = Bind::VertexBuffer::Resolve(gfx, "$FullScreenFilterVB", std::move(vb));
 		FullIb = Bind::IndexBuffer::Resolve(gfx, "$FullScreenFilterIB", std::move(inds));
 		FullVS = Bind::VertexShader::Resolve(gfx, "MapNDStoSurface_VS.cso");
-		FullPS = Bind::PixelShader::Resolve(gfx, "MapNDStoSurface_PS.cso");
+		FullPS = Bind::PixelShader::Resolve(gfx, "Blurr_PS.cso");
 		FullInputLay = Bind::InputLayout::Resolve(gfx, vl, FullVS->GetBytecode());
 		FullTopology = Bind::Topology::Resolve(gfx);
 		FullSample = Bind::Sampler::Resolve(gfx, false, false);
+		FullBlander = Bind::Blender::Resolve(gfx, true);
+
 		
 	}
 
@@ -54,9 +56,11 @@ public:
 	{
 		// setup render target used for all passes
 		ds.Clear(gfx);
-		
-		rt.BindAsTarget(gfx,ds);
+		rt.Clear(gfx);
 
+		gfx.BindSwapBuffer(ds);
+
+		Bind::Blender::Resolve(gfx, false)->Bind(gfx);
 		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
 		passes[0].Execute(gfx);
 
@@ -64,7 +68,9 @@ public:
 		Bind::NullPixelShader::Resolve(gfx)->Bind(gfx);
 		passes[1].Execute(gfx);
 
-		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Mask)->Bind(gfx);
+
+		rt.BindAsTarget(gfx);
+		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
 		passes[2].Execute(gfx);
 
 		gfx.BindSwapBuffer(ds);
@@ -76,7 +82,8 @@ public:
 		//FullTopology->Bind(gfx);
 		FullInputLay->Bind(gfx);
 		FullSample->Bind(gfx);
-		
+		FullBlander->Bind(gfx);
+		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Mask)->Bind(gfx);
 		gfx.DrawIndexed(FullIb->GetCount());
 	}
 private:
@@ -90,4 +97,5 @@ private:
 	std::shared_ptr<Bind::Topology> FullTopology;
 	std::shared_ptr<Bind::InputLayout> FullInputLay;
 	std::shared_ptr<Bind::Sampler> FullSample;
+	std::shared_ptr<Bind::Blender> FullBlander;
 };
