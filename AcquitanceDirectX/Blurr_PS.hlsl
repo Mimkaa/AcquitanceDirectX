@@ -11,14 +11,19 @@ float4 main(float2 uv : Texcoord) : SV_Target
     float dx = 1.0f / width;
     float dy = 1.0f / height;
     
-    float4 acc = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+    float accAlpha = 0.0f;
+    float3 maxColor = float3(0.0f, 0.0f, 0.0f);
     for (int y = -r; y <= r; y++)
     {
         for (int x = -r; x <= r; x++)
         {
-            acc += tex.Sample(splr, uv + float2(x * dx, y * dx)).rgba;
+            float4 sample = tex.Sample(splr, uv + float2(x * dx, y * dx)).rgba;
+            accAlpha += sample.a;
+            maxColor = max(sample.rgb, maxColor);
+            
         }
 
     }
-    return acc / div;
+    return float4(maxColor.rgb, accAlpha / div);
 }
