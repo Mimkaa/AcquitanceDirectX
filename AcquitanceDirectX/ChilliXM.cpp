@@ -33,3 +33,4 @@ DirectX::XMMATRIX ScaleTranslation(DirectX::XMMATRIX matrix, float scale)
 	matrix.r[3].m128_f32[2] *= scale;
 	return matrix;
 }
+

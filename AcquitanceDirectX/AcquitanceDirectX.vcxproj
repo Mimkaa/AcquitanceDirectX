@@ -222,6 +222,7 @@
     <ClInclude Include="BindableCodex.h" />
     <ClInclude Include="BindableCommon.h" />
     <ClInclude Include="Blender.h" />
+    <ClInclude Include="BlurManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChiliException.hpp" />
     <ClInclude Include="ChiliMath.h" />
@@ -312,6 +313,14 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Blurr_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)%(Filename).cso</ObjectFileOutput>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="GaussBlur_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

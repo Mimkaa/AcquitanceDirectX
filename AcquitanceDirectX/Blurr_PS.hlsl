@@ -18,7 +18,7 @@ float4 main(float2 uv : Texcoord) : SV_Target
     {
         for (int x = -r; x <= r; x++)
         {
-            float4 sample = tex.Sample(splr, uv + float2(x * dx, y * dx)).rgba;
+            float4 sample = tex.Sample(splr, uv + float2(x * dx, y * dy)).rgba;
             accAlpha += sample.a;
             maxColor = max(sample.rgb, maxColor);
             

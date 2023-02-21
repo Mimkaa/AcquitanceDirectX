@@ -70,6 +70,9 @@
     <Filter Include="Header Files\RenderAssets">
       <UniqueIdentifier>{37e5a85d-860f-49bc-97cc-2436f01bf8b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Blurr">
+      <UniqueIdentifier>{fc1ed476-bf85-4e9d-a43d-52b82e069328}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -497,6 +500,9 @@
     <ClInclude Include="DepthStencil.h">
       <Filter>Header Files\RenderAssets</Filter>
     </ClInclude>
+    <ClInclude Include="BlurManager.h">
+      <Filter>Header Files\Blurr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AcquitanceDirectX1.rc">
@@ -561,6 +567,9 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="Blurr_PS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="GaussBlur_PS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

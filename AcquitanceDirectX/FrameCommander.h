@@ -8,6 +8,7 @@
 #include "RenderTarget.h"
 #include "Vertex.h"
 #include "BindableCommon.h"
+#include "BlurManager.h"
 
 class FrameComander
 {
@@ -15,7 +16,8 @@ public:
 	FrameComander(Graphics& gfx)
 		:
 		ds(gfx, gfx.GetWidth(), gfx.GetHeight()),
-		rt(gfx, gfx.GetWidth(), gfx.GetHeight())
+		rt(gfx, gfx.GetWidth(), gfx.GetHeight()),
+		rt1(gfx, gfx.GetWidth(), gfx.GetHeight())
 	{
 	
 		Dvtx::VertexLayout vl{};
@@ -30,12 +32,12 @@ public:
 		FullVb = Bind::VertexBuffer::Resolve(gfx, "$FullScreenFilterVB", std::move(vb));
 		FullIb = Bind::IndexBuffer::Resolve(gfx, "$FullScreenFilterIB", std::move(inds));
 		FullVS = Bind::VertexShader::Resolve(gfx, "MapNDStoSurface_VS.cso");
-		FullPS = Bind::PixelShader::Resolve(gfx, "Blurr_PS.cso");
+		FullPS = Bind::PixelShader::Resolve(gfx, "GaussBlur_PS.cso");
 		FullInputLay = Bind::InputLayout::Resolve(gfx, vl, FullVS->GetBytecode());
 		FullTopology = Bind::Topology::Resolve(gfx);
 		FullSample = Bind::Sampler::Resolve(gfx, false, false);
 		FullBlander = Bind::Blender::Resolve(gfx, true);
-
+		blur =  std::make_shared<BlurManager>(gfx);
 		
 	}
 
@@ -58,38 +60,49 @@ public:
 		ds.Clear(gfx);
 		rt.Clear(gfx);
 
-		gfx.BindSwapBuffer(ds);
-
-		Bind::Blender::Resolve(gfx, false)->Bind(gfx);
-		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
+		rt.BindAsTarget(gfx, ds);
+		//Bind::Blender::Resolve(gfx, false)->Bind(gfx);
+		//Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
 		passes[0].Execute(gfx);
 
-		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Write)->Bind(gfx);
-		Bind::NullPixelShader::Resolve(gfx)->Bind(gfx);
-		passes[1].Execute(gfx);
-
-
-		rt.BindAsTarget(gfx);
-		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
-		passes[2].Execute(gfx);
-
-		gfx.BindSwapBuffer(ds);
+		rt1.BindAsTarget(gfx);
 		rt.BindAsTexture(gfx, 0);
-		FullPS->Bind(gfx);
 		FullVb->Bind(gfx);
 		FullIb->Bind(gfx);
 		FullVS->Bind(gfx);
-		//FullTopology->Bind(gfx);
 		FullInputLay->Bind(gfx);
 		FullSample->Bind(gfx);
-		FullBlander->Bind(gfx);
-		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Mask)->Bind(gfx);
+		//FullBlander->Bind(gfx);
+		blur->Bind(gfx);
+		blur->SetHorizontal(gfx);
 		gfx.DrawIndexed(FullIb->GetCount());
+
+
+		//Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Write)->Bind(gfx);
+		//Bind::NullPixelShader::Resolve(gfx)->Bind(gfx);
+		//passes[1].Execute(gfx);
+
+
+		//rt.BindAsTarget(gfx);
+		//Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
+		//passes[2].Execute(gfx);
+
+		gfx.BindSwapBuffer(ds);
+		rt1.BindAsTexture(gfx, 0);
+		
+		blur->SetVertical(gfx);
+
+		gfx.DrawIndexed(FullIb->GetCount());
+		
+		
+		
 	}
 private:
 	std::array<Pass,3> passes;
 	DepthStencil ds;
 	RenderTarget rt;
+	RenderTarget rt1;
+
 	std::shared_ptr<Bind::VertexBuffer> FullVb;
 	std::shared_ptr<Bind::IndexBuffer> FullIb;
 	std::shared_ptr<Bind::VertexShader> FullVS;
@@ -98,4 +111,5 @@ private:
 	std::shared_ptr<Bind::InputLayout> FullInputLay;
 	std::shared_ptr<Bind::Sampler> FullSample;
 	std::shared_ptr<Bind::Blender> FullBlander;
+	std::shared_ptr<BlurManager> blur;
 };
