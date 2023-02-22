@@ -17,7 +17,7 @@ public:
 		sigma(sigma)
 
 	{
-		FillKernel(gfx, radius, sigma);
+		FillKernelGauss(gfx, radius, sigma);
 	}
 	void Bind(Graphics& gfx)
 	{
@@ -26,7 +26,7 @@ public:
 		ccb.Bind(gfx);
 
 	}
-	void FillKernel(Graphics& gfx, float radius, float sigma)
+	void FillKernelGauss(Graphics& gfx, float radius, float sigma)
 	{
 		assert(radius <= 7.0f);
 		Kernel kerl;
@@ -46,6 +46,20 @@ public:
 		kcb.Update(gfx, kerl);
 		
 	}
+
+	void FillKernelBox(Graphics& gfx, float radius)
+	{
+		assert(radius <= 7.0f);
+		Kernel kerl;
+		float diameter = (radius * 2) + 1;
+		kerl.Taps = diameter;
+		float factor = 1.0f / diameter;
+		for (int i = 0; i < diameter; i++)
+		{
+			kerl.coefficients[i].x = factor;
+		}
+		kcb.Update(gfx, kerl);
+	}
 	void SetHorizontal(Graphics& gfx)
 	{
 		ccb.Update(gfx, { TRUE });
@@ -60,14 +74,49 @@ public:
 	{
 		if (ImGui::Begin("BlurrControl"))
 		{
+			bool filterChanged = false;
+			{
+				const char* items[] = { "Gauss","Box" };
+				static const char* curItem = items[0];
+				if (ImGui::BeginCombo("Filter Type", curItem))
+				{
+					for (int n = 0; n < std::size(items); n++)
+					{
+						const bool isSelected = (curItem == items[n]);
+						if (ImGui::Selectable(items[n], isSelected))
+						{
+							filterChanged = true;
+							curItem = items[n];
+							if (curItem == items[0])
+							{
+								kernelType = KernelType::Gauss;
+							}
+							else if (curItem == items[1])
+							{
+								kernelType = KernelType::Box;
+							}
+						}
+						if (isSelected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+					ImGui::EndCombo();
+				}
+			}
 			int rad = (int)radius;
 			bool changeSig = ImGui::SliderInt("radius", &rad, 1, 7);
 			bool changeRad = ImGui::SliderFloat("Sigma", &sigma, 1.0f, 10.0f, "%.1f", 1.5f);
 			radius = (float)rad;
-			if (changeRad || changeSig)
+			if (changeRad || changeSig || filterChanged)
 			{
-				FillKernel(gfx, radius, sigma);
-
+				if (kernelType == KernelType::Gauss) {
+					FillKernelGauss(gfx, radius, sigma);
+				}
+				else
+				{
+					FillKernelBox(gfx, radius);
+				}
 			}
 		}
 
@@ -75,6 +124,11 @@ public:
 	}
 
 private:
+	enum class KernelType
+	{
+		Gauss,
+		Box,
+	};
 	struct Kernel
 	{
 		UINT Taps;
@@ -89,6 +143,7 @@ private:
 	Bind::PixelConstantBuffer<Control> ccb;
 	Bind::PixelConstantBuffer<Kernel>kcb;
 	Bind::PixelShader ps;
+	KernelType kernelType = KernelType::Gauss;
 	float radius;
 	float sigma;
 };
