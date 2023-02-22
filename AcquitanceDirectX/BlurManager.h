@@ -8,11 +8,11 @@
 class BlurManager
 {
 public:
-	BlurManager(Graphics& gfx, float radius = 7.0f, float sigma = 2.6f)
+	BlurManager(Graphics& gfx, float radius = 7.0f, float sigma = 2.6f, const char* PsType = "GaussBlurOutline_PS.cso")
 		:
 		kcb{gfx,0},
 		ccb{gfx,1},
-		ps{gfx, "GaussBlur_PS.cso"},
+		ps{gfx, PsType},
 		radius(radius),
 		sigma(sigma)
 

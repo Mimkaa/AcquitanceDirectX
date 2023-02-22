@@ -59,39 +59,41 @@ public:
 		// setup render target used for all passes
 		ds.Clear(gfx);
 		rt.Clear(gfx);
+		rt1.Clear(gfx);
 
-		rt.BindAsTarget(gfx, ds);
-		//Bind::Blender::Resolve(gfx, false)->Bind(gfx);
-		//Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
+		gfx.BindSwapBuffer(ds);
+		Bind::Blender::Resolve(gfx, false)->Bind(gfx);
+		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
 		passes[0].Execute(gfx);
 
+		
+		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Write)->Bind(gfx);
+		Bind::NullPixelShader::Resolve(gfx)->Bind(gfx);
+		passes[1].Execute(gfx);
+
 		rt1.BindAsTarget(gfx);
-		rt.BindAsTexture(gfx, 0);
+		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
+		passes[2].Execute(gfx);
+
+		rt.BindAsTarget(gfx);
+		rt1.BindAsTexture(gfx, 0);
 		FullVb->Bind(gfx);
 		FullIb->Bind(gfx);
 		FullVS->Bind(gfx);
 		FullInputLay->Bind(gfx);
 		FullSample->Bind(gfx);
-		//FullBlander->Bind(gfx);
+		FullBlander->Bind(gfx);
 		blur->Bind(gfx);
 		blur->SetHorizontal(gfx);
 		gfx.DrawIndexed(FullIb->GetCount());
 
 
-		//Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Write)->Bind(gfx);
-		//Bind::NullPixelShader::Resolve(gfx)->Bind(gfx);
-		//passes[1].Execute(gfx);
-
-
-		//rt.BindAsTarget(gfx);
-		//Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
-		//passes[2].Execute(gfx);
+		
 
 		gfx.BindSwapBuffer(ds);
-		rt1.BindAsTexture(gfx, 0);
-		
+		rt.BindAsTexture(gfx, 0);
 		blur->SetVertical(gfx);
-
+		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Mask)->Bind(gfx);
 		gfx.DrawIndexed(FullIb->GetCount());
 		
 		
