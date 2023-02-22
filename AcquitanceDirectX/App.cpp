@@ -19,6 +19,7 @@
 #include "Node.h"
 #include "ChilliXM.h"
 
+
 namespace dx = DirectX;
 
 
@@ -380,7 +381,7 @@ void App::DoFrame()
 	light.SpawnControlWindow();
 	cubby.ShowControlWindow(wnd.Gfx());
 	
-	
+	fc.GetBlurManager()->ShowWindow(wnd.Gfx());
 	fc.Reset();
 
 	wnd.Gfx().EndFrame();

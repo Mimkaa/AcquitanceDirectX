@@ -97,6 +97,10 @@ public:
 		
 		
 	}
+	std::shared_ptr<BlurManager> GetBlurManager() const
+	{
+		return std::move(blur);
+	}
 private:
 	std::array<Pass,3> passes;
 	DepthStencil ds;

@@ -2,6 +2,9 @@
 #include "BindableCommon.h"
 #include "ChiliMath.h"
 #include "Graphics.hpp"
+#include "ImguiManager.h"
+#include "imgui/imgui.h"
+
 class BlurManager
 {
 public:
@@ -9,7 +12,9 @@ public:
 		:
 		kcb{gfx,0},
 		ccb{gfx,1},
-		ps{gfx, "GaussBlur_PS.cso"}
+		ps{gfx, "GaussBlur_PS.cso"},
+		radius(radius),
+		sigma(sigma)
 
 	{
 		FillKernel(gfx, radius, sigma);
@@ -39,7 +44,7 @@ public:
 			kerl.coefficients[i].x /= sum;
 		}
 		kcb.Update(gfx, kerl);
-
+		
 	}
 	void SetHorizontal(Graphics& gfx)
 	{
@@ -49,6 +54,24 @@ public:
 	void SetVertical(Graphics& gfx)
 	{
 		ccb.Update(gfx, { FALSE });
+	}
+
+	void ShowWindow(Graphics& gfx)
+	{
+		if (ImGui::Begin("BlurrControl"))
+		{
+			int rad = (int)radius;
+			bool changeSig = ImGui::SliderInt("radius", &rad, 1, 7);
+			bool changeRad = ImGui::SliderFloat("Sigma", &sigma, 1.0f, 10.0f, "%.1f", 1.5f);
+			radius = (float)rad;
+			if (changeRad || changeSig)
+			{
+				FillKernel(gfx, radius, sigma);
+
+			}
+		}
+
+		ImGui::End();
 	}
 
 private:
@@ -66,4 +89,6 @@ private:
 	Bind::PixelConstantBuffer<Control> ccb;
 	Bind::PixelConstantBuffer<Kernel>kcb;
 	Bind::PixelShader ps;
+	float radius;
+	float sigma;
 };
