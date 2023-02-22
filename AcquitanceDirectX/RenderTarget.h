@@ -6,6 +6,9 @@ class RenderTarget :public GraphicsResourse
 {
 public:
 	RenderTarget(Graphics& gfx, UINT width, UINT height)
+		:
+		width(width),
+		height(height)
 	{
 		INFOMAN(gfx);
 
@@ -52,11 +55,27 @@ public:
 	}
 	void BindAsTarget(Graphics& gfx) const noexcept
 	{
+		D3D11_VIEWPORT vp;
+		vp.Width = width;
+		vp.Height = height;
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0.0f;
+		vp.TopLeftY = 0.0f;
+		GetContext(gfx)->RSSetViewports(1u, &vp);
 		GetContext(gfx)->OMSetRenderTargets(1, pTargetView.GetAddressOf(), nullptr);
 	}
 
 	void BindAsTarget(Graphics& gfx, const DepthStencil& depthStencil) const noexcept
 	{
+		D3D11_VIEWPORT vp;
+		vp.Width = width;
+		vp.Height = height;
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0.0f;
+		vp.TopLeftY = 0.0f;
+		GetContext(gfx)->RSSetViewports(1u, &vp);
 		GetContext(gfx)->OMSetRenderTargets(1, pTargetView.GetAddressOf(), depthStencil.pDSView.Get());
 	}
 	void Clear(Graphics& gfx) const noexcept
@@ -72,4 +91,6 @@ public:
 private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pResourceView;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTargetView;
+	UINT width;
+	UINT height;
 };

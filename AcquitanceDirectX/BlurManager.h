@@ -70,10 +70,9 @@ public:
 		ccb.Update(gfx, { FALSE });
 	}
 
-	void ShowWindow(Graphics& gfx)
+	void ShowWidgets(Graphics& gfx)
 	{
-		if (ImGui::Begin("BlurrControl"))
-		{
+		
 			bool filterChanged = false;
 			{
 				const char* items[] = { "Gauss","Box" };
@@ -118,9 +117,9 @@ public:
 					FillKernelBox(gfx, radius);
 				}
 			}
-		}
+		
 
-		ImGui::End();
+		
 	}
 
 private:

@@ -13,13 +13,13 @@
 class FrameComander
 {
 public:
-	FrameComander(Graphics& gfx)
+	FrameComander(Graphics& gfx, int downsize = 2)
 		:
 		ds(gfx, gfx.GetWidth(), gfx.GetHeight()),
-		rt(gfx, gfx.GetWidth(), gfx.GetHeight()),
-		rt1(gfx, gfx.GetWidth(), gfx.GetHeight())
+		downsize(downsize)
 	{
-	
+		rt = RenderTarget{ gfx, gfx.GetWidth() / 2, gfx.GetHeight() / 2 };
+		rt1 = RenderTarget(gfx, gfx.GetWidth() / 2, gfx.GetHeight() / 2);
 		Dvtx::VertexLayout vl{};
 		vl.Append(Dvtx::VertexLayout::Position2D);
 		Dvtx::VertexBuffer vb{ vl };
@@ -35,7 +35,8 @@ public:
 		FullPS = Bind::PixelShader::Resolve(gfx, "GaussBlur_PS.cso");
 		FullInputLay = Bind::InputLayout::Resolve(gfx, vl, FullVS->GetBytecode());
 		FullTopology = Bind::Topology::Resolve(gfx);
-		FullSample = Bind::Sampler::Resolve(gfx, false, false);
+		FullSamplePoint = Bind::Sampler::Resolve(gfx, false, false);
+		FullSampleAni = Bind::Sampler::Resolve(gfx, true, false);
 		FullBlander = Bind::Blender::Resolve(gfx, true);
 		blur =  std::make_shared<BlurManager>(gfx);
 		
@@ -53,13 +54,28 @@ public:
 			p.Reset();
 		}
 	}
+	void ShowWindows(Graphics& gfx)
+	{
+		if (ImGui::Begin("BlurrControl"))
+		{
+			bool changeSize = ImGui::SliderInt("radius", &downsize, 1, 10);
+			blur->ShowWidgets(gfx);
+			if (changeSize)
+			{
+				rt = RenderTarget{ gfx, gfx.GetWidth() / downsize, gfx.GetHeight() / downsize };
+				rt1 = RenderTarget(gfx, gfx.GetWidth() / downsize, gfx.GetHeight() / downsize);
+			}
+		}
+
+		ImGui::End();
+	}
 
 	void Execute(Graphics& gfx) const
 	{
 		// setup render target used for all passes
 		ds.Clear(gfx);
-		rt.Clear(gfx);
-		rt1.Clear(gfx);
+		rt->Clear(gfx);
+		rt1->Clear(gfx);
 
 		gfx.BindSwapBuffer(ds);
 		Bind::Blender::Resolve(gfx, false)->Bind(gfx);
@@ -71,17 +87,17 @@ public:
 		Bind::NullPixelShader::Resolve(gfx)->Bind(gfx);
 		passes[1].Execute(gfx);
 
-		rt1.BindAsTarget(gfx);
+		rt1->BindAsTarget(gfx);
 		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off)->Bind(gfx);
 		passes[2].Execute(gfx);
 
-		rt.BindAsTarget(gfx);
-		rt1.BindAsTexture(gfx, 0);
+		rt->BindAsTarget(gfx);
+		rt1->BindAsTexture(gfx, 0);
 		FullVb->Bind(gfx);
 		FullIb->Bind(gfx);
 		FullVS->Bind(gfx);
 		FullInputLay->Bind(gfx);
-		FullSample->Bind(gfx);
+		FullSamplePoint->Bind(gfx);
 		FullBlander->Bind(gfx);
 		blur->Bind(gfx);
 		blur->SetHorizontal(gfx);
@@ -91,7 +107,8 @@ public:
 		
 
 		gfx.BindSwapBuffer(ds);
-		rt.BindAsTexture(gfx, 0);
+		rt->BindAsTexture(gfx, 0);
+		FullSampleAni->Bind(gfx);
 		blur->SetVertical(gfx);
 		Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Mask)->Bind(gfx);
 		gfx.DrawIndexed(FullIb->GetCount());
@@ -106,8 +123,9 @@ public:
 private:
 	std::array<Pass,3> passes;
 	DepthStencil ds;
-	RenderTarget rt;
-	RenderTarget rt1;
+	std::optional<RenderTarget> rt;
+	std::optional<RenderTarget> rt1;
+	int downsize;
 
 	std::shared_ptr<Bind::VertexBuffer> FullVb;
 	std::shared_ptr<Bind::IndexBuffer> FullIb;
@@ -115,7 +133,8 @@ private:
 	std::shared_ptr<Bind::PixelShader> FullPS;
 	std::shared_ptr<Bind::Topology> FullTopology;
 	std::shared_ptr<Bind::InputLayout> FullInputLay;
-	std::shared_ptr<Bind::Sampler> FullSample;
+	std::shared_ptr<Bind::Sampler> FullSamplePoint;
+	std::shared_ptr<Bind::Sampler> FullSampleAni;
 	std::shared_ptr<Bind::Blender> FullBlander;
 	std::shared_ptr<BlurManager> blur;
 };
