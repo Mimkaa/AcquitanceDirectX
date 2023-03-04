@@ -381,7 +381,7 @@ void App::DoFrame()
 	light.SpawnControlWindow();
 	cubby.ShowControlWindow(wnd.Gfx());
 	
-	fc.ShowWindows(wnd.Gfx());
+	//fc.ShowWindows(wnd.Gfx());
 	fc.Reset();
 
 	wnd.Gfx().EndFrame();

@@ -16,3 +16,4 @@
 #include "Stencel.h"
 #include "NonePixelShader.h"
 #include "ConstantBufferEx.h"
+#include "BlurManager.h"

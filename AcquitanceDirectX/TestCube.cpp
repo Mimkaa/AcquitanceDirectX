@@ -33,7 +33,7 @@ TestCube::TestCube(Graphics& gfx)
 		using namespace std::string_literals;
 		Technique single("shade"s);
 		{
-			Step lambertine(0);
+			Step lambertine("Lambertian");
 			
 			lambertine.AddBindable(Texture::Resolve(gfx, base + "brickwall.jpg", 0));
 			lambertine.AddBindable(Sampler::Resolve(gfx));
@@ -69,7 +69,7 @@ TestCube::TestCube(Graphics& gfx)
 	{
 		Technique outline("outline");
 		{
-			Step mask(1);
+			Step mask("outlineMask");
 
 			auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
 			auto pvsbc = pvs->GetBytecode();
@@ -86,7 +86,7 @@ TestCube::TestCube(Graphics& gfx)
 		}
 
 		{
-			Step draw(2);
+			Step draw("outlineDraw");
 
 			auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
 			auto pvsbc = pvs->GetBytecode();

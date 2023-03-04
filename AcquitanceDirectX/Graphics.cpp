@@ -6,7 +6,7 @@
 #include "GraphicsThrowHeader.h"
 #include "imgui/imgui_impl_win32.h"
 #include "imgui/imgui_impl_dx11.h"
-#include "DepthStencil.h"
+#include "RenderTarget.h"
 
 namespace wrl = Microsoft::WRL;
 
@@ -68,7 +68,8 @@ Graphics::Graphics(HWND hWnd, int width, int height)
     // & frees the pointer if I only need an address I should use GetAddressOf()
     // also it supports move semantics
     GFX_THROW_INFO(pSwap->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
-    GFX_THROW_INFO(pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget));
+ 
+    pTarget = std::make_shared<BackBufferRenderTraget>(*this, pBackBuffer, width, height);
 
 
     // init imgui d3d impl
@@ -113,8 +114,7 @@ void Graphics::BeginFrame(float red, float green, float blue) noexcept
         ImGui::NewFrame();
     }
     
-    const float color[] = { red, green, blue, 1.0f };
-    pContext->ClearRenderTargetView(pTarget.Get(), color);
+    
     
 }
 UINT Graphics::GetWidth() const noexcept
@@ -127,31 +127,11 @@ UINT Graphics::GetHeight() const noexcept
     return height;
 }
 
-void Graphics::BindSwapBuffer() noexcept
-{
-    D3D11_VIEWPORT vp;
-    vp.Width = width;
-    vp.Height = height;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0.0f;
-    vp.TopLeftY = 0.0f;
-    pContext->RSSetViewports(1u, &vp);
-    pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);
-}
 
-void Graphics::BindSwapBuffer(const DepthStencil& ds) noexcept
-{
-    D3D11_VIEWPORT vp;
-    vp.Width = width;
-    vp.Height = height;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0.0f;
-    vp.TopLeftY = 0.0f;
-    pContext->RSSetViewports(1u, &vp);
-    pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), ds.pDSView.Get());
-}
+
+
+
+
 
 void Graphics::EnableImgui() noexcept
 {
@@ -316,3 +296,7 @@ DirectX::XMMATRIX Graphics::GetCamera() const noexcept
     return camera;
 }
 
+std::shared_ptr<RenderTarget> Graphics::GetTarget() const
+{
+    return pTarget;
+}

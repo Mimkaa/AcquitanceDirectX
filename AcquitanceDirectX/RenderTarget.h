@@ -1,14 +1,18 @@
 #pragma once
 #include "GraphicsResourse.h"
 #include "DepthStencil.h"
+#include "Bindable.h"
+#include "BufferResource.h"
 
-class RenderTarget :public GraphicsResourse
+
+class RenderTarget :public Bind::Bindable, public BufferResource
 {
 public:
-	RenderTarget(Graphics& gfx, UINT width, UINT height)
+	RenderTarget(Graphics& gfx, UINT width, UINT height, UINT slot = 0u)
 		:
 		width(width),
-		height(height)
+		height(height),
+		slot(slot)
 	{
 		INFOMAN(gfx);
 
@@ -49,10 +53,19 @@ public:
 			pTexture.Get(), &rtvDesc, &pTargetView
 		));
 	}
+
+	
+
 	void BindAsTexture(Graphics& gfx, UINT slot) const noexcept
 	{
 		GetContext(gfx)->PSSetShaderResources(slot, 1, pResourceView.GetAddressOf());
 	}
+
+	void Bind(Graphics& gfx) noexcept override
+	{
+		GetContext(gfx)->PSSetShaderResources(slot, 1, pResourceView.GetAddressOf());
+	}
+
 	void BindAsTarget(Graphics& gfx) const noexcept
 	{
 		D3D11_VIEWPORT vp;
@@ -78,7 +91,7 @@ public:
 		GetContext(gfx)->RSSetViewports(1u, &vp);
 		GetContext(gfx)->OMSetRenderTargets(1, pTargetView.GetAddressOf(), depthStencil.pDSView.Get());
 	}
-	void Clear(Graphics& gfx) const noexcept
+	void Clear(Graphics& gfx) const noexcept override
 	{
 		const float color[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		GetContext(gfx)->ClearRenderTargetView(pTargetView.Get(), color);
@@ -87,10 +100,33 @@ public:
 	{
 		GetContext(gfx)->ClearRenderTargetView(pTargetView.Get(), pFirstArrEl);
 	}
+public:
+	UINT GetWidth() const
+	{
+		return width;
+	}
+	UINT GetHeight() const
+	{
+		return height;
+	}
 
-private:
+protected:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pResourceView;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTargetView;
 	UINT width;
 	UINT height;
+	UINT slot;
+};
+
+
+class BackBufferRenderTraget : public RenderTarget
+{
+public:
+	BackBufferRenderTraget(Graphics& gfx, Microsoft::WRL::ComPtr<ID3D11Resource> back_buff, UINT width, UINT height, UINT slot = 0u)
+		:
+		RenderTarget(gfx, width, height, slot)
+
+	{
+		GetDevice(gfx)->CreateRenderTargetView(back_buff.Get(), nullptr, &pTargetView);
+	}
 };

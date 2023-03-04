@@ -5,32 +5,34 @@
 #include "ImguiManager.h"
 #include "imgui/imgui.h"
 
-class BlurManager
+
+class BlurManager 
 {
 public:
 	BlurManager(Graphics& gfx, float radius = 7.0f, float sigma = 2.6f, const char* PsType = "GaussBlurOutline_PS.cso")
 		:
-		kcb{gfx,0},
-		ccb{gfx,1},
-		ps{gfx, PsType},
+		kcb{ gfx,0 },
+		ccb{ gfx,1 },
+		ps{ gfx, PsType },
 		radius(radius),
 		sigma(sigma)
 
 	{
 		FillKernelGauss(gfx, radius, sigma);
 	}
-	void Bind(Graphics& gfx)
+	void Bind(Graphics& gfx) noexcept
 	{
 		ps.Bind(gfx);
 		kcb.Bind(gfx);
 		ccb.Bind(gfx);
-
 	}
+		
+
 	void FillKernelGauss(Graphics& gfx, float radius, float sigma)
 	{
 		assert(radius <= 7.0f);
 		Kernel kerl;
-		float diameter =  (radius * 2) + 1;
+		float diameter = (radius * 2) + 1;
 		kerl.Taps = diameter;
 		float sum = 0.0f;
 		for (int i = 0; i < diameter; i++)
@@ -44,7 +46,7 @@ public:
 			kerl.coefficients[i].x /= sum;
 		}
 		kcb.Update(gfx, kerl);
-		
+
 	}
 
 	void FillKernelBox(Graphics& gfx, float radius)
@@ -72,54 +74,54 @@ public:
 
 	void ShowWidgets(Graphics& gfx)
 	{
-		
-			bool filterChanged = false;
+
+		bool filterChanged = false;
+		{
+			const char* items[] = { "Gauss","Box" };
+			static const char* curItem = items[0];
+			if (ImGui::BeginCombo("Filter Type", curItem))
 			{
-				const char* items[] = { "Gauss","Box" };
-				static const char* curItem = items[0];
-				if (ImGui::BeginCombo("Filter Type", curItem))
+				for (int n = 0; n < std::size(items); n++)
 				{
-					for (int n = 0; n < std::size(items); n++)
+					const bool isSelected = (curItem == items[n]);
+					if (ImGui::Selectable(items[n], isSelected))
 					{
-						const bool isSelected = (curItem == items[n]);
-						if (ImGui::Selectable(items[n], isSelected))
+						filterChanged = true;
+						curItem = items[n];
+						if (curItem == items[0])
 						{
-							filterChanged = true;
-							curItem = items[n];
-							if (curItem == items[0])
-							{
-								kernelType = KernelType::Gauss;
-							}
-							else if (curItem == items[1])
-							{
-								kernelType = KernelType::Box;
-							}
+							kernelType = KernelType::Gauss;
 						}
-						if (isSelected)
+						else if (curItem == items[1])
 						{
-							ImGui::SetItemDefaultFocus();
+							kernelType = KernelType::Box;
 						}
 					}
-					ImGui::EndCombo();
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
 				}
+				ImGui::EndCombo();
 			}
-			int rad = (int)radius;
-			bool changeSig = ImGui::SliderInt("radius", &rad, 1, 7);
-			bool changeRad = ImGui::SliderFloat("Sigma", &sigma, 1.0f, 10.0f, "%.1f", 1.5f);
-			radius = (float)rad;
-			if (changeRad || changeSig || filterChanged)
+		}
+		int rad = (int)radius;
+		bool changeSig = ImGui::SliderInt("radius", &rad, 1, 7);
+		bool changeRad = ImGui::SliderFloat("Sigma", &sigma, 1.0f, 10.0f, "%.1f", 1.5f);
+		radius = (float)rad;
+		if (changeRad || changeSig || filterChanged)
+		{
+			if (kernelType == KernelType::Gauss) {
+				FillKernelGauss(gfx, radius, sigma);
+			}
+			else
 			{
-				if (kernelType == KernelType::Gauss) {
-					FillKernelGauss(gfx, radius, sigma);
-				}
-				else
-				{
-					FillKernelBox(gfx, radius);
-				}
+				FillKernelBox(gfx, radius);
 			}
-		
+		}
 
-		
+
+
 	}
 
 private:

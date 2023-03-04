@@ -73,6 +73,18 @@
     <Filter Include="Header Files\Blurr">
       <UniqueIdentifier>{fc1ed476-bf85-4e9d-a43d-52b82e069328}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Jobber\RenderGraph">
+      <UniqueIdentifier>{cfbc7af0-f51c-4824-8cbd-9a0017487515}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Jobber\RenderGraph">
+      <UniqueIdentifier>{cfa08aae-0b27-4b54-b90d-ca537137c73a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Jobber\RenderGraph\Different_Passes">
+      <UniqueIdentifier>{59bebf88-f94b-431b-9974-8cc59470d7e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Jobber\RenderGraph\Different_Passes">
+      <UniqueIdentifier>{17be37d4-0987-411a-be84-a10ad708d0e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -242,6 +254,15 @@
     </ClCompile>
     <ClCompile Include="GraphicsResourse.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sink.cpp">
+      <Filter>Source Files\Jobber\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Pass.cpp">
+      <Filter>Source Files\Jobber\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="BindingPass.cpp">
+      <Filter>Source Files\Jobber\RenderGraph\Different_Passes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -449,9 +470,6 @@
     <ClInclude Include="Step.h">
       <Filter>Header Files\Jobber</Filter>
     </ClInclude>
-    <ClInclude Include="Pass.h">
-      <Filter>Header Files\Jobber</Filter>
-    </ClInclude>
     <ClInclude Include="Job.h">
       <Filter>Header Files\Jobber</Filter>
     </ClInclude>
@@ -502,6 +520,48 @@
     </ClInclude>
     <ClInclude Include="BlurManager.h">
       <Filter>Header Files\Blurr</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass.h">
+      <Filter>Header Files\Jobber\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Sink.h">
+      <Filter>Header Files\Jobber\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferResource.h">
+      <Filter>Header Files\RenderAssets</Filter>
+    </ClInclude>
+    <ClInclude Include="Source.h">
+      <Filter>Header Files\Jobber\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="RGException.h">
+      <Filter>Header Files\Jobber\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderGraph.h">
+      <Filter>Header Files\Jobber\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="BindingPass.h">
+      <Filter>Header Files\Jobber\RenderGraph\Different_Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="ClearBufferPass.h">
+      <Filter>Header Files\Jobber\RenderGraph\Different_Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderQueuPass.h">
+      <Filter>Header Files\Jobber\RenderGraph\Different_Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="FullScreenPass.h">
+      <Filter>Header Files\Jobber\RenderGraph\Different_Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="LambertianPass.h">
+      <Filter>Header Files\Jobber\RenderGraph\Different_Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="OutlineMaskPass.h">
+      <Filter>Header Files\Jobber\RenderGraph\Different_Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="VerticalBlurrPass.h">
+      <Filter>Header Files\Jobber\RenderGraph\Different_Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="OutlineDrawPass.h">
+      <Filter>Header Files\Jobber\RenderGraph\Different_Passes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

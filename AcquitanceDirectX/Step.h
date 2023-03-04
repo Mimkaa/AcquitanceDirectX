@@ -6,19 +6,24 @@
 
 #include "TechniqueProbe.h"
 
+class RenderQueuePass;
 
 class Step
 {
 public:
 
-	Step(size_t passIndex)
+	Step(const std::string& passName)
 		:
-		index(passIndex)
-		{}
+		passName(passName)
+	{
+		renderPass = nullptr;
+	}
+
 	Step(Step&&) = default;
 	Step(const Step& src) noexcept
 		:
-		index(src.index)
+		passName(src.passName),
+		renderPass(src.renderPass)
 	{
 		bindables.reserve(src.bindables.size());
 		for (auto& pb : src.bindables)
@@ -40,7 +45,7 @@ public:
 
 	void Bind(Graphics& gfx) const noexcept;
 
-	void Submit(class FrameComander& frame, const class Drawable& drawable) const noexcept;
+	void Submit(class FrameComander& frame, const class Drawable& drawable)  noexcept;
 	
 
 	void InitializeParentReference(const class Drawable& drawable) noexcept;
@@ -54,6 +59,7 @@ public:
 		}
 	}
 private:
-	const size_t index;
+	std::string passName;
 	std::vector<std::shared_ptr<Bind::Bindable>> bindables;
+	RenderQueuePass* renderPass;
 };

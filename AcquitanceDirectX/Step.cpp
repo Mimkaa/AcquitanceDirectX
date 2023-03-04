@@ -2,6 +2,8 @@
 #include "FrameCommander.h"
 #include "Drawable.h"
 
+#include "RenderQueuPass.h"
+
 void Step::AddBindable(std::shared_ptr<Bind::Bindable> bindable_in)
 {
 	bindables.push_back(std::move(bindable_in));
@@ -15,9 +17,13 @@ void Step::Bind(Graphics& gfx) const noexcept
 	}
 }
 
-void Step::Submit(FrameComander& frame, const Drawable& drawable) const noexcept
+void Step::Submit(FrameComander& frame, const Drawable& drawable) noexcept
 {
-	frame.Accept(Job{ &drawable, this }, index);
+	if (renderPass == nullptr)
+	{
+		renderPass = &frame.GetRenderQueue(passName);
+	}
+	renderPass->Accept(Job{ &drawable, this });
 }
 
 void Step::InitializeParentReference(const Drawable& drawable) noexcept

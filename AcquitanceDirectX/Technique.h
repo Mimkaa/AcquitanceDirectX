@@ -52,7 +52,7 @@ public:
 		return name;
 	}
 
-	void Submit(class FrameComander& frame, const  class Drawable& drawable) const;
+	void Submit(class FrameComander& frame, const  class Drawable& drawable) ;
 	
 
 	void InitializeParentReference(const class Drawable& drawable) noexcept;

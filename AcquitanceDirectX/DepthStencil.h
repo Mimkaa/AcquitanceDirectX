@@ -1,8 +1,13 @@
 #pragma once
 #include "GraphicsResourse.h"
 #include "GraphicsThrowHeader.h"
+#include "Bindable.h"
+#include "BufferResource.h"
 
-class DepthStencil :public GraphicsResourse
+
+
+
+class DepthStencil :public Bind::Bindable, public BufferResource
 {
     friend class RenderTarget;
     friend class Graphics;
@@ -28,11 +33,11 @@ public :
         
         GFX_THROW_INFO(GetDevice(gfx)->CreateDepthStencilView(pDepthStencil.Get(), nullptr, &pDSView));
 	}
-    void Bind(Graphics& gfx)
+    void Bind(Graphics& gfx) noexcept override
     {
         GetContext(gfx)->OMSetRenderTargets(0, nullptr, pDSView.Get());
     }
-    void Clear(Graphics& gfx) const noexcept
+    void Clear(Graphics& gfx) const noexcept override
     {
         GetContext(gfx)->ClearDepthStencilView(pDSView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
     }

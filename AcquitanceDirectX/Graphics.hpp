@@ -11,7 +11,9 @@
 #include "ConditionalNoexcept.h"
 #include "GraphicsResourse.h"
 
+
 class DepthStencil;
+class RenderTarget;
 namespace Bind
 {
 	class Bindable;
@@ -76,6 +78,8 @@ public:
 	UINT GetHeight() const noexcept;
 	void BindSwapBuffer() noexcept;
 	void BindSwapBuffer(const DepthStencil& ds) noexcept;
+	std::shared_ptr<RenderTarget> GetTarget() const;
+
 private:
 #ifndef NDEBUG
 	DxgiInfoManager infoManager;
@@ -84,7 +88,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
 	Microsoft::WRL::ComPtr < IDXGISwapChain> pSwap ;
 	Microsoft::WRL::ComPtr < ID3D11DeviceContext> pContext ;
-	Microsoft::WRL::ComPtr < ID3D11RenderTargetView> pTarget ;
+	std::shared_ptr<RenderTarget> pTarget;
 	Microsoft::WRL::ComPtr <ID3D11DepthStencilView> pDSV;
 
 private:
