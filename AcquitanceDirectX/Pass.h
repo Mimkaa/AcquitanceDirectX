@@ -46,12 +46,12 @@ public:
 	void SetPassLinkage(const std::string& sinkName, const std::string& pass_source_names);
 
 	
-	std::vector<std::unique_ptr<Sink>> GetSinks() const
+	std::vector<std::unique_ptr<Sink>>& GetSinks() 
 	{
 		return sinks;
 	}
 
-	std::vector<std::unique_ptr<Source>> GetSources() const
+	std::vector<std::unique_ptr<Source>>& GetSources() 
 	{
 		return sources;
 	}

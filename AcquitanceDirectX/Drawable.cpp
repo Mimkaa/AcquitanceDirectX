@@ -17,7 +17,7 @@ size_t Drawable::GetIndexCount() const
 	return ret;
 }
 
-void Drawable::Submit(class FrameComander& frame) const noexcept
+void Drawable::Submit(class FrameComander& frame) noexcept
 {
 	for (auto& t : techniques)
 	{

@@ -14,7 +14,7 @@ public:
 	using Drawable::Drawable;
 	DirectX::XMMATRIX GetTransformXM() const noexcept;
 
-	void Submit(FrameComander& frame, DirectX::FXMMATRIX accumulatedTranform) const noxnd;
+	void Submit(FrameComander& frame, DirectX::FXMMATRIX accumulatedTranform)  noxnd;
 private:
 	mutable DirectX::XMFLOAT4X4 transform;
 };

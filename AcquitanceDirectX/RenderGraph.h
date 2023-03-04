@@ -72,7 +72,7 @@ public :
 		}
 	}
 
-	void SetSinkLinkage(const Pass& pass_in)
+	void SetSinkLinkage(Pass& pass_in)
 	{
 		for (auto& si : pass_in.GetSinks())
 		{
