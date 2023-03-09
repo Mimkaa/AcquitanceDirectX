@@ -3,14 +3,16 @@
 #include <memory>
 #include <sstream>
 #include <type_traits>
+#include "Source.h"
 
-
-class Source;
 
 class Sink
 {
 public:
-	Sink(std::string regiseredName);
+	Sink(std::string regiseredNam)
+		:
+		registeredName{ std::move(regiseredNam) }
+	{}
 		
 	std::string GetRegisteredName() const
 	{
@@ -48,29 +50,53 @@ template<class T>
 class DirectPassSink : public Sink
 {
 public:
-	static std::unique_ptr<DirectPassSink<T>> Make (std::string registeredName, std::shared_ptr<T>& target_in)
+	static std::unique_ptr<Sink> Make (std::string registeredNam, std::shared_ptr<T>& target_in)
 	{
-		return std::make_unique<DirectPassSink<T>>(std::move(registeredName), target_in);
+		return std::make_unique<DirectPassSink>(std::move(registeredNam), target_in);
 	}
 	DirectPassSink(std::string registeredName, std::shared_ptr<T>& target_in)
 		:
-		Sink{std::move(registeredName)}
+		Sink{ std::move(registeredName) },
+		target(target_in)
 	{
-		target = target_in;
 		linked = false;
 	}
+
 	void PostLinkValidation() const override
 	{
 		if (!linked)
 		{
-			throw std::runtime_error("one of the sinks is not linked");
+	 		throw std::runtime_error("one of the sinks is not linked");
 		}
 	}
-	void Bind(std::unique_ptr<Source>& source);
+	void Bind(std::unique_ptr<Source>& source)
+	{
+		auto ppppp = typeid(source->YeildBuffer()).name();//std::shared_ptr<class BufferResource>
+		auto ppppp1 = typeid(target).name();// std::shared_ptr<class RendereTarget>
+		
+		auto p = std::dynamic_pointer_cast<T>(source->YeildBuffer());
+		auto t = GetRegisteredName();
+		auto s = GetSourceName();
+		auto x = GetPassName();
+		bool com = !p;
+
+
+		if (!p)
+		{
+			
+			std::ostringstream oss;
+			oss << "you fuched up the class:" << typeid(this).name() << " with registered name:" << GetRegisteredName() <<
+				" pointing to the source:" << GetSourceName() << " attached to :" << GetPassName() << " the types are not compatible";
+
+			throw std::runtime_error(oss.str());
+		}
+		target = std::move(p);
+		linked = true;
+	}
 	
 private:
 	bool linked;
-	std::shared_ptr<T> target;
+	std::shared_ptr<T>& target;
 
 };
 
@@ -79,20 +105,35 @@ template<class T>
 class BindPassSink : public Sink
 {
 public:
-	static std::unique_ptr< BindPassSink<T>> Make(std::string registeredName, std::shared_ptr<T>& target_in)
+	static std::unique_ptr<Sink> Make(std::string registeredName, std::shared_ptr<T>& target_in)
 	{
-		return std::make_unique< BindPassSink<T>>(std::move(registeredName), target_in);
+		return std::make_unique<BindPassSink>(std::move(registeredName), target_in);
 	}
 	BindPassSink(std::string registeredName, std::shared_ptr<T>& target_in)
 		:
-		Sink{ std::move(registeredName) }
+		Sink{ std::move(registeredName) },
+		target(target_in)
 	{
-		target = target_in;
 		linked = false;
 	}
-	void Bind(std::unique_ptr<Source>& source);
+
+	
+	void Bind(std::unique_ptr<Source>& source)
+	{
+		auto p = std::dynamic_pointer_cast<T>(source->YieldBindable());
+		if (!p)
+		{
+			std::ostringstream oss;
+			oss << "you fucked up the class:" << typeid(this).name() << " with registered name:" << GetRegisteredName() <<
+				"pointing to the source:" << GetSourceName() << "attached to :" << GetPassName() << "the types are not compatible";
+
+			throw std::runtime_error(oss.str());
+		}
+		target = std::move(p);
+		linked = true;
+	}
 private:
 	bool linked;
-	std::shared_ptr<T> target;
+	std::shared_ptr<T>& target;
 
 };

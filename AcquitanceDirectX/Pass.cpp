@@ -10,7 +10,7 @@ void Pass::SetPassLinkage(const std::string& sinkName, const std::string& pass_s
 		{
 			auto strVec = SplitString(pass_source_names, "."s);
 			// for now no name validity chacks (TODO)
-			s->SetPass(std::move(strVec[0]));
+			s->SetPass(std::move(std::string(strVec[0])));
 			s->SetSource(std::move(strVec[1]));
 		}
 	}

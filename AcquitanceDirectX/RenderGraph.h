@@ -17,7 +17,7 @@ public :
 		masterDepth(std::make_shared<DepthStencil>(gfx, gfx.GetWidth(),gfx.GetHeight())),
 		blurMaster(std::make_shared<BlurManager>(gfx))
 	{
-		AddGlobalSource(BindPassSource<RenderTarget>::Make("bufferInp", backBufferTarget));
+		AddGlobalSource(DirectPassSource<RenderTarget>::Make("bufferInp", backBufferTarget));
 		AddGlobalSource(DirectPassSource<DepthStencil>::Make("stencil", masterDepth));
 		AddGlobalSink(DirectPassSink<RenderTarget>::Make("bufferOut", backBufferTarget));
 		AddGlobalSource(BindPassSource<BlurManager>::Make("blurPapa", blurMaster));
@@ -28,6 +28,8 @@ public :
 		const auto finder = [&sinkName](const std::unique_ptr<Sink>& p) {
 			return p->GetRegisteredName() == sinkName;
 		};
+		/*auto r = std::move(globalSinks);
+		auto t = std::move(globalSources);*/
 		const auto i = std::find_if(globalSinks.begin(), globalSinks.end(), finder);
 		if (i == globalSinks.end())
 		{
@@ -76,33 +78,32 @@ public :
 	{
 		for (auto& si : pass_in.GetSinks())
 		{
-			for (auto& res : globalSources)
+			
+			using namespace std::string_literals;
+			if (si->GetPassName() == "$"s)
 			{
-				using namespace std::string_literals;
-				if (si->GetSourceName() == "$"s)
+				for (auto& gsource : globalSources)
 				{
-					for (auto& gsource : globalSources)
+					if (gsource->GetRegisteredName() == si->GetSourceName())
 					{
-						if (gsource->GetRegisteredName() == si->GetSourceName())
-						{
-							si->Bind(gsource);
-						}
+						si->Bind(gsource);
 					}
 				}
-				else
+			}
+			else
+			{
+				for (const auto& pass : passes)
 				{
-					for (const auto& pass : passes)
+					for (auto& so : pass->GetSources())
 					{
-						for (auto& so : pass->GetSources())
+						if (so->GetRegisteredName() == si->GetSourceName())
 						{
-							if (so->GetRegisteredName() == si->GetSourceName())
-							{
-								si->Bind(so);
-							}
+							si->Bind(so);
 						}
 					}
 				}
 			}
+			
 		}
 	}
 
@@ -133,7 +134,7 @@ public :
 		globalSinks.push_back(std::move(sink_in));
 	}
 
-	void AddGlobalSource(std::unique_ptr < Source> source_in)
+	void AddGlobalSource(std::unique_ptr <Source> source_in)
 	{
 		globalSources.push_back(std::move(source_in));
 	}
@@ -190,9 +191,10 @@ public:
 		:
 		RenderGraph(gfx)
 	{
+		using namespace std::string_literals;
 		{
 			auto pass = std::make_unique<ClearBufferPass>("clearRt");
-			pass->SetPassLinkage("buffer", "$.bufferInp");
+			pass->SetPassLinkage("buffer", "$.bufferInp"s);
 			AddPass(std::move(pass));
 		}
 		{
@@ -218,6 +220,7 @@ public:
 		}
 		{
 			auto pass = std::make_unique<FullScreenPass>("horizontal", gfx);
+			pass->SetAdditionalBuffer(gfx, gfx.GetWidth() / 2, gfx.GetHeight() / 2);
 			pass->SetPassLinkage("scratch_in", "outlineDraw.buffer");
 			pass->SetPassLinkage("blur", "$.blurPapa");
 			AddPass(std::move(pass));
@@ -228,7 +231,7 @@ public:
 			pass->SetPassLinkage("buffer", "Lambertian.buffer");
 			pass->SetPassLinkage("depthStencil", "outlineMask.depthStencil");
 			blurMaster->SetVertical(gfx);
-			pass->SetPassLinkage("blur", "&.blurPapa");
+			pass->SetPassLinkage("blur", "$.blurPapa");
 		}
 		SetGlobalComp("bufferOut", "vertical.buffer");
 		BindGlobalComps();

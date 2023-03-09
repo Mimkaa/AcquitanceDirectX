@@ -85,6 +85,9 @@
     <Filter Include="Source Files\Jobber\RenderGraph\Different_Passes">
       <UniqueIdentifier>{17be37d4-0987-411a-be84-a10ad708d0e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RenderAssets">
+      <UniqueIdentifier>{3e98f2cf-deb8-440e-8441-86ddf8748794}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -263,6 +266,18 @@
     </ClCompile>
     <ClCompile Include="BindingPass.cpp">
       <Filter>Source Files\Jobber\RenderGraph\Different_Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferResource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files\Jobber\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>Source Files\RenderAssets</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStencil.cpp">
+      <Filter>Source Files\RenderAssets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

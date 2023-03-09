@@ -1,5 +1,12 @@
 #pragma once
 #include <string>
+#include "BufferResource.h"
+#include <memory>
+#include  <stdexcept>
+namespace Bind
+{
+	class Bindable;
+};
 class Source
 {
 public:
@@ -11,6 +18,16 @@ public:
 	{
 		return registeredName;
 	}
+	virtual std::shared_ptr<BufferResource> YeildBuffer()
+	{
+		throw std::runtime_error("this is a base class of direct source, you are doing something wrong");
+	}
+	virtual std::shared_ptr<Bind::Bindable> YieldBindable()
+	{
+		throw std::runtime_error("this is a base class of bind source, you are doing something wrong");
+	}
+	
+
 private:
 	std::string registeredName;
 
@@ -31,18 +48,21 @@ public:
 	{
 		return std::make_unique<DirectPassSource<T>>(std::move(registeredName), target_in);
 	}
-	std::shared_ptr<T> YeildBuffer() const
+	std::shared_ptr<BufferResource> YeildBuffer() override
 	{
-		if (linked)
-		{
-			std::ostringstream oss;
-			oss << "you fuched up the class:" << typeid(this) << " with registered name:" << GetRegisteredName() <<
-				"something is already liked to this crap";
-			throw std::runtime_error(oss.str());
-		}
-		linked = true;
-		return bind;
+		
+			if (linked)
+			{
+				std::ostringstream oss;
+				oss << "you fuched up the class:" << typeid(this).name() << " with registered name:" << GetRegisteredName() <<
+					"something is already liked to this crap";
+				throw std::runtime_error(oss.str());
+			}
+			linked = true;
+			return bind;
+		
 	}
+
 private:
 	bool linked;
 	std::shared_ptr<T>& bind;
@@ -62,10 +82,12 @@ public:
 	{
 		return std::make_unique<BindPassSource<T>>(std::move(registeredName), target_in);
 	}
-	std::shared_ptr<T> YeildBuffer() const
+	std::shared_ptr<Bind::Bindable> YieldBindable() override
 	{
+		
 		return bind;
 	}
+	
 private:
 	std::shared_ptr<T>& bind;
 };

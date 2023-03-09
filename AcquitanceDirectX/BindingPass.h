@@ -15,7 +15,7 @@ class BindingPass : public Pass
 public:
 	BindingPass(const std::string& name)
 		:
-		Pass(std::move(name))
+		Pass(name)
 	{}
 
 	void AddBind(std::shared_ptr<Bind::Bindable> bindable_in);

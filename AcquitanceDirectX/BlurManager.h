@@ -4,9 +4,10 @@
 #include "Graphics.hpp"
 #include "ImguiManager.h"
 #include "imgui/imgui.h"
+#include "BufferResource.h"
+#include "Bindable.h"
 
-
-class BlurManager 
+class BlurManager : public BufferResource, public Bind::Bindable
 {
 public:
 	BlurManager(Graphics& gfx, float radius = 7.0f, float sigma = 2.6f, const char* PsType = "GaussBlurOutline_PS.cso")
@@ -27,7 +28,10 @@ public:
 		ccb.Bind(gfx);
 	}
 		
+	void Clear(Graphics& gfx)const noexcept override
+	{
 
+	}
 	void FillKernelGauss(Graphics& gfx, float radius, float sigma)
 	{
 		assert(radius <= 7.0f);

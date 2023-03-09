@@ -163,10 +163,12 @@
     <ClCompile Include="Bindable.cpp" />
     <ClCompile Include="BindingPass.cpp" />
     <ClCompile Include="Blender.cpp" />
+    <ClCompile Include="BufferResource.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ChiliException.cpp" />
     <ClCompile Include="ChilliStringUtils.cpp" />
     <ClCompile Include="ChilliXM.cpp" />
+    <ClCompile Include="DepthStencil.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DxgiInfoManager.cpp" />
     <ClCompile Include="DynamicConstantBuffer.cpp" />
@@ -196,10 +198,12 @@
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="ScriptCommander.cpp" />
     <ClCompile Include="Sink.cpp" />
     <ClCompile Include="SolidSphere.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="Step.cpp" />
     <ClCompile Include="StringToWstring.cpp" />
     <ClCompile Include="Surface.cpp" />

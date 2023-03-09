@@ -18,7 +18,7 @@ public:
 	void Execute(Graphics& gfx) override
 	{
 		BindPassingResources(gfx);
-		rt1->BindAsTexture(gfx, 0u);
+		rt->BindAsTexture(gfx, 0u);
 		BindAll(gfx);
 		bl->Bind(gfx);
 		gfx.DrawIndexed(FullIb->GetCount());
