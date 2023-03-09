@@ -73,13 +73,15 @@ public:
 	{
 		auto ppppp = typeid(source->YeildBuffer()).name();//std::shared_ptr<class BufferResource>
 		auto ppppp1 = typeid(target).name();// std::shared_ptr<class RendereTarget>
-		
-		auto p = std::dynamic_pointer_cast<T>(source->YeildBuffer());
+		auto refff = source->YeildBuffer();
+		auto p = std::dynamic_pointer_cast<T>(refff);
+
 		auto t = GetRegisteredName();
 		auto s = GetSourceName();
 		auto x = GetPassName();
+		bool is_null = refff == nullptr;
 		bool com = !p;
-
+		
 
 		if (!p)
 		{
