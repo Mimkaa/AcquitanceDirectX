@@ -20,7 +20,7 @@ void BindingPass::BindAll(Graphics& gfx)
 
 void BindingPass::BindPassingResources(Graphics& gfx)
 {
-	if (target && stencil)
+	if (target)
 	{
 		target->BindAsTarget(gfx, *stencil);
 	}

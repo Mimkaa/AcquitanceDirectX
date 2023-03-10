@@ -12,8 +12,8 @@ public:
 		:
 		BindingPass(name)
 	{
-		RegisterSource(BindPassSource<RenderTarget>::Make("scratch_in", rt1));
-		RegisterSink(DirectPassSink<RenderTarget>::Make("scratch_out", rt));
+		RegisterSource(BindPassSource<RenderTarget>::Make("scratch_out", rt1));
+		RegisterSink(BindPassSink<RenderTarget>::Make("scratch_in", rt));
 
 		RegisterSink(BindPassSink<BlurManager>::Make("blur", bl));
 	
@@ -51,6 +51,7 @@ public:
 		rt->BindAsTexture(gfx, 0u);
 		bl->Bind(gfx);
 		gfx.DrawIndexed(FullIb->GetCount());
+		ClearAdditionalBuffer(gfx);
 	}
 	virtual void Execute(Graphics& gfx) override
 	{
@@ -60,6 +61,10 @@ public:
 	void SetAdditionalBuffer(Graphics& gfx, int width, int height)
 	{
 		rt1 = std::make_shared<RenderTarget>(gfx,width, height);
+	}
+	void ClearAdditionalBuffer(Graphics& gfx)
+	{
+		rt->Clear(gfx);
 	}
 protected:
 	std::shared_ptr<RenderTarget> rt;

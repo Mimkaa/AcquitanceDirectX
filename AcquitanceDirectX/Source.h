@@ -20,11 +20,11 @@ public:
 	}
 	virtual std::shared_ptr<BufferResource> YeildBuffer()
 	{
-		throw std::runtime_error("this is a base class of direct source, you are doing something wrong");
+		throw std::runtime_error("this is a base class of direct source, you are doing something wrong " + GetRegisteredName());
 	}
 	virtual std::shared_ptr<Bind::Bindable> YieldBindable()
 	{
-		throw std::runtime_error("this is a base class of bind source, you are doing something wrong");
+		throw std::runtime_error("this is a base class of bind source, you are doing something wrong " + GetRegisteredName());
 	}
 	
 

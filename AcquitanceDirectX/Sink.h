@@ -71,16 +71,27 @@ public:
 	}
 	void Bind(std::unique_ptr<Source>& source)
 	{
-		auto ppppp = typeid(source->YeildBuffer()).name();//std::shared_ptr<class BufferResource>
-		auto ppppp1 = typeid(target).name();// std::shared_ptr<class RendereTarget>
-		auto refff = source->YeildBuffer();
-		auto p = std::dynamic_pointer_cast<T>(refff);
+		auto p = std::dynamic_pointer_cast<T>(source->YeildBuffer());
+		/*auto refff = source->YeildBuffer();
+		
 
 		auto t = GetRegisteredName();
 		auto s = GetSourceName();
 		auto x = GetPassName();
 		bool is_null = refff == nullptr;
-		bool com = !p;
+		bool com = !p;*/
+
+
+		//auto ptr0 = refff.get(); // yeild buffer autism when u call it twice
+		//auto ptr1 = target.get();
+
+		//std::string name_0, name_1;
+
+		//if (ptr0)
+		//	name_0 = typeid(*ptr0).name();
+
+		//if (ptr1)
+		//	name_1 = typeid(*ptr1).name();
 		
 
 		if (!p)

@@ -63,11 +63,13 @@ public :
 			using namespace std::string_literals;
 			for (const auto& pass : passes)
 			{
-				for (auto& so : pass->GetSources())
-				{
-					if (so->GetRegisteredName() == si->GetSourceName())
+				if (pass->GetName() == si->GetPassName()) {
+					for (auto& so : pass->GetSources())
 					{
-						si->Bind(so);
+						if (so->GetRegisteredName() == si->GetSourceName())
+						{
+							si->Bind(so);
+						}
 					}
 				}
 			}
@@ -88,20 +90,28 @@ public :
 					{
 						si->Bind(gsource);
 					}
+					
 				}
+				//throw std::runtime_error("no such source in globalscope for " + si->GetSourceName() + " " + si->GetPassName() + " " + si->GetRegisteredName());
 			}
 			else
 			{
 				for (const auto& pass : passes)
 				{
-					for (auto& so : pass->GetSources())
+					if (pass->GetName() == si->GetPassName())
 					{
-						if (so->GetRegisteredName() == si->GetSourceName())
+						
+						for (auto& so : pass->GetSources())
 						{
-							si->Bind(so);
+							if (so->GetRegisteredName() == si->GetSourceName())
+							{
+								si->Bind(so);
+							}
 						}
+						
 					}
 				}
+				//throw std::runtime_error("no such pass " + si->GetPassName() + " for " + si->GetSourceName());
 			}
 			
 		}
@@ -176,7 +186,7 @@ protected:
 	std::shared_ptr<BlurManager> blurMaster;
 	
 
-private:
+protected:
 	std::vector<std::unique_ptr<Sink>> globalSinks;
 	std::vector<std::unique_ptr<Source>> globalSources;
 	std::vector<std::unique_ptr<Pass>> passes;
@@ -193,13 +203,13 @@ public:
 	{
 		using namespace std::string_literals;
 		{
-			auto pass = std::make_unique<ClearBufferPass>("clearRt");
-			pass->SetPassLinkage("buffer", "$.bufferInp"s);
+			auto pass = std::make_unique<ClearBufferPass>("clearDS");
+			pass->SetPassLinkage("buffer", "$.stencil");
 			AddPass(std::move(pass));
 		}
 		{
-			auto pass = std::make_unique<ClearBufferPass>("clearDS");
-			pass->SetPassLinkage("buffer", "$.stencil");
+			auto pass = std::make_unique<ClearBufferPass>("clearRt");
+			pass->SetPassLinkage("buffer", "$.bufferInp"s);
 			AddPass(std::move(pass));
 		}
 		{
@@ -216,6 +226,7 @@ public:
 
 		{
 			auto pass = std::make_unique<OutlineDrawPass>("outlineDraw", gfx);
+			pass->SetTargetAndStencil(gfx, gfx.GetWidth() / 2, gfx.GetHeight() / 2);
 			AddPass(std::move(pass));
 		}
 		{
@@ -224,14 +235,16 @@ public:
 			pass->SetPassLinkage("scratch_in", "outlineDraw.buffer");
 			pass->SetPassLinkage("blur", "$.blurPapa");
 			AddPass(std::move(pass));
+			
 		}
 		{
 			auto pass = std::make_unique<VerticalBlurrPass>("vertical", gfx);
-			pass->SetPassLinkage("scratch_in", "horisontal.scratch_out");
+			pass->SetPassLinkage("scratch_in", "horizontal.scratch_out");
 			pass->SetPassLinkage("buffer", "Lambertian.buffer");
 			pass->SetPassLinkage("depthStencil", "outlineMask.depthStencil");
 			blurMaster->SetVertical(gfx);
 			pass->SetPassLinkage("blur", "$.blurPapa");
+			AddPass(std::move(pass));
 		}
 		SetGlobalComp("bufferOut", "vertical.buffer");
 		BindGlobalComps();

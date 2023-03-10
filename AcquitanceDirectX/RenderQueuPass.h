@@ -19,7 +19,7 @@ public:
 		jobs.clear();
 	}
 
-	void Execute(Graphics& gfx) override
+	virtual void Execute(Graphics& gfx) override
 	{
 		BindPassingResources(gfx);
 		BindAll(gfx);
