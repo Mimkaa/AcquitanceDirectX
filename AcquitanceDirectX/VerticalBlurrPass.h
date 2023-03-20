@@ -19,9 +19,10 @@ public:
 	{
 		BindPassingResources(gfx);
 		rt->BindAsTexture(gfx, 0u);
+		//target->ToSurface(gfx).Save("screen.png");
 		BindAll(gfx);
 		bl->Bind(gfx);
 		gfx.DrawIndexed(FullIb->GetCount());
-
+		
 	}
 };

@@ -11,6 +11,10 @@ namespace Bind {
 		static std::string GenerateUID(const std::string& path);
 		std::string GetUID() const noexcept override;
 		ID3DBlob* GetBytecode() const noexcept;
+		std::string GetFileName() const
+		{
+			return path;
+		}
 	protected:
 		Microsoft::WRL::ComPtr<ID3DBlob> pBytecodeBlob;
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertexShader;

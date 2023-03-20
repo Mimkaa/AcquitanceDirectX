@@ -34,7 +34,7 @@ public:
 		FullIb = Bind::IndexBuffer::Resolve(gfx, "$FullScreenFilterIB", std::move(inds));
 
 		AddBind(FullIb);
-		AddBind(Bind::InputLayout::Resolve(gfx, vb.GetLayout(), FullVS->GetBytecode()));
+		AddBind(Bind::InputLayout::Resolve(gfx, vb.GetLayout(), *FullVS));
 		AddBind(std::move(FullVS));
 		AddBind(Bind::PixelShader::Resolve(gfx, "GaussBlur_PS.cso"));
 		AddBind(Bind::Blender::Resolve(gfx, true));
@@ -56,7 +56,7 @@ public:
 	virtual void Execute(Graphics& gfx) override
 	{
 		PerformBlur(gfx);
-
+		
 	}
 	void SetAdditionalBuffer(Graphics& gfx, int width, int height)
 	{

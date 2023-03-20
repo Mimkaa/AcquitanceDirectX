@@ -86,9 +86,10 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 			step.AddBindable(Blender::Resolve(gfx, false));
 			auto pvs = VertexShader::Resolve(gfx, shaderCode + "_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
+			step.AddBindable(InputLayout::Resolve(gfx, vtxLayout, *pvs));
 			step.AddBindable(std::move(pvs));
 			step.AddBindable(PixelShader::Resolve(gfx, shaderCode + "_PS.cso"));
-			step.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
+			
 			if (hasTexture)
 			{
 				step.AddBindable(Bind::Sampler::Resolve(gfx));
@@ -136,10 +137,11 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 
 			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
+			mask.AddBindable(InputLayout::Resolve(gfx, vtxLayout, *pvs));
 			mask.AddBindable(std::move(pvs));
 
 			// TODO: better sub-layout generation tech for future consideration maybe
-			mask.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
+			
 
 			mask.AddBindable(std::make_shared<TransformCbuf>(gfx));
 
@@ -153,6 +155,8 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 			// these can be pass-constant (tricky due to layout issues)
 			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
+			// TODO: better sub-layout generation tech for future consideration maybe
+			draw.AddBindable(InputLayout::Resolve(gfx, vtxLayout, *pvs));
 			draw.AddBindable(std::move(pvs));
 
 			// this can be pass-constant
@@ -166,8 +170,7 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 
 		
 
-			// TODO: better sub-layout generation tech for future consideration maybe
-			draw.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
+			
 
 			draw.AddBindable(std::make_shared<TransformCbuf>(gfx));
 

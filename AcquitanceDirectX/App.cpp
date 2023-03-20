@@ -382,8 +382,12 @@ void App::DoFrame()
 	cubby.ShowControlWindow(wnd.Gfx());
 	
 	//fc.ShowWindows(wnd.Gfx());
-	fc.Reset();
 
+	fc.Reset();
+	
+	//wnd.Gfx().GetTarget()->ToSurface(wnd.Gfx()).Save("screen.png");
+
+	
 	wnd.Gfx().EndFrame();
 	
 		

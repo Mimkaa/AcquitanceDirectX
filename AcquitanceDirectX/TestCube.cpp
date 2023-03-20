@@ -39,7 +39,7 @@ TestCube::TestCube(Graphics& gfx)
 			lambertine.AddBindable(Sampler::Resolve(gfx));
 			auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
 			auto pvsbc = pvs->GetBytecode();
-
+			lambertine.AddBindable(InputLayout::Resolve(gfx, cube.vertices.GetLayout(), *pvs));
 			lambertine.AddBindable(std::move(pvs));
 			lambertine.AddBindable(PixelShader::Resolve(gfx, "PhongPS.cso"));
 
@@ -56,7 +56,7 @@ TestCube::TestCube(Graphics& gfx)
 
 			lambertine.AddBindable(std::make_shared<CachingPixelConstantBufferEx>(gfx, buf, 1));
 			//lambertine.AddBindable(PixelConstantBuffer<PSConstant>::Resolve(gfx, Const, 1u));
-			lambertine.AddBindable(InputLayout::Resolve(gfx, cube.vertices.GetLayout(), pvsbc));
+			
 			lambertine.AddBindable(std::make_shared<TransformCbuf>(gfx));
 
 			single.AddStep(std::move(lambertine));
@@ -73,10 +73,11 @@ TestCube::TestCube(Graphics& gfx)
 
 			auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
 			auto pvsbc = pvs->GetBytecode();
+			// TODO: better sub-layout generation tech for future consideration maybe
+			mask.AddBindable(InputLayout::Resolve(gfx, cube.vertices.GetLayout(), *pvs));
 			mask.AddBindable(std::move(pvs));
 
-			// TODO: better sub-layout generation tech for future consideration maybe
-			mask.AddBindable(InputLayout::Resolve(gfx, cube.vertices.GetLayout(), pvsbc));
+			
 
 			mask.AddBindable(std::make_shared<TransformCbuf>(gfx));
 
@@ -90,13 +91,14 @@ TestCube::TestCube(Graphics& gfx)
 
 			auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
 			auto pvsbc = pvs->GetBytecode();
+			// TODO: better sub-layout generation tech for future consideration maybe
+			draw.AddBindable(InputLayout::Resolve(gfx, cube.vertices.GetLayout(), *pvs));
 			draw.AddBindable(std::move(pvs));
 
 			// this can be pass-constant
 			draw.AddBindable(PixelShader::Resolve(gfx, "SolidPS.cso"));
 
-			// TODO: better sub-layout generation tech for future consideration maybe
-			draw.AddBindable(InputLayout::Resolve(gfx, cube.vertices.GetLayout(), pvsbc));
+			
 
 			// quick and dirty... nicer solution maybe takes a lamba... we'll see :)
 			class TransformCbufScaling : public TransformCbuf

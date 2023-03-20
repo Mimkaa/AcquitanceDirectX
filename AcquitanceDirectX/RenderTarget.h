@@ -4,6 +4,7 @@
 #include "Bindable.h"
 #include "BufferResource.h"
 
+class Surface;
 
 class RenderTarget :public Bind::Bindable, public BufferResource
 {
@@ -19,6 +20,8 @@ public:
 
 
 	void BindAsTarget(Graphics& gfx) const noexcept;
+
+	Surface ToSurface(Graphics& gfx) const;
 
 
 	void BindAsTarget(Graphics& gfx, const DepthStencil& depthStencil) const noexcept;

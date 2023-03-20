@@ -24,6 +24,7 @@ SolidSphere::SolidSphere(Graphics& gfx, float radius)
 
 		auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 		auto pvsbc = pvs->GetBytecode();
+		only.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), *pvs));
 		only.AddBindable(std::move(pvs));
 
 		only.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
@@ -35,7 +36,7 @@ SolidSphere::SolidSphere(Graphics& gfx, float radius)
 		} colorConst;
 		only.AddBindable(PixelConstantBuffer<PSColorConstant>::Resolve(gfx, colorConst, 1u));
 
-		only.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+		
 
 		only.AddBindable(std::make_shared<TransformCbuf>(gfx));
 
