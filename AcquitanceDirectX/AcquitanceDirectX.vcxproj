@@ -165,6 +165,7 @@
     <ClCompile Include="Blender.cpp" />
     <ClCompile Include="BufferResource.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraIndicator.cpp" />
     <ClCompile Include="ChiliException.cpp" />
     <ClCompile Include="ChilliStringUtils.cpp" />
     <ClCompile Include="ChilliXM.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="Pass.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="Projection.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Sampler.cpp" />
@@ -204,6 +206,7 @@
     <ClCompile Include="Sink.cpp" />
     <ClCompile Include="SolidSphere.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="CameraContainer.cpp" />
     <ClCompile Include="Step.cpp" />
     <ClCompile Include="StringToWstring.cpp" />
     <ClCompile Include="Surface.cpp" />
@@ -233,6 +236,8 @@
     <ClInclude Include="BlurManager.h" />
     <ClInclude Include="BufferResource.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraContainer.h" />
+    <ClInclude Include="CameraIndicator.h" />
     <ClInclude Include="ChiliException.hpp" />
     <ClInclude Include="ChiliMath.h" />
     <ClInclude Include="ChilliStringUtils.h" />
@@ -289,6 +294,7 @@
     <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Prism.h" />
+    <ClInclude Include="Projection.h" />
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="RenderGraph.h" />
     <ClInclude Include="RenderQueuPass.h" />

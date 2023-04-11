@@ -44,4 +44,4 @@ namespace Bind {
 		static std::unique_ptr<VertexConstantBuffer<Transforms>> pVcbuf;
 		const Drawable* parent;
 	};
-}
+}          

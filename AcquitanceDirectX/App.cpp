@@ -57,8 +57,13 @@ App::App(const std::string& commandLine )
 	Gobber.SetRootTransform(dx::XMMatrixTranslation(0.0f, 0.0f, 1.0f));
 	nano.SetRootTransform(dx::XMMatrixTranslation(-2.0f, -7.0f, 1.0f));*/
 
-wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 400.0f));
+//wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 400.0f));
 // check if we get the same pointer in this case
+
+// Add cameras 
+
+cams.AddCamera(std::make_unique<Camera>(wnd.Gfx(),"A", 1.2f, 0.0f, DirectX::XMFLOAT3{ 0.0f, 12.0f, 3.0f }));
+cams.AddCamera(std::make_unique<Camera>(wnd.Gfx(), "B", 1.2f, 0.0f, DirectX::XMFLOAT3{ 0.0f, 15.0f, 3.0f }));
 
 
 }
@@ -89,8 +94,9 @@ void App::DoFrame()
 	light.Bind(wnd.Gfx(), wnd.Gfx().GetCamera());
 	
 	wnd.Gfx().BeginFrame(0.07f, 0.0f, 0.12f);
-	wnd.Gfx().SetCamera(cam.GetMatrix());
-
+	//wnd.Gfx().SetCamera(cams.GetCamera().GetMatrix());
+	cams.Bind(wnd.Gfx());
+	cams.Submit(fc);
 	
 	sponza.Submit(fc);
 	//Gobber.Submit(fc);
@@ -334,27 +340,27 @@ void App::DoFrame()
 		// moving
 		if (wnd.kbd.KeyIsPressed('W'))
 		{
-			cam.Translate({ 0.0f, 0.0f, dt });
+			cams.GetCamera().Translate({ 0.0f, 0.0f, dt });
 		}
 		if (wnd.kbd.KeyIsPressed('S'))
 		{
-			cam.Translate({ 0.0f, 0.0f, -dt });
+			cams.GetCamera().Translate({ 0.0f, 0.0f, -dt });
 		}
 		if (wnd.kbd.KeyIsPressed('D'))
 		{
-			cam.Translate({ dt, 0.0f, 0.0f });
+			cams.GetCamera().Translate({ dt, 0.0f, 0.0f });
 		}
 		if (wnd.kbd.KeyIsPressed('A'))
 		{
-			cam.Translate({ -dt, 0.0f, 0.0f });
+			cams.GetCamera().Translate({ -dt, 0.0f, 0.0f });
 		}
 		if (wnd.kbd.KeyIsPressed('R'))
 		{
-			cam.Translate({ 0.0f, dt, 0.0f });
+			cams.GetCamera().Translate({ 0.0f, dt, 0.0f });
 		}
 		if (wnd.kbd.KeyIsPressed('F'))
 		{
-			cam.Translate({ 0.0f, -dt, 0.0f });
+			cams.GetCamera().Translate({ 0.0f, -dt, 0.0f });
 		}
 
 		
@@ -363,7 +369,7 @@ void App::DoFrame()
 	{
 		if (!wnd.GetCursorenabled())
 		{
-			cam.Rotate(d->x, d->y);
+			cams.GetCamera().Rotate(d->x, d->y);
 		}
 
 	}
@@ -377,7 +383,7 @@ void App::DoFrame()
 	wall.ShowControlWindow(wnd.Gfx());*/
 	
 	// imgui window for camera
-	cam.SpawnControlWindow();
+	cams.ControlWindow();
 	light.SpawnControlWindow();
 	cubby.ShowControlWindow(wnd.Gfx());
 	

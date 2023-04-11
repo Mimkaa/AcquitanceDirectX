@@ -1,11 +1,33 @@
 #include "Camera.h"
 #include "imgui/imgui.h"
 #include "ChiliMath.h"
+#include "Graphics.hpp"
+#include "FrameCommander.h"
 
 namespace dx = DirectX;
-Camera::Camera()
+Camera::Camera(Graphics& gfx, const std::string& name_in, float pitch, float yaw, DirectX::XMFLOAT3 v)
+	:
+	name{ name_in },
+	pos{ v },
+	OrPos{ v },
+	pitch{ pitch },
+	yaw{ yaw },
+	prj{ 1.0f, 3.0f / 4.0f, 0.5f, 400.0f },
+	camInd{ gfx }
 {
+	camInd.SetPosition(pos);
+	camInd.SetRotation({ pitch,yaw,0.0f });
 	Reset();
+}
+
+void Camera::Submit(FrameComander& fc)
+{
+	camInd.Submit(fc);
+}
+
+std::string Camera::GetName() const
+{
+	return name;
 }
 
 DirectX::XMMATRIX Camera::GetMatrix() const noexcept
@@ -20,10 +42,9 @@ DirectX::XMMATRIX Camera::GetMatrix() const noexcept
 	
 }
 
-void Camera::SpawnControlWindow() noexcept
+void Camera::SpawnWidgets() noexcept
 {
-	if (ImGui::Begin("Camera"))
-	{
+	
 		ImGui::Text("Position");
 		ImGui::SliderFloat("X", &pos.x, -80.0f, 80.0f);
 		ImGui::SliderFloat("Y", &pos.y, -80.0f, 80.0f);
@@ -35,8 +56,8 @@ void Camera::SpawnControlWindow() noexcept
 		{
 			Reset();
 		}
-	}
-	ImGui::End();
+		prj.SpawnWidges();
+	
 }
 
 DirectX::XMVECTOR Camera::GetPosition()
@@ -46,16 +67,24 @@ DirectX::XMVECTOR Camera::GetPosition()
 
 void Camera::Reset() noexcept
 {
-	pos = { 0.0f, 15.0f, 3.0f };
+	pos = OrPos;
 	pitch = 0.0f;
 	yaw = 0.0f;
 	
+}
+
+void  Camera::BindToGraphics(Graphics& gfx)
+{
+	gfx.SetProjection(prj.GetMatrix());
+	gfx.SetCamera(GetMatrix());
+
 }
 
 void Camera::Rotate(const int dx, const int dy)
 {
 	yaw = wrap_angle(yaw + dx * rotationSpeed);
 	pitch = std::clamp(pitch + dy * rotationSpeed, 0.995f * -PI / 2, 0.995f * PI / 2);
+	camInd.SetRotation({ pitch, yaw, 0.0f });
 }
 
 void Camera::Translate(DirectX::XMFLOAT3 translation)
@@ -67,5 +96,5 @@ void Camera::Translate(DirectX::XMFLOAT3 translation)
 	pos.x += translation.x;
 	pos.y += translation.y;
 	pos.z += translation.z;
-
+	camInd.SetPosition(pos);
 }
