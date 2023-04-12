@@ -12,7 +12,8 @@ namespace Bind {
 	VertexBuffer::VertexBuffer(Graphics& gfx, std::string tag, const Dvtx::VertexBuffer& vb)
 		:
 		stride(vb.GetLayout().Size()),
-		tag(tag)
+		tag(tag),
+		layout{vb.GetLayout()}
 	{
 		INFOMAN(gfx);
 		D3D11_BUFFER_DESC bd = {};

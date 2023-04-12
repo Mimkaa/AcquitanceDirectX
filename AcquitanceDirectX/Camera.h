@@ -3,6 +3,7 @@
 #include <string>
 #include "Projection.h"
 #include "CameraIndicator.h"
+#include "Frustrum.h"
 
 class FrameComander;
 
@@ -30,6 +31,7 @@ private:
 	float yaw = 0.0f;
 	Projection prj;
 	CameraIndicator camInd;
+	Frustrum frus;
 	static constexpr float rotationSpeed = 0.004f;
 	static constexpr float movingSpeed = 12.0f;
 

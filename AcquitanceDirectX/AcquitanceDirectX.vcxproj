@@ -173,6 +173,7 @@
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DxgiInfoManager.cpp" />
     <ClCompile Include="DynamicConstantBuffer.cpp" />
+    <ClCompile Include="Frustrum.cpp" />
     <ClCompile Include="GetErrorStringFromHresult.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="GraphicsResourse.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="DxgiInfoManager.hpp" />
     <ClInclude Include="DynamicConstantBuffer.h" />
     <ClInclude Include="FrameCommander.h" />
+    <ClInclude Include="Frustrum.h" />
     <ClInclude Include="FullScreenPass.h" />
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="GraphicsResourse.h" />

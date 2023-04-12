@@ -18,9 +18,15 @@ namespace Bind {
 			return GenerateUID_(tag_in);
 		}
 		std::string GetUID() const noexcept override;
+		const Dvtx::VertexLayout& GetLayout() const
+		{
+			return layout;
+		}
+
 	private:
 		static std::string GenerateUID_(const std::string& tag_in);
 	protected:
+		Dvtx::VertexLayout layout;
 		UINT stride;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
 		std::string tag;
