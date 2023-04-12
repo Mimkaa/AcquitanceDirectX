@@ -26,8 +26,14 @@ Camera::Camera(Graphics& gfx, const std::string& name_in, float pitch, float yaw
 
 void Camera::Submit(FrameComander& fc)
 {
-	camInd.Submit(fc);
-	frus.Submit(fc);
+	if (showCamera)
+	{
+		camInd.Submit(fc);
+	}
+	if (showFrustum)
+	{
+		frus.Submit(fc);
+	}
 }
 
 std::string Camera::GetName() const
@@ -62,6 +68,8 @@ void Camera::SpawnWidgets() noexcept
 			Reset();
 		}
 		prj.SpawnWidges();
+		ImGui::Checkbox("ShowCameraIndicator", &showCamera);
+		ImGui::Checkbox("ShowFrustum", &showFrustum);
 		
 	
 }
@@ -87,12 +95,32 @@ void  Camera::BindToGraphics(Graphics& gfx)
 
 }
 
+void Camera::ApplyTranformations(Graphics& gfx)
+{
+	frus.SetVertBuffer(gfx, prj.GetWidth(), prj.GetHeight(), prj.GetFar(), prj.GetNear());
+	if (showCamera)
+	{
+		camInd.SetRotation({ pitch, yaw, 0.0f });
+		camInd.SetPosition(pos);
+	
+	}
+	if (showFrustum) {
+		frus.SetRotation({ pitch, yaw, 0.0f });
+		frus.SetPosition(pos);
+	}
+}
+
 void Camera::Rotate(const int dx, const int dy)
 {
 	yaw = wrap_angle(yaw + dx * rotationSpeed);
 	pitch = std::clamp(pitch + dy * rotationSpeed, 0.995f * -PI / 2, 0.995f * PI / 2);
-	camInd.SetRotation({ pitch, yaw, 0.0f });
-	frus.SetRotation({ pitch, yaw, 0.0f });
+	if (showCamera)
+	{
+		camInd.SetRotation({ pitch, yaw, 0.0f });
+	}
+	if (showFrustum) {
+		frus.SetRotation({ pitch, yaw, 0.0f });
+	}
 }
 
 void Camera::Translate(DirectX::XMFLOAT3 translation)
@@ -104,6 +132,12 @@ void Camera::Translate(DirectX::XMFLOAT3 translation)
 	pos.x += translation.x;
 	pos.y += translation.y;
 	pos.z += translation.z;
-	camInd.SetPosition(pos);
-	frus.SetPosition(pos);
+	if (showCamera)
+	{
+		camInd.SetPosition(pos);
+	}
+	if (showFrustum)
+	{
+		frus.SetPosition(pos);
+	}
 }

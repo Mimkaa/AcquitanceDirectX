@@ -11,7 +11,9 @@ void CameraContainer::AddCamera(std::unique_ptr<Camera> camera)
 
 void CameraContainer::Bind(Graphics& gfx) const
 {
+   
     GetCamera().BindToGraphics(gfx);
+    
     
 }
 
@@ -19,7 +21,7 @@ void CameraContainer::Submit(FrameComander& fc)
 {
     for (int i = 0; i < cameras.size(); i++)
     {
-        if (i != selected)
+        if (i != active)
         {
             (*cameras[i]).Submit(fc);
         }
@@ -28,26 +30,43 @@ void CameraContainer::Submit(FrameComander& fc)
 
 Camera& CameraContainer::GetCamera() const
 {
-	return *cameras[selected];
+	return *cameras[active];
 }
 
-void CameraContainer::ControlWindow() 
+Camera& CameraContainer::GetControlCamera() const
+{
+    return *cameras[controled];
+}
+
+void CameraContainer::ControlWindow(Graphics& gfx) 
 {
 	ImGui::Begin("Model");
   
-    if (ImGui::BeginCombo("Camera Select", GetCamera().GetName().c_str()))
+    if (ImGui::BeginCombo("Camera Active", GetCamera().GetName().c_str()))
     {
         for (int i = 0; i < cameras.size(); i++)
         {
-            const bool is_selected = i == selected;
+            const bool is_selected = i == active;
             
             if (ImGui::Selectable(cameras[i]->GetName().c_str(), is_selected))
-                selected = i;
+                active = i;
             
         }
         ImGui::EndCombo();
     }
-    GetCamera().SpawnWidgets();
-    
+    if (ImGui::BeginCombo("Camera Controled",GetControlCamera().GetName().c_str()))
+    {
+        for (int i = 0; i < cameras.size(); i++)
+        {
+            const bool is_selected = i == controled;
+
+            if (ImGui::Selectable(cameras[i]->GetName().c_str(), is_selected))
+                controled = i;
+
+        }
+        ImGui::EndCombo();
+    }
+    GetControlCamera().SpawnWidgets();
+    GetControlCamera().ApplyTranformations(gfx);
 	ImGui::End();
 }

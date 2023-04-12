@@ -22,6 +22,7 @@ public :
 	DirectX::XMVECTOR GetPosition();
 	std::string GetName() const;
 	void Submit(FrameComander& fc);
+	void ApplyTranformations(Graphics& gfx);
 
 private:
 	std::string name;
@@ -32,8 +33,11 @@ private:
 	Projection prj;
 	CameraIndicator camInd;
 	Frustrum frus;
+	bool showFrustum = true;
+	bool showCamera = true;
 	static constexpr float rotationSpeed = 0.004f;
 	static constexpr float movingSpeed = 12.0f;
+
 
 	
 };

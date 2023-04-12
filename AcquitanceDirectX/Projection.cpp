@@ -17,6 +17,6 @@ void Projection::SpawnWidges()
 {
 	ImGui::SliderFloat("width", &width, 0.5f, 2.0f, "%.3f");
 	ImGui::SliderFloat("height", &height, 0.5f, 2.0f, "%.3f");
-	ImGui::SliderFloat("near", &nearr, 0.1f, 4.0f, "%.3f");
-	ImGui::SliderFloat("far", &farr, 0.1f, 400.0f, "%.3f");
+	ImGui::SliderFloat("near", &nearr, 0.1f, farr-0.01, "%.3f");
+	ImGui::SliderFloat("far", &farr, nearr + 0.01f, 400.0f, "%.3f");
 }

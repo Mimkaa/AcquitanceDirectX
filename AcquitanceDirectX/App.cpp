@@ -340,27 +340,27 @@ void App::DoFrame()
 		// moving
 		if (wnd.kbd.KeyIsPressed('W'))
 		{
-			cams.GetCamera().Translate({ 0.0f, 0.0f, dt });
+			cams->Translate({ 0.0f, 0.0f, dt });
 		}
 		if (wnd.kbd.KeyIsPressed('S'))
 		{
-			cams.GetCamera().Translate({ 0.0f, 0.0f, -dt });
+			cams->Translate({ 0.0f, 0.0f, -dt });
 		}
 		if (wnd.kbd.KeyIsPressed('D'))
 		{
-			cams.GetCamera().Translate({ dt, 0.0f, 0.0f });
+			cams->Translate({ dt, 0.0f, 0.0f });
 		}
 		if (wnd.kbd.KeyIsPressed('A'))
 		{
-			cams.GetCamera().Translate({ -dt, 0.0f, 0.0f });
+			cams->Translate({ -dt, 0.0f, 0.0f });
 		}
 		if (wnd.kbd.KeyIsPressed('R'))
 		{
-			cams.GetCamera().Translate({ 0.0f, dt, 0.0f });
+			cams->Translate({ 0.0f, dt, 0.0f });
 		}
 		if (wnd.kbd.KeyIsPressed('F'))
 		{
-			cams.GetCamera().Translate({ 0.0f, -dt, 0.0f });
+			cams->Translate({ 0.0f, -dt, 0.0f });
 		}
 
 		
@@ -369,7 +369,7 @@ void App::DoFrame()
 	{
 		if (!wnd.GetCursorenabled())
 		{
-			cams.GetCamera().Rotate(d->x, d->y);
+			cams->Rotate(d->x, d->y);
 		}
 
 	}
@@ -383,7 +383,7 @@ void App::DoFrame()
 	wall.ShowControlWindow(wnd.Gfx());*/
 	
 	// imgui window for camera
-	cams.ControlWindow();
+	cams.ControlWindow(wnd.Gfx());
 	light.SpawnControlWindow();
 	cubby.ShowControlWindow(wnd.Gfx());
 	

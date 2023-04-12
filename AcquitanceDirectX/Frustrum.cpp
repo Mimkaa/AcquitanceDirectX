@@ -75,8 +75,8 @@ void Frustrum::SetVertBuffer(Graphics& gfx, float width, float height, float fFa
 	float ratio = fFar / fNear;
 	float xNear = width / 2;
 	float yNear = height / 2;
-	float xFar = fNear * ratio;
-	float yFar = fNear * ratio;
+	float xFar = xNear * ratio;
+	float yFar = yNear * ratio;
 
 	Dvtx::VertexLayout vl;
 	vl.Append(Dvtx::VertexLayout::Position3D);
