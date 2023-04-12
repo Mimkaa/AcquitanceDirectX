@@ -11,7 +11,8 @@ namespace Bind
 			Off,
 			Write,
 			Mask,
-			DepthOff
+			DepthOff,
+			ReverseSample
 		};
 		Stencil(Graphics& gfx, Mode mode)
 			:
@@ -43,6 +44,10 @@ namespace Bind
 				dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 
 			}
+			else if (mode == Mode::ReverseSample)
+			{
+				dsDesc.DepthFunc = D3D11_COMPARISON_GREATER;
+			}
 
 			GetDevice(gfx)->CreateDepthStencilState(&dsDesc, &pStencil);
 		}
@@ -65,6 +70,10 @@ namespace Bind
 					return "write"s;
 				case Mode::Mask:
 					return "mask"s;
+				case Mode::ReverseSample:
+					return "reverse_sampling"s;
+				case Mode::DepthOff:
+					return "depth_off"s;
 				}
 				return "ERROR"s;
 			};

@@ -38,11 +38,11 @@ Frustrum::Frustrum(Graphics& gfx, float width, float height, float fFar, float f
 	pIndexBuff = Bind::IndexBuffer::Resolve(gfx, tag, indices);
 
 	pTopology = Bind::Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-
+	Technique line;
 	SetVertBuffer(gfx, width, height, fFar, fNear);
 	{
-		Technique line;
-		Step only("wireframe");
+		
+		Step only("Lambertian");
 		auto pvs = Bind::VertexShader::Resolve(gfx, "Solid_VS.cso");
 		auto pvsbc = pvs->GetBytecode();
 		only.AddBindable(Bind::InputLayout::Resolve(gfx,pVertBuff->GetLayout(), *pvs));
@@ -66,8 +66,36 @@ Frustrum::Frustrum(Graphics& gfx, float width, float height, float fFar, float f
 		only.AddBindable(Bind::Rasterizer::Resolve(gfx, false));
 
 		line.AddStep(std::move(only));
-		AddTechnique(std::move(line));
+		
 	}
+	{
+		Step only("wireframe");
+		auto pvs = Bind::VertexShader::Resolve(gfx, "Solid_VS.cso");
+		auto pvsbc = pvs->GetBytecode();
+		only.AddBindable(Bind::InputLayout::Resolve(gfx, pVertBuff->GetLayout(), *pvs));
+		only.AddBindable(std::move(pvs));
+
+		only.AddBindable(Bind::PixelShader::Resolve(gfx, "Solid_PS.cso"));
+
+		struct PSColorConstant
+		{
+			DirectX::XMFLOAT3 color = { 1.0f,1.0f,1.0f };
+			float padding;
+		} colorConst;
+		only.AddBindable(Bind::PixelConstantBuffer<PSColorConstant>::Resolve(gfx, colorConst, 1u));
+
+
+
+		only.AddBindable(std::make_shared<Bind::TransformCbuf>(gfx));
+
+		only.AddBindable(Bind::Blender::Resolve(gfx, false));
+
+		only.AddBindable(Bind::Rasterizer::Resolve(gfx, false));
+
+		line.AddStep(std::move(only));
+		
+	}
+	AddTechnique(std::move(line));
 }
 
 void Frustrum::SetVertBuffer(Graphics& gfx, float width, float height, float fFar, float fNear)

@@ -14,6 +14,6 @@ public:
 		RegisterSource(DirectPassSource<DepthStencil>::Make("depthStencil", stencil));
 		RegisterSink(DirectPassSink<RenderTarget>::Make("buffer", target));
 		RegisterSource(DirectPassSource<RenderTarget>::Make("buffer", target));
-		AddBind(Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::DepthOff));
+		AddBind(Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::ReverseSample));
 	}
 };
