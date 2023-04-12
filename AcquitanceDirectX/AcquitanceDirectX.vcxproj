@@ -331,6 +331,7 @@
     <ClInclude Include="Window.hpp" />
     <ClInclude Include="WindowMessageMap.hpp" />
     <ClInclude Include="WindowThrowHeader.h" />
+    <ClInclude Include="WireFramePass.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AcquitanceDirectX1.rc" />

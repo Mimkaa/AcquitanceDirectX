@@ -6,6 +6,7 @@
 #include "OutlineDrawPass.h"
 #include "VerticalBlurrPass.h"
 #include "ClearBufferPass.h"
+#include "WireFramePass.h"
 #include "Source.h"
 
 class RenderGraph
@@ -246,7 +247,13 @@ public:
 			pass->SetPassLinkage("blur", "$.blurPapa");
 			AddPass(std::move(pass));
 		}
-		SetGlobalComp("bufferOut", "vertical.buffer");
+		{
+			auto pass = std::make_unique<WireFramePass>(gfx, "wireframe");
+			pass->SetPassLinkage("buffer", "vertical.buffer");
+			pass->SetPassLinkage("depthStencil", "vertical.depthStencil");
+			AddPass(std::move(pass));
+		}
+		SetGlobalComp("bufferOut", "wireframe.buffer");
 		BindGlobalComps();
 	}
 };

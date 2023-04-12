@@ -42,7 +42,7 @@ Frustrum::Frustrum(Graphics& gfx, float width, float height, float fFar, float f
 	SetVertBuffer(gfx, width, height, fFar, fNear);
 	{
 		Technique line;
-		Step only("Lambertian");
+		Step only("wireframe");
 		auto pvs = Bind::VertexShader::Resolve(gfx, "Solid_VS.cso");
 		auto pvsbc = pvs->GetBytecode();
 		only.AddBindable(Bind::InputLayout::Resolve(gfx,pVertBuff->GetLayout(), *pvs));

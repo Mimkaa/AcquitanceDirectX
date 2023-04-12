@@ -608,6 +608,9 @@
     <ClInclude Include="Frustrum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WireFramePass.h">
+      <Filter>Header Files\Jobber\RenderGraph\Different_Passes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AcquitanceDirectX1.rc">
