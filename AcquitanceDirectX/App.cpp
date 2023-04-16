@@ -64,7 +64,7 @@ App::App(const std::string& commandLine )
 
 cams.AddCamera(std::make_unique<Camera>(wnd.Gfx(),"A", 1.2f, 0.0f, DirectX::XMFLOAT3{ 0.0f, 12.0f, 3.0f }));
 cams.AddCamera(std::make_unique<Camera>(wnd.Gfx(), "B", 1.2f, 0.0f, DirectX::XMFLOAT3{ 0.0f, 15.0f, 3.0f }));
-
+cams.AddCamera(light.GetCamera());
 
 }
 

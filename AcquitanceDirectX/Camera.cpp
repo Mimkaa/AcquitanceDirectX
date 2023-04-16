@@ -5,7 +5,7 @@
 #include "FrameCommander.h"
 
 namespace dx = DirectX;
-Camera::Camera(Graphics& gfx, const std::string& name_in, float pitch, float yaw, DirectX::XMFLOAT3 v)
+Camera::Camera(Graphics& gfx, const std::string& name_in, float pitch, float yaw, DirectX::XMFLOAT3 v, bool tethered)
 	:
 	name{ name_in },
 	pos{ v },
@@ -14,7 +14,8 @@ Camera::Camera(Graphics& gfx, const std::string& name_in, float pitch, float yaw
 	yaw{ yaw },
 	prj{ 1.0f, 3.0f / 4.0f, 0.5f, 400.0f },
 	camInd{ gfx },
-	frus{gfx,1.0f, 3.0f / 4.0f, 0.5f, 400.0f }
+	frus{gfx,1.0f, 3.0f / 4.0f, 0.5f, 400.0f },
+	tethered{tethered}
 {
 	camInd.SetPosition(pos);
 	camInd.SetRotation({ pitch,yaw,0.0f });
@@ -53,13 +54,20 @@ DirectX::XMMATRIX Camera::GetMatrix() const noexcept
 	
 }
 
+void Camera::SetPos(DirectX::XMFLOAT3 pos_in)
+{
+	pos = pos_in;
+}
+
 void Camera::SpawnWidgets() noexcept
 {
-	
+	if (!tethered)
+	{
 		ImGui::Text("Position");
 		ImGui::SliderFloat("X", &pos.x, -80.0f, 80.0f);
 		ImGui::SliderFloat("Y", &pos.y, -80.0f, 80.0f);
 		ImGui::SliderFloat("Z", &pos.z, -80.0f, 80.0f);
+	}
 		ImGui::Text("Orientation");
 		ImGui::SliderAngle("Pitch", &pitch, -90.0f * 0.995f, 90.0f * 0.995f);
 		ImGui::SliderAngle("Yaw", &yaw, -180.0f, 180.0f);

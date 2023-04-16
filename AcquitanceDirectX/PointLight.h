@@ -2,6 +2,8 @@
 #include "Graphics.hpp"
 #include "ConstantBuffers.h"
 #include "SolidSphere.h"
+#include "Camera.h"
+#include <memory>
 
 class PointLight
 {
@@ -11,6 +13,7 @@ public:
 	void Reset() noexcept;
 	void Submit(class FrameComander& frame) const noxnd;
 	void Bind(Graphics& gfx, DirectX::XMMATRIX view) const noexcept;
+	std::shared_ptr<Camera> GetCamera();
 private:
 	struct PointLightCBuf
 	{
@@ -24,7 +27,9 @@ private:
 		float attQuad;
 	};
 private:
+
 	PointLightCBuf cbData;
+	std::shared_ptr<Camera> pCamera;
 	mutable SolidSphere mesh;
 	mutable Bind::PixelConstantBuffer<PointLightCBuf> cbuf;
 }; 

@@ -12,7 +12,7 @@ class Graphics;
 class Camera
 {
 public :
-	Camera(Graphics& gfx, const std::string& name_in, float pitch, float yaw, DirectX::XMFLOAT3 v);
+	Camera(Graphics& gfx, const std::string& name_in, float pitch, float yaw, DirectX::XMFLOAT3 v, bool tethered = false);
 	DirectX::XMMATRIX GetMatrix() const noexcept;
 	void SpawnWidgets() noexcept;
 	void Reset() noexcept;
@@ -23,7 +23,7 @@ public :
 	std::string GetName() const;
 	void Submit(FrameComander& fc);
 	void ApplyTranformations(Graphics& gfx);
-
+	void SetPos(DirectX::XMFLOAT3 pos_in);
 private:
 	std::string name;
 	DirectX::XMFLOAT3 pos;
@@ -35,6 +35,7 @@ private:
 	Frustrum frus;
 	bool showFrustum = true;
 	bool showCamera = true;
+	bool tethered;
 	static constexpr float rotationSpeed = 0.004f;
 	static constexpr float movingSpeed = 12.0f;
 

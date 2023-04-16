@@ -2,12 +2,19 @@
 #include "imgui/imgui.h"
 #include "FrameCommander.h"
 
+
 PointLight::PointLight(Graphics& gfx, float radius)
 	:
 	mesh{ gfx, radius },
 	cbuf{gfx,0}
 {
 	Reset();
+	pCamera = std::make_shared<Camera>(gfx, "Light", 0.0f, 0.0f, cbData.pos, true);
+}
+
+std::shared_ptr<Camera> PointLight::GetCamera()
+{
+	return pCamera;
 }
 
 void PointLight::SpawnControlWindow() noexcept
@@ -37,6 +44,7 @@ void PointLight::SpawnControlWindow() noexcept
 		Reset();
 	}
 	ImGui::End();
+	pCamera->SetPos(cbData.pos);
 }
 
 void PointLight::Reset() noexcept
@@ -57,6 +65,7 @@ void PointLight::Submit(FrameComander& frame) const noxnd
 {
 	mesh.SetPos(cbData.pos);
 	mesh.Submit(frame);
+	pCamera->Submit(frame);
 }
 
 void PointLight::Bind(Graphics& gfx, DirectX::XMMATRIX view) const noexcept

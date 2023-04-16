@@ -4,7 +4,7 @@
 #include "Graphics.hpp"
 
 
-void CameraContainer::AddCamera(std::unique_ptr<Camera> camera)
+void CameraContainer::AddCamera(std::shared_ptr<Camera> camera)
 {
 	cameras.push_back(std::move(camera));
 }

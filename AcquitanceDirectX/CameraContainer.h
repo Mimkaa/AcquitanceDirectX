@@ -11,7 +11,7 @@ class CameraContainer
 public:
 	void ControlWindow(Graphics& gfx) ;
 	void Bind(Graphics& gfx) const;
-	void AddCamera(std::unique_ptr<Camera> camera);
+	void AddCamera(std::shared_ptr<Camera> camera);
 	Camera& GetCamera() const;
 	Camera& GetControlCamera() const;
 	CameraContainer() = default;
@@ -22,7 +22,7 @@ public:
 		return cameras[controled].get();
 	}
 private:
-	std::vector<std::unique_ptr<Camera>> cameras;
+	std::vector<std::shared_ptr<Camera>> cameras;
 	int active = 0;
 	int controled = 0;
 };
