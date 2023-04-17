@@ -362,6 +362,10 @@ void App::DoFrame()
 		{
 			cams->Translate({ 0.0f, -dt, 0.0f });
 		}
+		if (wnd.kbd.KeyIsPressed('L'))
+		{
+			saveDepth = true;
+		}
 
 		
 	}
@@ -396,5 +400,10 @@ void App::DoFrame()
 	
 	wnd.Gfx().EndFrame();
 	
+	if (saveDepth)
+	{
+		fc.SaveDepth(wnd.Gfx());
+		saveDepth = false;
+	}
 		
 }

@@ -87,6 +87,11 @@ public:
 	{
 		return org.GetRenderQueue(name);
 	}
+
+	void SaveDepth(Graphics& gfx)
+	{
+		org.GetDepthStencil()->ToSurface(gfx).Save("depth.png");
+	}
 private:
 	
 	int downsize;

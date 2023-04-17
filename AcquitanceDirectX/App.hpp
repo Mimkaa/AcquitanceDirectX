@@ -44,6 +44,7 @@ private:
 	TestCube cubby{ wnd.Gfx() };
 	int x = 0;
 	int y = 0;
+	bool saveDepth = false;
 	ScriptCommander sc;
 };
 

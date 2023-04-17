@@ -24,6 +24,11 @@ public :
 		AddGlobalSource(BindPassSource<BlurManager>::Make("blurPapa", blurMaster));
 	}
 
+	std::shared_ptr<DepthStencil> GetDepthStencil() const
+	{
+		return masterDepth;
+	}
+
 	void SetGlobalComp(const std::string& sinkName, const std::string& target)
 	{
 		const auto finder = [&sinkName](const std::unique_ptr<Sink>& p) {

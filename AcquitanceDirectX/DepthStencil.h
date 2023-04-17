@@ -4,6 +4,7 @@
 #include "Bindable.h"
 #include "BufferResource.h"
 
+class Surface;
 
 
 
@@ -12,7 +13,14 @@ class DepthStencil :public Bind::Bindable, public BufferResource
     friend class RenderTarget;
     friend class Graphics;
 public :
-    DepthStencil(Graphics& gfx, UINT width, UINT height);
+    enum Usage
+    {
+        DepthStencilUsage,
+        ShadowDepthUsage
+    };
+
+    Surface ToSurface(Graphics& gfx) const;
+    DepthStencil(Graphics& gfx, UINT width, UINT height, Usage usage = Usage::DepthStencilUsage);
 	
     void Bind(Graphics& gfx) noexcept override;
   
@@ -21,6 +29,12 @@ public :
     {
         return pDSView;
     }
+
+    unsigned int GetWidth() const;
+    unsigned int GetHeight() const;
+
 private:
+    int width;
+    int height;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSView;
 };
