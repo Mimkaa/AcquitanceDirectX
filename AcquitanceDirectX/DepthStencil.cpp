@@ -77,7 +77,7 @@ void DepthStencil::Clear(Graphics& gfx) const noexcept
     GetContext(gfx)->ClearDepthStencilView(pDSView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
 }
 
-Surface DepthStencil::ToSurface(Graphics& gfx) const
+Surface DepthStencil::ToSurface(Graphics& gfx, bool lineralze) const
 {
 	namespace wrl = Microsoft::WRL;
 
@@ -118,13 +118,25 @@ Surface DepthStencil::ToSurface(Graphics& gfx) const
 			if (textureDesc.Format == DXGI_FORMAT_R24G8_TYPELESS)
 			{
 				const auto raw = 0xFFFFFF & *reinterpret_cast<const unsigned int*>(pSrcRow + x);
-				const unsigned char color = raw >> 16;
+				unsigned char color = raw >> 16;
+				if (lineralze)
+				{
+					const auto rawNormalized = (float)raw / (float)0xFFFFFF;
+					const auto linearized = 0.01 / (1.01 - rawNormalized);
+					color = linearized * 255;
+				}
 				s.PutPixel(x, y, { color, color, color });
 			}
 			else if (textureDesc.Format == DXGI_FORMAT_R32_FLOAT)
 			{
 				auto raw = *reinterpret_cast<const float*>(pSrcRow + x);
-				const unsigned char color = raw * 255;
+				unsigned char color = raw * 255;
+				if (lineralze)
+				{
+					
+					const auto linearized = 0.01 / (1.01 - raw);
+					color = linearized * 255;
+				}
 				s.PutPixel(x, y, { color, color, color });
 			}
 			else

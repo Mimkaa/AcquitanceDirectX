@@ -88,9 +88,9 @@ public:
 		return org.GetRenderQueue(name);
 	}
 
-	void SaveDepth(Graphics& gfx)
+	void SaveDepth(Graphics& gfx, bool lineralze = false)
 	{
-		org.GetDepthStencil()->ToSurface(gfx).Save("depth.png");
+		org.GetDepthStencil()->ToSurface(gfx, lineralze).Save("depth.png");
 	}
 private:
 	

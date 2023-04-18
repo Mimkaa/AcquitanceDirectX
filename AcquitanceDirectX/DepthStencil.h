@@ -19,7 +19,7 @@ public :
         ShadowDepthUsage
     };
 
-    Surface ToSurface(Graphics& gfx) const;
+    Surface ToSurface(Graphics& gfx, bool lineralze = false) const;
     DepthStencil(Graphics& gfx, UINT width, UINT height, Usage usage = Usage::DepthStencilUsage);
 	
     void Bind(Graphics& gfx) noexcept override;

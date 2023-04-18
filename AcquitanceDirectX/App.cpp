@@ -402,7 +402,7 @@ void App::DoFrame()
 	
 	if (saveDepth)
 	{
-		fc.SaveDepth(wnd.Gfx());
+		fc.SaveDepth(wnd.Gfx(),true);
 		saveDepth = false;
 	}
 		

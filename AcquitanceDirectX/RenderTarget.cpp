@@ -51,7 +51,7 @@ void RenderTarget::BindAsTexture(Graphics& gfx, UINT slot) const noexcept
 	GetContext(gfx)->PSSetShaderResources(slot, 1, pResourceView.GetAddressOf());
 }
 
-Surface RenderTarget::ToSurface(Graphics& gfx) const
+Surface RenderTarget::ToSurface(Graphics& gfx ) const
 {
 	namespace wrl = Microsoft::WRL;
 
