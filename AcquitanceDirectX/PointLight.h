@@ -11,7 +11,7 @@ public:
 	PointLight(Graphics& gfx, float radius = 0.5f);
 	void SpawnControlWindow() noexcept;
 	void Reset() noexcept;
-	void Submit(class FrameComander& frame) const noxnd;
+	void Submit(class FrameComander& frame, size_t channel) const noxnd;
 	void Bind(Graphics& gfx, DirectX::XMMATRIX view) const noexcept;
 	std::shared_ptr<Camera> GetCamera();
 private:

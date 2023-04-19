@@ -10,7 +10,7 @@
 #include "ChilliXM.h"
 namespace dx = DirectX;
 
-Model::Model(Graphics& gfx, const std::string& pathname, const float scale)
+Model::Model(Graphics& gfx, const std::string& pathname,  const float scale)
 	:
 	gfx(gfx),
 	pWindow(std::make_unique<ModelWindow>())
@@ -58,9 +58,9 @@ Model::~Model() noexcept
 //	
 //}
 
-void Model::Submit(FrameComander& frame) const noxnd
+void Model::Submit(FrameComander& frame, size_t channel) const noxnd
 {
-	pRoot->Submit(frame, dx::XMMatrixIdentity());
+	pRoot->Submit(frame, dx::XMMatrixIdentity(), channel);
 }
 
 //void Model::ShowWindow(Graphics& gfx, const char* windowName) noexcept

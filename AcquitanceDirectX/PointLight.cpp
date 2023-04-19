@@ -61,11 +61,11 @@ void PointLight::Reset() noexcept
 	};
 }
 
-void PointLight::Submit(FrameComander& frame) const noxnd
+void PointLight::Submit(FrameComander& frame, size_t channel) const noxnd
 {
 	mesh.SetPos(cbData.pos);
-	mesh.Submit(frame);
-	pCamera->Submit(frame);
+	mesh.Submit(frame, channel);
+	pCamera->Submit(frame, channel);
 }
 
 void PointLight::Bind(Graphics& gfx, DirectX::XMMATRIX view) const noexcept

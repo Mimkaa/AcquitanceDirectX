@@ -25,15 +25,15 @@ Camera::Camera(Graphics& gfx, const std::string& name_in, float pitch, float yaw
 	Reset();
 }
 
-void Camera::Submit(FrameComander& fc)
+void Camera::Submit(FrameComander& fc, size_t channel)
 {
 	if (showCamera)
 	{
-		camInd.Submit(fc);
+		camInd.Submit(fc, channel);
 	}
 	if (showFrustum)
 	{
-		frus.Submit(fc);
+		frus.Submit(fc, channel);
 	}
 }
 

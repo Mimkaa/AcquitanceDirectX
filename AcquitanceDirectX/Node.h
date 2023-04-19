@@ -15,7 +15,7 @@ class Node
 
 
 public:
-	void Submit(FrameComander& frame, DirectX::FXMMATRIX accumulatedTransform) const noxnd;
+	void Submit(FrameComander& frame, DirectX::FXMMATRIX accumulatedTransform, size_t channel) const noxnd;
 	Node(int id_in, const std::string& name_in, std::vector<Mesh*> meshes_in, const DirectX::XMMATRIX& transfomation);
 	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) noxnd;
 	DirectX::XMMATRIX GetAppliedTransform() const noexcept;

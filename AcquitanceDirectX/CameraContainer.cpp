@@ -17,13 +17,13 @@ void CameraContainer::Bind(Graphics& gfx) const
     
 }
 
-void CameraContainer::Submit(FrameComander& fc)
+void CameraContainer::Submit(FrameComander& fc, size_t channel)
 {
     for (int i = 0; i < cameras.size(); i++)
     {
         if (i != active)
         {
-            (*cameras[i]).Submit(fc);
+            (*cameras[i]).Submit(fc, channel);
         }
     }
 }

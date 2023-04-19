@@ -18,6 +18,7 @@
 #include "ModelProbe.h"
 #include "Node.h"
 #include "ChilliXM.h"
+#include "Channels.h"
 
 
 namespace dx = DirectX;
@@ -96,11 +97,11 @@ void App::DoFrame()
 	wnd.Gfx().BeginFrame(0.07f, 0.0f, 0.12f);
 	//wnd.Gfx().SetCamera(cams.GetCamera().GetMatrix());
 	cams.Bind(wnd.Gfx());
-	cams.Submit(fc);
+	cams.Submit(fc, Chan::main);
 	
-	sponza.Submit(fc);
+	sponza.Submit(fc, Chan::main);
 	//Gobber.Submit(fc);
-	light.Submit(fc);
+	light.Submit(fc, Chan::main);
 	//cubby.Submit(fc);
 	
 

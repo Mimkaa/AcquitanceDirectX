@@ -6,6 +6,7 @@
 #include "DynamicConstantBuffer.h"
 #include "TechniqueProbe.h"
 #include <string>
+#include "Channels.h"
 
 
 TestCube::TestCube(Graphics& gfx)
@@ -31,7 +32,7 @@ TestCube::TestCube(Graphics& gfx)
 	
 	{
 		using namespace std::string_literals;
-		Technique single("shade"s);
+		Technique single("shade"s, Chan::main);
 		{
 			Step lambertine("Lambertian");
 			
@@ -67,7 +68,7 @@ TestCube::TestCube(Graphics& gfx)
 	}
 
 	{
-		Technique outline("outline");
+		Technique outline("outline", Chan::main);
 		{
 			Step mask("outlineMask");
 

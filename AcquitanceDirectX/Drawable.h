@@ -27,7 +27,7 @@ public:
 	void Draw(Graphics& gfx) const noxnd;
 	virtual ~Drawable() = default;
 
-	void Submit(class FrameComander& frame) noexcept;
+	void Submit(class FrameComander& frame, size_t channel) noexcept;
 
 	
 	void Bind(Graphics& gfx) const;

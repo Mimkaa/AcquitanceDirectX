@@ -67,7 +67,7 @@ DirectX::XMMATRIX Node::GetBaseTransform() const noexcept
 //	}
 //}
 
-void Node::Submit(FrameComander& frame, DirectX::FXMMATRIX accumulatedTransform) const noxnd
+void Node::Submit(FrameComander& frame, DirectX::FXMMATRIX accumulatedTransform, size_t channel) const noxnd
 {
 	const auto built =
 		dx::XMLoadFloat4x4(&appliedTransform) *
@@ -75,11 +75,11 @@ void Node::Submit(FrameComander& frame, DirectX::FXMMATRIX accumulatedTransform)
 		accumulatedTransform;
 	for (const auto pm : meshes)
 	{
-		pm->Submit(frame, built);
+		pm->Submit(frame, built, channel);
 	}
 	for (const auto& pc : children)
 	{
-		pc->Submit(frame, built);
+		pc->Submit(frame, built, channel);
 	}
 }
 

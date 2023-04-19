@@ -1,10 +1,10 @@
 #include "Mesh.h"
 #include "FrameCommander.h"
 namespace dx = DirectX;
-void Mesh::Submit(FrameComander& frame, dx::FXMMATRIX accumulatedTranform)  noxnd
+void Mesh::Submit(FrameComander& frame, dx::FXMMATRIX accumulatedTranform, size_t channel)  noxnd
 {
 	dx::XMStoreFloat4x4(&transform, accumulatedTranform);
-	Drawable::Submit(frame);
+	Drawable::Submit(frame, channel);
 }
 
 DirectX::XMMATRIX Mesh::GetTransformXM() const noexcept

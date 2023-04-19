@@ -17,11 +17,11 @@ size_t Drawable::GetIndexCount() const
 	return ret;
 }
 
-void Drawable::Submit(class FrameComander& frame) noexcept
+void Drawable::Submit(class FrameComander& frame, size_t channel) noexcept
 {
 	for (auto& t : techniques)
 	{
-		t.Submit(frame, *this);
+		t.Submit(frame, *this, channel);
 	}
 }
 

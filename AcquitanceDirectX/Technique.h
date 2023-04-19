@@ -7,10 +7,11 @@ class Technique
 public:
 	Technique() = default;
 
-	Technique(const std::string& name, bool active = true)
+	Technique(const std::string& name, size_t chennel, bool active = true)
 		:
 		name(name),
-		active(active)
+		active(active),
+		chennel{chennel}
 	{}
 
 	void SetActiveState(bool state_in)
@@ -52,7 +53,7 @@ public:
 		return name;
 	}
 
-	void Submit(class FrameComander& frame, const  class Drawable& drawable) ;
+	void Submit(class FrameComander& frame, const  class Drawable& drawable, size_t chennel) ;
 	
 
 	void InitializeParentReference(const class Drawable& drawable) noexcept;
@@ -62,4 +63,5 @@ private:
 	bool active = true;
 	std::vector<Step> steps;
 	std::string name = "Nameless Tech";
+	size_t chennel;
 };

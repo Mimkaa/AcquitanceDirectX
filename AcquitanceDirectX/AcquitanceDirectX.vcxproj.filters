@@ -611,6 +611,9 @@
     <ClInclude Include="WireFramePass.h">
       <Filter>Header Files\Jobber\RenderGraph\Different_Passes</Filter>
     </ClInclude>
+    <ClInclude Include="Channels.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AcquitanceDirectX1.rc">

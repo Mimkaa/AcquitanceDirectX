@@ -29,7 +29,7 @@ private:
 
 
 public:
-	void Submit(FrameComander& frame) const noxnd;
+	void Submit(FrameComander& frame, size_t channel) const noxnd;
 	void SetRootTransform(const DirectX::FXMMATRIX& rt) noexcept;
 	void Draw();
 	void ShowWindow(Graphics& gfx, const char* windowName) noexcept;

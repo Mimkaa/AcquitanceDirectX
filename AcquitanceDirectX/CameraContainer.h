@@ -16,7 +16,7 @@ public:
 	Camera& GetControlCamera() const;
 	CameraContainer() = default;
 	~CameraContainer() = default;
-	void Submit(FrameComander& fc);
+	void Submit(FrameComander& fc, size_t channel);
 	Camera* operator->() const
 	{
 		return cameras[controled].get();

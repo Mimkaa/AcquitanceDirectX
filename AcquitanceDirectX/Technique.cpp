@@ -2,9 +2,9 @@
 #include "FrameCommander.h"
 #include "Drawable.h"
 
-void Technique::Submit(FrameComander& frame, const Drawable& drawable) 
+void Technique::Submit(FrameComander& frame, const Drawable& drawable, size_t FilterChennel)
 {
-	if (active)
+	if (active && ((chennel & FilterChennel)!=0))
 	{
 		for (auto& s : steps)
 		{

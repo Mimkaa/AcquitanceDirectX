@@ -21,7 +21,7 @@ public :
 	void Translate(DirectX::XMFLOAT3 translation);
 	DirectX::XMVECTOR GetPosition();
 	std::string GetName() const;
-	void Submit(FrameComander& fc);
+	void Submit(FrameComander& fc, size_t channel);
 	void ApplyTranformations(Graphics& gfx);
 	void SetPos(DirectX::XMFLOAT3 pos_in);
 private:

@@ -1,6 +1,7 @@
 #include "Material.h"
 #include "BindableCommon.h"
 #include <memory>
+#include "Channels.h"
 Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::path path)
 	:
 	ModelPath(path.string())
@@ -15,7 +16,7 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 	}
 	// phong technique
 	{
-		Technique phong{ "Phong" };
+		Technique phong{ "Phong", Chan::main };
 		Step step("Lambertian");
 		std::string shaderCode = "Phong";
 		aiString texFileName;
@@ -131,7 +132,7 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 	
 	// outline technique
 	{
-		Technique outline("Outline", false);
+		Technique outline("Outline", Chan::main, false);
 		{
 			Step mask("outlineMask");
 
