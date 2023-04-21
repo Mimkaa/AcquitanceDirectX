@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderQueuPass.h"
+#include "Camera.h"
 
 class LambertianPass : public RenderQueuePass
 {
@@ -16,4 +17,19 @@ public:
 		AddBind(Bind::Blender::Resolve(gfx, false));
 		AddBind(Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Off));
 	}
+	void SetMainCamRef(const Camera& cam)
+	{
+		pMainCam = &cam;
+	}
+	void Execute(Graphics& gfx) override
+	{
+		assert(pMainCam);
+		pMainCam->BindToGraphics(gfx);
+		RenderQueuePass::Execute(gfx);
+	}
+	
+	
+private:
+	const Camera* pMainCam = nullptr;
+
 };

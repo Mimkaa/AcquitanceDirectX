@@ -95,11 +95,11 @@ void Camera::Reset() noexcept
 	
 }
 
-void  Camera::BindToGraphics(Graphics& gfx)
+void  Camera::BindToGraphics(Graphics& gfx) const 
 {
 	gfx.SetProjection(prj.GetMatrix());
 	gfx.SetCamera(GetMatrix());
-	frus.SetVertBuffer(gfx, prj.GetWidth(), prj.GetHeight(), prj.GetFar(), prj.GetNear());
+	//frus.SetVertBuffer(gfx, prj.GetWidth(), prj.GetHeight(), prj.GetFar(), prj.GetNear());
 
 }
 

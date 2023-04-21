@@ -12,7 +12,7 @@ public:
 	void ControlWindow(Graphics& gfx) ;
 	void Bind(Graphics& gfx) const;
 	void AddCamera(std::shared_ptr<Camera> camera);
-	Camera& GetCamera() const;
+	Camera& GetActiveCamera() const;
 	Camera& GetControlCamera() const;
 	CameraContainer() = default;
 	~CameraContainer() = default;

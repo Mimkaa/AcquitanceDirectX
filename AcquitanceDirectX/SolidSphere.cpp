@@ -2,6 +2,7 @@
 #include "BindableCommon.h"
 #include "GraphicsThrowHeader.h"
 #include "Sphere.h"
+#include "Channels.h"
 #include"Stencel.h"
 
 
@@ -19,7 +20,7 @@ SolidSphere::SolidSphere(Graphics& gfx, float radius)
 	pTopology = Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	{
-		Technique solid;
+		Technique solid{ "Phong", Chan::main };
 		Step only("Lambertian");
 
 		auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");

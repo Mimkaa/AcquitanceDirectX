@@ -2,6 +2,7 @@
 #include "Graphics.hpp"
 #include "BindableCommon.h"
 #include <string>
+#include "Channels.h"
 
 Frustrum::Frustrum(Graphics& gfx, float width, float height, float fFar, float fNear) noexcept
 {
@@ -38,7 +39,7 @@ Frustrum::Frustrum(Graphics& gfx, float width, float height, float fFar, float f
 	pIndexBuff = Bind::IndexBuffer::Resolve(gfx, tag, indices);
 
 	pTopology = Bind::Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	Technique line;
+	Technique line{ "Line", Chan::main };
 	SetVertBuffer(gfx, width, height, fFar, fNear);
 	{
 		

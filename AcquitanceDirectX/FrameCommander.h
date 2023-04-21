@@ -92,6 +92,10 @@ public:
 	{
 		org.GetDepthStencil()->ToSurface(gfx, lineralze).Save("depth.png");
 	}
+	void BindMainCamera(Camera& cam)
+	{
+		org.BindMainCamera(cam);
+	}
 private:
 	
 	int downsize;

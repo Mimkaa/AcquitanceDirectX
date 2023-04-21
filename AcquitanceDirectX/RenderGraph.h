@@ -8,6 +8,7 @@
 #include "ClearBufferPass.h"
 #include "WireFramePass.h"
 #include "Source.h"
+#include "Camera.h"
 
 class RenderGraph
 {
@@ -60,6 +61,17 @@ public :
 			}
 		}
 		//throw std::runtime_error("no such source");
+	}
+
+	Pass& GetPassByName(const std::string& pass_name)
+	{
+		for (auto& p : passes)
+		{
+			if (p->GetName() == pass_name)
+			{
+				return *p;
+			}
+		}
 	}
 
 	void BindGlobalComps() 
@@ -203,6 +215,12 @@ protected:
 class OutlineRenderGraph : public RenderGraph
 {
 public:
+	void BindMainCamera(Camera& cam)
+	{
+		dynamic_cast<LambertianPass&>(GetPassByName("Lambertian")).SetMainCamRef(cam);
+	}
+	void BindShadowCamera(Camera& cam);
+
 	OutlineRenderGraph(Graphics& gfx)
 		:
 		RenderGraph(gfx)

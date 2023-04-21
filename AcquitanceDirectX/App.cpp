@@ -91,19 +91,19 @@ int App::Go()
 void App::DoFrame()
 {
 	const auto dt = timer.Mark() * speed_factor;
-
-	light.Bind(wnd.Gfx(), wnd.Gfx().GetCamera());
 	
 	wnd.Gfx().BeginFrame(0.07f, 0.0f, 0.12f);
 	//wnd.Gfx().SetCamera(cams.GetCamera().GetMatrix());
-	cams.Bind(wnd.Gfx());
-	cams.Submit(fc, Chan::main);
+	light.Bind(wnd.Gfx(),cams->GetMatrix());
+	fc.BindMainCamera(cams.GetActiveCamera());
+	//cams.Bind(wnd.Gfx());
+	
 	
 	sponza.Submit(fc, Chan::main);
 	//Gobber.Submit(fc);
 	light.Submit(fc, Chan::main);
 	//cubby.Submit(fc);
-	
+	cams.Submit(fc, Chan::main);
 
 
 	class TP : public TechniqueProbe

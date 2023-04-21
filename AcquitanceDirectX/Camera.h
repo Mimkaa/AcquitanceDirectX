@@ -16,7 +16,7 @@ public :
 	DirectX::XMMATRIX GetMatrix() const noexcept;
 	void SpawnWidgets() noexcept;
 	void Reset() noexcept;
-	void BindToGraphics(Graphics& gfx);
+	void BindToGraphics(Graphics& gfx) const;
 	void Rotate(const int dx, const int dy);
 	void Translate(DirectX::XMFLOAT3 translation);
 	DirectX::XMVECTOR GetPosition();

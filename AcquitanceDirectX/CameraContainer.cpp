@@ -12,7 +12,7 @@ void CameraContainer::AddCamera(std::shared_ptr<Camera> camera)
 void CameraContainer::Bind(Graphics& gfx) const
 {
    
-    GetCamera().BindToGraphics(gfx);
+    GetActiveCamera().BindToGraphics(gfx);
     
     
 }
@@ -28,7 +28,7 @@ void CameraContainer::Submit(FrameComander& fc, size_t channel)
     }
 }
 
-Camera& CameraContainer::GetCamera() const
+Camera& CameraContainer::GetActiveCamera() const
 {
 	return *cameras[active];
 }
@@ -42,7 +42,7 @@ void CameraContainer::ControlWindow(Graphics& gfx)
 {
 	ImGui::Begin("Model");
   
-    if (ImGui::BeginCombo("Camera Active", GetCamera().GetName().c_str()))
+    if (ImGui::BeginCombo("Camera Active", GetActiveCamera().GetName().c_str()))
     {
         for (int i = 0; i < cameras.size(); i++)
         {
