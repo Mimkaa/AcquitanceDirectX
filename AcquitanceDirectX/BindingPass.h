@@ -26,6 +26,6 @@ public:
 protected:
 	std::shared_ptr<RenderTarget> target;
 	std::shared_ptr<DepthStencil> stencil;
-private:
+
 	std::vector<std::shared_ptr<Bind::Bindable>> bindables;
 };

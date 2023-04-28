@@ -20,6 +20,11 @@ namespace Bind
 		{
 			D3D11_DEPTH_STENCIL_DESC dsDesc = CD3D11_DEPTH_STENCIL_DESC{ CD3D11_DEFAULT{} };
 
+			if (mode == Mode::Off)
+			{
+				dsDesc.StencilEnable = FALSE;
+			}
+
 			if (mode == Mode::Write)
 			{
 				dsDesc.DepthEnable = FALSE;

@@ -46,5 +46,6 @@ private:
 	int y = 0;
 	bool saveDepth = false;
 	ScriptCommander sc;
+
 };
 

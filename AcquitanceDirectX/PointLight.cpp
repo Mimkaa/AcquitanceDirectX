@@ -44,7 +44,7 @@ void PointLight::SpawnControlWindow() noexcept
 		Reset();
 	}
 	ImGui::End();
-	pCamera->SetPos(cbData.pos);
+	
 }
 
 void PointLight::Reset() noexcept
@@ -65,6 +65,7 @@ void PointLight::Submit(FrameComander& frame, size_t channel) const noxnd
 {
 	mesh.SetPos(cbData.pos);
 	mesh.Submit(frame, channel);
+	pCamera->SetPos(cbData.pos);
 	pCamera->Submit(frame, channel);
 }
 
@@ -72,7 +73,8 @@ void PointLight::Bind(Graphics& gfx, DirectX::XMMATRIX view) const noexcept
 {
 	auto dataCopy = cbData;
 	auto vec_pos = DirectX::XMLoadFloat3(&dataCopy.pos);
-	DirectX::XMStoreFloat3(&dataCopy.pos, DirectX::XMVector3Transform(vec_pos, view));
+
+	DirectX::XMStoreFloat3(&dataCopy.pos, DirectX::XMVector3Transform(vec_pos,view));
 	cbuf.Update(gfx, dataCopy);
 	cbuf.Bind(gfx);
 }

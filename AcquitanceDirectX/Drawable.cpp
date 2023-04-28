@@ -33,6 +33,7 @@ Drawable::Drawable(Graphics& gfx, const Material& mat, const aiMesh& mesh, float
 
 	for (auto& t : mat.GetTechniques())
 	{
+		t.InitializeParentReference(*this);
 		AddTechnique(std::move(t));
 	}
 }

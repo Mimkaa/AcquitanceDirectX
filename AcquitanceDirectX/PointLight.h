@@ -14,6 +14,7 @@ public:
 	void Submit(class FrameComander& frame, size_t channel) const noxnd;
 	void Bind(Graphics& gfx, DirectX::XMMATRIX view) const noexcept;
 	std::shared_ptr<Camera> GetCamera();
+	
 private:
 	struct PointLightCBuf
 	{

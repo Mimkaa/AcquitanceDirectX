@@ -66,7 +66,7 @@ App::App(const std::string& commandLine )
 cams.AddCamera(std::make_unique<Camera>(wnd.Gfx(),"A", 1.2f, 0.0f, DirectX::XMFLOAT3{ 0.0f, 12.0f, 3.0f }));
 cams.AddCamera(std::make_unique<Camera>(wnd.Gfx(), "B", 1.2f, 0.0f, DirectX::XMFLOAT3{ 0.0f, 15.0f, 3.0f }));
 cams.AddCamera(light.GetCamera());
-
+fc.BindShadowCamera(*light.GetCamera());
 }
 
 App::~App()
@@ -93,9 +93,11 @@ void App::DoFrame()
 	const auto dt = timer.Mark() * speed_factor;
 	
 	wnd.Gfx().BeginFrame(0.07f, 0.0f, 0.12f);
-	//wnd.Gfx().SetCamera(cams.GetCamera().GetMatrix());
-	light.Bind(wnd.Gfx(),cams->GetMatrix());
+	//wnd.Gfx().SetCamera(cams.GetActiveCamera().GetMatrix());
 	fc.BindMainCamera(cams.GetActiveCamera());
+	light.Bind(wnd.Gfx(), cams.GetActiveCamera().GetMatrix());
+	
+	
 	//cams.Bind(wnd.Gfx());
 	
 	
@@ -104,6 +106,24 @@ void App::DoFrame()
 	light.Submit(fc, Chan::main);
 	//cubby.Submit(fc);
 	cams.Submit(fc, Chan::main);
+	
+
+	// shadow channel pass
+	
+	sponza.Submit(fc, Chan::shadow);
+	//Gobber.Submit(fc);
+	light.Submit(fc, Chan::shadow);
+	//cubby.Submit(fc);
+	cams.Submit(fc, Chan::shadow);
+	
+	fc.Execute(wnd.Gfx());
+
+	if (saveDepth)
+	{
+		fc.DumpDepth(wnd.Gfx());
+		//fc.SaveDepth(wnd.Gfx(),true);
+		saveDepth = false;
+	}
 
 
 	class TP : public TechniqueProbe
@@ -316,7 +336,7 @@ void App::DoFrame()
 	//plane.Draw(wnd.Gfx());
 	//plane.Draw(wnd.Gfx());
 
-	fc.Execute(wnd.Gfx());
+	
 
 	while (const auto e = wnd.kbd.ReadKey())
 	{
@@ -388,11 +408,13 @@ void App::DoFrame()
 	wall.ShowControlWindow(wnd.Gfx());*/
 	
 	// imgui window for camera
+	
 	cams.ControlWindow(wnd.Gfx());
 	light.SpawnControlWindow();
 	cubby.ShowControlWindow(wnd.Gfx());
 	
 	//fc.ShowWindows(wnd.Gfx());
+	
 
 	fc.Reset();
 	
@@ -401,10 +423,6 @@ void App::DoFrame()
 	
 	wnd.Gfx().EndFrame();
 	
-	if (saveDepth)
-	{
-		fc.SaveDepth(wnd.Gfx(),true);
-		saveDepth = false;
-	}
+
 		
 }

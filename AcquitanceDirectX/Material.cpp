@@ -14,6 +14,9 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 		material.Get(AI_MATKEY_NAME, tempName);
 		name = tempName.C_Str();
 	}
+	vtxLayout.Append(Dvtx::VertexLayout::Position3D);
+	vtxLayout.Append(Dvtx::VertexLayout::Normal);
+	
 	// phong technique
 	{
 		Technique phong{ "Phong", Chan::main };
@@ -22,8 +25,7 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 		aiString texFileName;
 
 		// common (pre)
-		vtxLayout.Append(Dvtx::VertexLayout::Position3D);
-		vtxLayout.Append(Dvtx::VertexLayout::Normal);
+		
 		Dcb::RawLayout pscLayout;
 		bool hasTexture = false;
 		bool hasGlossAlpha = false;
@@ -180,6 +182,25 @@ Material::Material(Graphics& gfx, const aiMaterial& material, std::filesystem::p
 			outline.AddStep(std::move(draw));
 		}
 		techniques.push_back(std::move(outline));
+	}
+	// shadow map technique
+	{
+		Technique map{ "ShadowMap",Chan::shadow,true };
+		{
+			Step draw("shadowPass");
+
+			// TODO: better sub-layout generation tech for future consideration maybe
+			draw.AddBindable(InputLayout::Resolve(gfx, vtxLayout, *VertexShader::Resolve(gfx, "Solid_VS.cso")));
+
+			draw.AddBindable(std::make_shared<TransformCbuf>(gfx));
+			// TODO: might need to specify rasterizer when doubled-sided models start being used
+
+			
+
+			map.AddStep(std::move(draw));
+
+		}
+		techniques.push_back(std::move(map));
 	}
 }
 

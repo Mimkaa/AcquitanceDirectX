@@ -28,6 +28,17 @@ void CameraContainer::Submit(FrameComander& fc, size_t channel)
     }
 }
 
+Camera& CameraContainer::GetByName(std::string name) const
+{
+    for (auto& c : cameras)
+    {
+        if (c->GetName() == name)
+        {
+            return *c;
+        }
+    }
+}
+
 Camera& CameraContainer::GetActiveCamera() const
 {
 	return *cameras[active];

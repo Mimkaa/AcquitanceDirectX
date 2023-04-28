@@ -7,6 +7,7 @@
 #include "VerticalBlurrPass.h"
 #include "ClearBufferPass.h"
 #include "WireFramePass.h"
+#include "ShadowMappingPass.h"
 #include "Source.h"
 #include "Camera.h"
 
@@ -219,7 +220,14 @@ public:
 	{
 		dynamic_cast<LambertianPass&>(GetPassByName("Lambertian")).SetMainCamRef(cam);
 	}
-	void BindShadowCamera(Camera& cam);
+	void BindShadowCamera(Camera& cam)
+	{
+		dynamic_cast<ShadowMappingPass&>(GetPassByName("shadowPass")).SetShadowCamRef(cam);
+	}
+	void DumpDepth(Graphics& gfx)
+	{
+		dynamic_cast<ShadowMappingPass&>(GetPassByName("shadowPass")).DumpCamera(gfx,"depth.png");
+	}
 
 	OutlineRenderGraph(Graphics& gfx)
 		:
@@ -234,6 +242,10 @@ public:
 		{
 			auto pass = std::make_unique<ClearBufferPass>("clearRt");
 			pass->SetPassLinkage("buffer", "$.bufferInp"s);
+			AddPass(std::move(pass));
+		}
+		{
+			auto pass = std::make_unique<ShadowMappingPass>(gfx,"shadowPass");
 			AddPass(std::move(pass));
 		}
 		{
@@ -277,6 +289,7 @@ public:
 			AddPass(std::move(pass));
 		}
 		SetGlobalComp("bufferOut", "wireframe.buffer");
+		
 		BindGlobalComps();
 	}
 };

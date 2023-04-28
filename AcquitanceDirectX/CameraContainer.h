@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <string>
 
 class Camera;
 class Graphics;
@@ -14,6 +15,7 @@ public:
 	void AddCamera(std::shared_ptr<Camera> camera);
 	Camera& GetActiveCamera() const;
 	Camera& GetControlCamera() const;
+	Camera& GetByName(std::string name) const;
 	CameraContainer() = default;
 	~CameraContainer() = default;
 	void Submit(FrameComander& fc, size_t channel);
