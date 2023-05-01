@@ -67,6 +67,7 @@ cams.AddCamera(std::make_unique<Camera>(wnd.Gfx(),"A", 1.2f, 0.0f, DirectX::XMFL
 cams.AddCamera(std::make_unique<Camera>(wnd.Gfx(), "B", 1.2f, 0.0f, DirectX::XMFLOAT3{ 0.0f, 15.0f, 3.0f }));
 cams.AddCamera(light.GetCamera());
 fc.BindShadowCamera(*light.GetCamera());
+saveDepth = true;
 }
 
 App::~App()
@@ -117,13 +118,13 @@ void App::DoFrame()
 	cams.Submit(fc, Chan::shadow);
 	
 	fc.Execute(wnd.Gfx());
-
 	if (saveDepth)
 	{
 		fc.DumpDepth(wnd.Gfx());
 		//fc.SaveDepth(wnd.Gfx(),true);
 		saveDepth = false;
 	}
+	
 
 
 	class TP : public TechniqueProbe

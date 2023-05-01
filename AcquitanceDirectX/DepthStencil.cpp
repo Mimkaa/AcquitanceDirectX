@@ -202,7 +202,7 @@ unsigned int DepthStencil::GetWidth() const
 unsigned int DepthStencil::GetHeight() const
 {
 	return height;
-}
+} 
 
 
 ShaderInputDepthStencil::ShaderInputDepthStencil(Graphics& gfx, UINT slot, Usage usage)
@@ -228,13 +228,16 @@ ShaderInputDepthStencil::ShaderInputDepthStencil(Graphics& gfx, UINT width, UINT
 	GFX_THROW_INFO(GetDevice(gfx)->CreateShaderResourceView(
 		pRes.Get(), &srvDesc, &pShaderResourceView
 	));
-
 }
 
-void ShaderInputDepthStencil::Bind(Graphics& gfx) noexcept
+void ShaderInputDepthStencil::BindPS(Graphics& gfx) noexcept
 {
 
 	INFOMAN_NOHR(gfx);
-	
+	// simply provides the access to the buffer in pixel shader stage
 	GFX_THROW_INFO_ONLY(GetContext(gfx)->PSSetShaderResources(slot, 1u, pShaderResourceView.GetAddressOf()));
+	//GetContext(gfx)->OMSetRenderTargets(0, nullptr, pDSView.Get());
+	
 }
+
+

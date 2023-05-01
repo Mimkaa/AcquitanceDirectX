@@ -24,7 +24,7 @@ public :
     DepthStencil(Graphics& gfx, UINT width, UINT height, bool canBindShaderInput, Usage usage = Usage::DepthStencilUsage);
 	
     void Bind(Graphics& gfx) noexcept override;
-  
+    
     void Clear(Graphics& gfx) const noexcept override;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> getComPtr()const
     {
@@ -45,7 +45,7 @@ class ShaderInputDepthStencil : public DepthStencil
 public:
     ShaderInputDepthStencil(Graphics& gfx, UINT slot, Usage usage = Usage::DepthStencilUsage);
     ShaderInputDepthStencil(Graphics& gfx, UINT width, UINT height, UINT slot, Usage usage = Usage::DepthStencilUsage);
-    void Bind(Graphics& gfx) noexcept override;
+    void BindPS(Graphics& gfx) noexcept;
 private:
     UINT slot;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pShaderResourceView;

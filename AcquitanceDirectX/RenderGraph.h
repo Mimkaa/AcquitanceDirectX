@@ -235,6 +235,12 @@ public:
 	{
 		using namespace std::string_literals;
 		{
+			// one of the problems was that I was binding many bindables and the buffer inside ShadowMappingPass  was one of 
+			// and basically we were having smaller values of depth recorded in here, so that we could observe the silhouete on the main buff 
+			auto pass = std::make_unique<ShadowMappingPass>(gfx, "shadowPass");
+			AddPass(std::move(pass));
+		}
+		{
 			auto pass = std::make_unique<ClearBufferPass>("clearDS");
 			pass->SetPassLinkage("buffer", "$.stencil");
 			AddPass(std::move(pass));
@@ -244,10 +250,7 @@ public:
 			pass->SetPassLinkage("buffer", "$.bufferInp"s);
 			AddPass(std::move(pass));
 		}
-		{
-			auto pass = std::make_unique<ShadowMappingPass>(gfx,"shadowPass");
-			AddPass(std::move(pass));
-		}
+	
 		{
 			auto pass = std::make_unique < LambertianPass>("Lambertian", gfx);
 			pass->SetPassLinkage("buffer", "clearRt.buffer");
