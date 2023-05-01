@@ -29,7 +29,7 @@ public:
 		AddBind(Blender::Resolve(gfx, false));
 		//AddBind(anotherDepth);
 		
-		RegisterSource(DirectPassSource<DepthStencil>::Make("shadowMap", stencil));
+		RegisterSource(DirectPassSource<DepthStencil>::Make("map", stencil));
 	}
 	
 	void Execute(Graphics& gfx)  noexcept override

@@ -223,6 +223,7 @@ public:
 	void BindShadowCamera(Camera& cam)
 	{
 		dynamic_cast<ShadowMappingPass&>(GetPassByName("shadowPass")).SetShadowCamRef(cam);
+		dynamic_cast<LambertianPass&>(GetPassByName("Lambertian")).BindShadowCamera(cam);
 	}
 	void DumpDepth(Graphics& gfx)
 	{
@@ -253,6 +254,7 @@ public:
 	
 		{
 			auto pass = std::make_unique < LambertianPass>("Lambertian", gfx);
+			pass->SetPassLinkage("shadowMap", "shadowPass.map");
 			pass->SetPassLinkage("buffer", "clearRt.buffer");
 			pass->SetPassLinkage("depthStencil", "clearDS.buffer");
 			AddPass(std::move(pass));

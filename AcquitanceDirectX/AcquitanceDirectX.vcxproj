@@ -204,6 +204,7 @@
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="ScriptCommander.cpp" />
+    <ClCompile Include="ShadowCameraCbuf.cpp" />
     <ClCompile Include="Sink.cpp" />
     <ClCompile Include="SolidSphere.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="RGException.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="ScriptCommander.h" />
+    <ClInclude Include="ShadowCameraCbuf.h" />
     <ClInclude Include="ShadowMappingPass.h" />
     <ClInclude Include="Sink.h" />
     <ClInclude Include="SolidSphere.h" />

@@ -14,6 +14,7 @@ class Camera
 public :
 	Camera(Graphics& gfx, const std::string& name_in, float pitch, float yaw, DirectX::XMFLOAT3 v, bool tethered = false);
 	DirectX::XMMATRIX GetMatrix() const noexcept;
+	DirectX::XMMATRIX GetProjection() const noexcept;
 	void SpawnWidgets() noexcept;
 	void Reset() noexcept;
 	void BindToGraphics(Graphics& gfx) const;

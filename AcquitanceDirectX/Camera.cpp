@@ -54,6 +54,11 @@ DirectX::XMMATRIX Camera::GetMatrix() const noexcept
 	
 }
 
+DirectX::XMMATRIX Camera::GetProjection() const noexcept
+{
+	return  prj.GetMatrix();
+}
+
 void Camera::SetPos(DirectX::XMFLOAT3 pos_in)
 {
 	pos = pos_in;
