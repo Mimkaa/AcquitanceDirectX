@@ -25,6 +25,7 @@ public :
 	void Submit(FrameComander& fc, size_t channel);
 	void ApplyTranformations(Graphics& gfx);
 	void SetPos(DirectX::XMFLOAT3 pos_in);
+	
 private:
 	std::string name;
 	DirectX::XMFLOAT3 pos;

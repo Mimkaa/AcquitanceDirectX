@@ -22,11 +22,12 @@ Camera::Camera(Graphics& gfx, const std::string& name_in, float pitch, float yaw
 	frus.SetPosition(pos);
 	frus.SetRotation({ pitch,yaw,0.0f });
 	frus.SetVertBuffer(gfx, prj.GetWidth(), prj.GetHeight(), prj.GetFar(), prj.GetNear());
-	Reset();
+	
 }
 
 void Camera::Submit(FrameComander& fc, size_t channel)
 {
+	frus.SetRotation({ pitch,yaw,0.0f });
 	if (showCamera)
 	{
 		camInd.Submit(fc, channel);

@@ -22,6 +22,13 @@ public:
 	void BindAll(Graphics& gfx);
 	
 	void BindPassingResources(Graphics& gfx);
+	template<class T>
+	void AddBindSink(std::string name)
+	{
+		const auto index = bindables.size();
+		bindables.emplace_back();
+		RegisterSink(std::make_unique<ContainerBindableSink<T>>(std::move(name), bindables, index));
+	}
 	
 protected:
 	std::shared_ptr<RenderTarget> target;

@@ -150,3 +150,43 @@ private:
 	std::shared_ptr<T>& target;
 
 };
+
+template<class T>
+class ContainerBindableSink : public Sink
+{
+	static_assert(std::is_base_of_v<Bind::Bindable, T>, "DirectBindableSink target type must be a Bindable type");
+public:
+
+	void PostLinkValidation() const override
+	{
+		if (!linked)
+		{
+			throw std::runtime_error("one of the sinks is not linked");
+		}
+	}
+	
+	void Bind(std::unique_ptr<Source>& source) 
+	{
+		auto p = std::dynamic_pointer_cast<T>(source->YieldBindable());
+		if (!p)
+		{
+			std::ostringstream oss;
+			oss << "you fucked up the class:" << typeid(this).name() << " with registered name:" << GetRegisteredName() <<
+				"pointing to the source:" << GetSourceName() << "attached to :" << GetPassName() << "the types are not compatible";
+
+			throw std::runtime_error(oss.str());
+		}
+		container[index] = std::move(p);
+		linked = true;
+	}
+	ContainerBindableSink(std::string registeredName, std::vector<std::shared_ptr<Bind::Bindable>>& container, size_t index)
+		:
+		Sink(std::move(registeredName)),
+		container(container),
+		index(index)
+	{}
+private:
+	std::vector<std::shared_ptr<Bind::Bindable>>& container;
+	size_t index;
+	bool linked = false;
+};

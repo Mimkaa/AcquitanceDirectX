@@ -64,7 +64,7 @@ App::App(const std::string& commandLine )
 // Add cameras 
 
 cams.AddCamera(std::make_unique<Camera>(wnd.Gfx(),"A", 1.2f, 0.0f, DirectX::XMFLOAT3{ 0.0f, 12.0f, 3.0f }));
-cams.AddCamera(std::make_unique<Camera>(wnd.Gfx(), "B", 1.2f, 0.0f, DirectX::XMFLOAT3{ 0.0f, 15.0f, 3.0f }));
+//cams.AddCamera(std::make_unique<Camera>(wnd.Gfx(), "B", 1.2f, 0.0f, DirectX::XMFLOAT3{ 0.0f, 15.0f, 3.0f }));
 cams.AddCamera(light.GetCamera());
 fc.BindShadowCamera(*light.GetCamera());
 saveDepth = true;
@@ -105,7 +105,7 @@ void App::DoFrame()
 	sponza.Submit(fc, Chan::main);
 	//Gobber.Submit(fc);
 	light.Submit(fc, Chan::main);
-	//cubby.Submit(fc);
+	cubby.Submit(fc, Chan::main);
 	cams.Submit(fc, Chan::main);
 	
 
@@ -114,7 +114,7 @@ void App::DoFrame()
 	sponza.Submit(fc, Chan::shadow);
 	//Gobber.Submit(fc);
 	light.Submit(fc, Chan::shadow);
-	//cubby.Submit(fc);
+	cubby.Submit(fc, Chan::shadow);
 	cams.Submit(fc, Chan::shadow);
 	
 	fc.Execute(wnd.Gfx());

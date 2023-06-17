@@ -9,7 +9,7 @@ PointLight::PointLight(Graphics& gfx, float radius)
 	cbuf{gfx,0}
 {
 	Reset();
-	pCamera = std::make_shared<Camera>(gfx, "Light", 0.0f, 0.0f, cbData.pos, true);
+	pCamera = std::make_shared<Camera>(gfx, "Light", -0.3f, -1.0f, cbData.pos, true);
 }
 
 std::shared_ptr<Camera> PointLight::GetCamera()

@@ -20,16 +20,51 @@ TestCube::TestCube(Graphics& gfx)
 
 	auto cube = Cube::MakeIndenedentSkinned(std::move(layout));
 	cube.SetNormalsIndependentFlat();
-	
+
 	std::string TagName = "cube$";
 	std::string base = "images\\";
 
 
-	pIndexBuff=IndexBuffer::Resolve(gfx, TagName, cube.indices);
-	pVertBuff=VertexBuffer::Resolve(gfx, TagName, cube.vertices);
-	pTopology=Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pIndexBuff = IndexBuffer::Resolve(gfx, TagName, cube.indices);
+	pVertBuff = VertexBuffer::Resolve(gfx, TagName, cube.vertices);
+	pTopology = Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	auto tcb = std::make_shared<TransformCbuf>(gfx);
 	
+
 	
+	{
+		Technique shade("Shade", Chan::main);
+		{
+			Step only("Lambertian");
+
+			only.AddBindable(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
+			only.AddBindable(Sampler::Resolve(gfx));
+
+			auto pvs = VertexShader::Resolve(gfx, "ShadowTest_VS.cso");
+			only.AddBindable(InputLayout::Resolve(gfx, cube.vertices.GetLayout(), *pvs));
+			only.AddBindable(std::move(pvs));
+
+			only.AddBindable(PixelShader::Resolve(gfx, "ShadowTest_PS.cso"));
+
+			Dcb::RawLayout lay;
+			lay.Add<Dcb::Float3>("specularColor");
+			lay.Add<Dcb::Float>("specularWeight");
+			lay.Add<Dcb::Float>("specularGloss");
+			auto buf = Dcb::Buffer(std::move(lay));
+			buf["specularColor"] = dx::XMFLOAT3{ 1.0f,1.0f,1.0f };
+			buf["specularWeight"] = 0.1f;
+			buf["specularGloss"] = 20.0f;
+			only.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
+
+
+			only.AddBindable(Rasterizer::Resolve(gfx, false));
+
+			only.AddBindable(tcb);
+
+			shade.AddStep(std::move(only));
+		}
+		AddTechnique(std::move(shade));
+	}
 	{
 		using namespace std::string_literals;
 		Technique single("shade"s, Chan::main);
@@ -66,7 +101,24 @@ TestCube::TestCube(Graphics& gfx)
 		}
 		AddTechnique(std::move(single));
 	}
+	{
+		Technique map{ "ShadowMap",Chan::shadow,true };
+		{
+			Step draw("shadowPass");
 
+			// TODO: better sub-layout generation tech for future consideration maybe
+			draw.AddBindable(InputLayout::Resolve(gfx, cube.vertices.GetLayout(), *VertexShader::Resolve(gfx, "Solid_VS.cso")));
+
+			draw.AddBindable(std::make_shared<TransformCbuf>(gfx));
+			// TODO: might need to specify rasterizer when doubled-sided models start being used
+
+
+			map.AddStep(std::move(draw));
+
+		}
+		AddTechnique(std::move(map));
+	}
+	
 	{
 		Technique outline("outline", Chan::main);
 		{

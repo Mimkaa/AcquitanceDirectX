@@ -14,7 +14,8 @@ namespace Bind {
 		auto modelView = parent->GetTransformXM() * gfx.GetCamera();
 		return { DirectX::XMMatrixTranspose(modelView),
 			DirectX::XMMatrixTranspose(modelView *
-				gfx.GetProjection())
+				gfx.GetProjection()),
+			DirectX::XMMatrixTranspose(parent->GetTransformXM())
 		};
 
 	}

@@ -10,8 +10,9 @@ namespace Bind {
 	protected:
 		struct Transforms
 		{
-			DirectX::XMMATRIX modle;
+			DirectX::XMMATRIX modleView;
 			DirectX::XMMATRIX modelViewProj;
+			DirectX::XMMATRIX modle;
 		};
 	public:
 		virtual Transforms GenerateTransform(Graphics& gfx) noexcept;
@@ -32,11 +33,13 @@ namespace Bind {
 			assert(parent != nullptr);
 			DirectX::XMMATRIX modelView = parent->GetTransformXM() * gfx.GetCamera();
 			return {
+				
 				DirectX::XMMatrixTranspose(modelView),
 				DirectX::XMMatrixTranspose(
 					modelView *
 					gfx.GetProjection()
-				)
+				),
+				DirectX::XMMatrixTranspose(parent->GetTransformXM())
 			};
 		}
 		

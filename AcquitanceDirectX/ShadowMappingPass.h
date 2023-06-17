@@ -39,12 +39,9 @@ public:
 		stencil->Clear(gfx);
 		anotherDepth->Clear(gfx);
  		pShadowCamera->BindToGraphics(gfx);
+		//stencil->BindPS(gfx);
 		RenderQueuePass::Execute(gfx);
-		auto pp = *stencil;
-		if (ShaderInputDepthStencil* child_ptr = dynamic_cast<ShaderInputDepthStencil*>(&pp)) {
-			// Call the child function
-			child_ptr->BindPS(gfx);
-		}
+		
 		
 	}
 	void DumpCamera(Graphics& gfx, const std::string& path) const

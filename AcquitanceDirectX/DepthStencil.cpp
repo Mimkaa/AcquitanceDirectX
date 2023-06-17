@@ -236,8 +236,17 @@ void ShaderInputDepthStencil::BindPS(Graphics& gfx) noexcept
 	INFOMAN_NOHR(gfx);
 	// simply provides the access to the buffer in pixel shader stage
 	GFX_THROW_INFO_ONLY(GetContext(gfx)->PSSetShaderResources(slot, 1u, pShaderResourceView.GetAddressOf()));
-	//GetContext(gfx)->OMSetRenderTargets(0, nullptr, pDSView.Get());
 	
 }
+
+void ShaderInputDepthStencil::UnbindOM(Graphics& gfx) noexcept
+{
+
+	INFOMAN_NOHR(gfx);
+	// simply provides the access to the buffer in pixel shader stage
+	GetContext(gfx)->OMSetRenderTargets(0, nullptr, nullptr);
+
+}
+
 
 
